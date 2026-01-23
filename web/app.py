@@ -1,0 +1,132 @@
+import os
+import uvicorn
+import numpy as np
+import tensorflow as tf
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from typing import List
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Import services
+from services.gee_layer import GEEService
+from services.model_runner import ModelRunner
+
+app = FastAPI(
+    title="PyroCast API",
+    description="Wildfire Risk Prediction using Satellite Imagery and ML",
+    version="1.0.0"
+)
+
+# Add CORS middleware for development
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Mount static files (HTML/JS/CSS)
+static_dir = os.path.join(os.path.dirname(__file__), "static")
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
+# --- Global State ---
+model = None
+gee_service = None
+model_runner = None
+
+class PredictionRequest(BaseModel):
+    min_lat: float
+    max_lat: float
+    min_lon: float
+    max_lon: float
+    date: str
+    grid_density: int = 5  # Number of points along the longest edge
+
+@app.on_event("startup")
+def load_resources():
+    global model, gee_service, model_runner
+    
+    # 1. Load Model
+    model_path = os.path.join(os.path.dirname(__file__), "..", "best_fire_model.keras")
+    if not os.path.exists(model_path):
+        print(f"WARNING: Model not found at {model_path}")
+    else:
+        print(f"Loading model from {model_path}...")
+        model = tf.keras.models.load_model(model_path)
+        print("Model loaded successfully.")
+
+    # 2. Initialize Services
+    gee_service = GEEService()
+    model_runner = ModelRunner()
+
+@app.post("/predict_heatmap")
+def predict_heatmap(req: PredictionRequest):
+    if model is None:
+        raise HTTPException(status_code=500, detail="Model not loaded. Please ensure best_fire_model.keras exists.")
+    
+    if gee_service is None:
+        raise HTTPException(status_code=500, detail="Google Earth Engine service not initialized.")
+    
+    try:
+        # Validate input bounds
+        if req.min_lat >= req.max_lat or req.min_lon >= req.max_lon:
+            raise HTTPException(status_code=400, detail="Invalid bounds: min values must be less than max values.")
+        
+        # Log region size for monitoring (no hard limit)
+        lat_range = req.max_lat - req.min_lat
+        lon_range = req.max_lon - req.min_lon
+        logger.info(f"Region size: {lat_range:.3f}° x {lon_range:.3f}° (~{lat_range*111:.1f}km x {lon_range*111:.1f}km)")
+        
+        # 1. Get Grid Data from GEE
+        logger.info(f"Fetching GEE data for bounds: {req.min_lat:.4f}, {req.min_lon:.4f} to {req.max_lat:.4f}, {req.max_lon:.4f}")
+        logger.info(f"Date: {req.date}, Grid Density: {req.grid_density}")
+        
+        raw_patches, coordinates, actual_date = gee_service.get_data_from_bounds(
+            req.min_lat, req.min_lon, req.max_lat, req.max_lon, req.date, req.grid_density
+        )
+
+        if not raw_patches:
+            return {"status": "error", "message": "No valid land points found in this region. The area may be entirely ocean or have missing data."}
+
+        # 2. Run Inference
+        logger.info(f"Running inference on {len(raw_patches)} patches...")
+        probabilities = model_runner.predict_batch(model, raw_patches)
+
+        # 3. Format Response
+        results = []
+        for (lat, lon), prob in zip(coordinates, probabilities):
+            results.append({
+                "lat": lat,
+                "lon": lon,
+                "prob": float(prob)
+            })
+        
+        logger.info(f"Analysis complete. Returning {len(results)} predictions.")
+            
+        return {
+            "status": "success", 
+            "data": results,
+            "actual_date": actual_date
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Prediction error: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
+
+@app.get("/", response_class=HTMLResponse)
+async def read_root():
+    with open(os.path.join(static_dir, "index.html"), encoding="utf-8") as f:
+        return f.read()
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8000)

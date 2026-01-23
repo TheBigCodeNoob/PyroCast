@@ -1,0 +1,85 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Environment
+.env
+*.env
+
+# Conda
+*.conda
+
+# Data files (large)
+*.tfrecord
+*.npy
+*.npz
+*.h5
+*.hdf5
+*.keras
+*.pt
+*.pth
+*.ckpt
+
+# Model checkpoints
+spread_model/models/checkpoints/*.keras
+spread_model/models/checkpoints/*.pt
+spread_model/models/checkpoints/*.pth
+
+# Logs
+spread_model/logs/*.csv
+spread_model/logs/tensorboard/
+
+# Data directories (too large for git)
+spread_model/data/raw/
+spread_model/data/processed/
+spread_model/data/tfrecords/*.tfrecord
+spread_model/data/tfrecords/*.npy
+spread_model/data/sim2real_fire/
+
+Training Data/
+Testing/
+
+# Keep structure files
+!spread_model/data/raw/fire_catalog.csv
+!spread_model/data/tfrecords/*.json
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
