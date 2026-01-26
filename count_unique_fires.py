@@ -1,14 +1,19 @@
+import os
+# ================= CRITICAL =================
+# Forces CPU execution to avoid RTX 5080 crash.
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+# ============================================
+
 import tensorflow as tf
 import numpy as np
 import glob
-import os
 from collections import defaultdict
 
 # ================= CONFIGURATION =================
-DATA_DIR = "C:\\Users\\nonna\\Downloads\\PyroCast\\Training Data Florida\\"
-FILE_PATTERN = "Export_Florida_Fire_Dataset_Part_*.tfrecord"
+DATA_DIR = "//workspace//PyroCast//Training Data Florida//"
+FILE_PATTERN = "*.tfrecord"
 
-RAW_IMG_SIZE = 257
+# We standardize everything to 256 for analysis
 TARGET_IMG_SIZE = 256
 
 # Band indices
@@ -16,30 +21,42 @@ BANDS = ['Blue', 'Green', 'Red', 'NIR', 'SWIR1', 'SWIR2', 'NDVI', 'NDMI',
          'Temp_Max', 'Humidity_Min', 'Wind_Speed', 'Precip',
          'Elevation', 'Slope', 'Pop_Density']
 
-ELEVATION_IDX = 12
-SLOPE_IDX = 13
-POP_DENSITY_IDX = 14
-
 # ================= PARSING =================
 
 def parse_tfrecord(proto):
     """Parse a single TFRecord example"""
-    flat_shape = [RAW_IMG_SIZE * RAW_IMG_SIZE]
-    zero_default = [0.0] * (RAW_IMG_SIZE * RAW_IMG_SIZE)
     
-    feature_desc = {k: tf.io.FixedLenFeature(flat_shape, tf.float32, default_value=zero_default) 
-                    for k in BANDS}
+    # Use VarLenFeature to safely read varying sizes
+    feature_desc = {k: tf.io.VarLenFeature(tf.float32) for k in BANDS}
     feature_desc['label'] = tf.io.FixedLenFeature([], tf.float32, default_value=0.0)
     
     parsed = tf.io.parse_single_example(proto, feature_desc)
     
+    # Helper to decode, reshape, and standardize dynamic tensors
+    def decode_band(name):
+        x = tf.sparse.to_dense(parsed[name], default_value=0.0)
+        
+        # 1. Determine size dynamically
+        num_elements = tf.shape(x)[0]
+        side_len = tf.cast(tf.sqrt(tf.cast(num_elements, tf.float32)), tf.int32)
+        
+        # 2. Reshape to [H, W, 1] (3D is required for image ops)
+        x = tf.reshape(x, [side_len, side_len, 1])
+        
+        # 3. Standardize to 256x256
+        x = tf.image.resize_with_crop_or_pad(x, TARGET_IMG_SIZE, TARGET_IMG_SIZE)
+        
+        # 4. Squeeze back to [H, W] for analysis
+        x = tf.squeeze(x, axis=-1)
+        return x
+
     # Extract static features (don't change over time)
-    elevation = tf.reshape(parsed['Elevation'], [RAW_IMG_SIZE, RAW_IMG_SIZE])
-    slope = tf.reshape(parsed['Slope'], [RAW_IMG_SIZE, RAW_IMG_SIZE])
-    pop_density = tf.reshape(parsed['Pop_Density'], [RAW_IMG_SIZE, RAW_IMG_SIZE])
+    elevation = decode_band('Elevation')
+    slope = decode_band('Slope')
+    pop_density = decode_band('Pop_Density')
     
     # Get center pixel values (most representative of location)
-    center = RAW_IMG_SIZE // 2
+    center = TARGET_IMG_SIZE // 2
     elev_center = elevation[center, center]
     slope_center = slope[center, center]
     pop_center = pop_density[center, center]
@@ -47,11 +64,11 @@ def parse_tfrecord(proto):
     # Also get mean values for the central 50x50 region
     half_size = 25
     elev_region = tf.reduce_mean(elevation[center-half_size:center+half_size, 
-                                           center-half_size:center+half_size])
-    slope_region = tf.reduce_mean(slope[center-half_size:center+half_size, 
-                                        center-half_size:center+half_size])
-    pop_region = tf.reduce_mean(pop_density[center-half_size:center+half_size, 
                                             center-half_size:center+half_size])
+    slope_region = tf.reduce_mean(slope[center-half_size:center+half_size, 
+                                         center-half_size:center+half_size])
+    pop_region = tf.reduce_mean(pop_density[center-half_size:center+half_size, 
+                                             center-half_size:center+half_size])
     
     label = parsed['label']
     
@@ -144,7 +161,7 @@ def count_unique_fires():
             if count > 0:
                 pct = 100 * count / len(unique_locations)
                 if low == high:
-                    print(f"  {low:3d} sample:       {count:4d} fires ({pct:5.1f}%)")
+                    print(f"  {low:3d} sample:        {count:4d} fires ({pct:5.1f}%)")
                 else:
                     print(f"  {low:3d}-{high:3d} samples: {count:4d} fires ({pct:5.1f}%)")
     

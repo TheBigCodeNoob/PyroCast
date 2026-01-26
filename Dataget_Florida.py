@@ -154,18 +154,39 @@ def generate_positive_samples(count, seed):
 
     return fires_shuffled.map(setup_fire_feature)
 
+# ================= NEW FUNCTION: VEGETATION-ONLY NEGATIVES =================
+
 def generate_negative_samples(count, seed):
     """
-    Generate negative samples (non-fire locations) from FLORIDA ONLY.
-    Random points are constrained to Florida's bounding box.
+    Generate negative samples (non-fire) ONLY from burnable vegetation.
+    Uses ESA WorldCover to filter out cities, water, and bare ground.
     """
-    print(f"  - Generating non-fires in FLORIDA (Seed: {seed})...")
+    print(f"  - Generating TARGETED vegetation negatives (Seed: {seed})...")
     
-    # Generate random points WITHIN FLORIDA
-    points = ee.FeatureCollection.randomPoints(FLORIDA_BBOX, count, seed)
+    # Load Land Cover Map (ESA WorldCover 10m)
+    lc = ee.Image("ESA/WorldCover/v100/2020").select('Map')
+    
+    # Valid classes: 10(Trees), 20(Shrub), 30(Grass), 40(Crop), 90(Mangrove), 95(Wetland)
+    # Invalid: 50(Built-up), 60(Bare), 80(Water)
+    
+    # We generate 3x the requested count to ensure we have enough after filtering
+    candidates = ee.FeatureCollection.randomPoints(FLORIDA_BBOX, count * 3, seed)
+    
+    # Sample the land cover at these points
+    candidates = lc.sampleRegions(
+        collection=candidates, 
+        scale=10, 
+        geometries=True
+    )
+    
+    # Filter: Keep only burnable vegetation classes
+    burnable = candidates.filter(ee.Filter.inList('Map', [10, 20, 30, 40, 90, 95]))
+    
+    # Limit to the exact requested count
+    final_points = burnable.limit(count)
 
     def setup_random_feature(feature):
-        # Create pseudo-random date using coordinates + batch seed
+        # Create pseudo-random date
         geo_seed = ee.Number(feature.geometry().coordinates().get(0)) \
             .add(feature.geometry().coordinates().get(1)) \
             .add(seed) 
@@ -174,9 +195,11 @@ def generate_negative_samples(count, seed):
         end = ee.Date('2022-01-01').millis()
         diff = ee.Number(end).subtract(start)
         random_time = ee.Number(start).add(diff.multiply(geo_seed.sin().abs()))
-        return feature.set({'label': 0, 'target_time': random_time})
+        
+        # We must remove the 'Map' property (LandCover class) so it doesn't break the export columns
+        return feature.set({'label': 0, 'target_time': random_time}).select(['label', 'target_time'])
 
-    return points.map(setup_random_feature)
+    return final_points.map(setup_random_feature)
 
 # ================= BATCH EXECUTION =================
 
@@ -195,8 +218,8 @@ def run_export_batches():
     ]
 
     for i in range(NUM_BATCHES):
-        batch_id = i + 1
-        current_seed = (i * 12345) + 271590  # Deterministic but different seed per batch
+        batch_id = (i + 1) + 10
+        current_seed = (i * 12345) + 400000  # Deterministic but different seed per batch
         
         print(f"\n[Batch {batch_id}/{NUM_BATCHES}] Preparing...")
         
