@@ -55,7 +55,7 @@ def load_resources():
     global model, gee_service, model_runner
     
     # 1. Load Model
-    model_path = os.path.join(os.path.dirname(__file__), "fire_model.keras")
+    model_path = os.path.join(os.path.dirname(__file__), "A-lot-better-post-data-fix_fixed.keras")
     if not os.path.exists(model_path):
         print(f"WARNING: Model not found at {model_path}")
     else:
