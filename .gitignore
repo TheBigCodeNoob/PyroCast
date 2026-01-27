@@ -47,6 +47,7 @@ wheels/
 *.hdf5
 *.keras
 !web/fire_model.keras
+!web/A-lot-better-post-data-fix_fixed.keras
 *.pt
 *.pth
 *.ckpt
