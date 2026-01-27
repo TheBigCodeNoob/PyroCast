@@ -1,7 +1,11 @@
 import os
+# Set Keras backend before any imports
+os.environ['KERAS_BACKEND'] = 'tensorflow'
+
 import uvicorn
 import numpy as np
 import tensorflow as tf
+import keras
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
@@ -89,31 +93,24 @@ def load_resources():
     if model_path and os.path.exists(model_path):
         print(f"Loading model from {model_path}...")
         try:
-            # Try loading normally
-            model = tf.keras.models.load_model(model_path)
-        except TypeError as e:
-            if "quantization_config" in str(e):
-                # Keras version mismatch - load with safe_mode=False and compile=False
-                print("Detected Keras version mismatch, loading with compatibility mode...")
-                model = tf.keras.models.load_model(model_path, compile=False, safe_mode=False)
-            else:
-                raise e
+            # Use Keras 3.x API to load the model
+            model = keras.models.load_model(model_path)
+            print("Model loaded successfully.")
         except Exception as e:
             print(f"ERROR loading model: {e}")
-            model = None
-        
-        if model:
-            print("Model loaded successfully.")
+            print("Attempting to load with compile=False...")
+            try:
+                model = keras.models.load_model(model_path, compile=False)
+                print("Model loaded successfully (without compilation).")
+            except Exception as e2:
+                print(f"ERROR loading model even without compilation: {e2}")
+                model = None
     else:
         print("WARNING: No valid model available")
 
-    # 2. Initialize Services & Pre-cache Florida
+    # 2. Initialize Services
     gee_service = GEEService()
     model_runner = ModelRunner()
-    
-    # Run Florida pre-caching in a background thread to not block startup
-    import threading
-    threading.Thread(target=gee_service.precache_florida_data, daemon=True).start()
 
 @app.post("/predict_heatmap")
 def predict_heatmap(req: PredictionRequest):
