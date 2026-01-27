@@ -9,6 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
 import logging
+import urllib.request
+import shutil
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -56,9 +58,35 @@ def load_resources():
     
     # 1. Load Model
     model_path = os.path.join(os.path.dirname(__file__), "A-lot-better-post-data-fix_fixed.keras")
-    if not os.path.exists(model_path):
-        print(f"WARNING: Model not found at {model_path}")
-    else:
+    
+    # Check if file exists and is valid (not LFS pointer)
+    needs_download = True
+    if os.path.exists(model_path):
+        file_size = os.path.getsize(model_path)
+        if file_size > 10000000:  # > 10MB means it's the real model
+            needs_download = False
+            print(f"Model file found ({file_size / 1024 / 1024:.1f} MB)")
+        else:
+            print(f"Model file is too small ({file_size} bytes) - likely LFS pointer, will download")
+    
+    # Download model from environment variable URL if needed
+    if needs_download:
+        model_url = os.getenv('MODEL_URL')
+        if model_url:
+            print(f"Downloading model from {model_url}...")
+            try:
+                with urllib.request.urlopen(model_url) as response:
+                    with open(model_path, 'wb') as out_file:
+                        shutil.copyfileobj(response, out_file)
+                print(f"Model downloaded successfully ({os.path.getsize(model_path) / 1024 / 1024:.1f} MB)")
+            except Exception as e:
+                print(f"Failed to download model: {e}")
+                model_path = None
+        else:
+            print("WARNING: Model not found and MODEL_URL not set")
+            model_path = None
+    
+    if model_path and os.path.exists(model_path):
         print(f"Loading model from {model_path}...")
         try:
             # Try loading normally
@@ -70,7 +98,14 @@ def load_resources():
                 model = tf.keras.models.load_model(model_path, compile=False, safe_mode=False)
             else:
                 raise e
-        print("Model loaded successfully.")
+        except Exception as e:
+            print(f"ERROR loading model: {e}")
+            model = None
+        
+        if model:
+            print("Model loaded successfully.")
+    else:
+        print("WARNING: No valid model available")
 
     # 2. Initialize Services
     gee_service = GEEService()
