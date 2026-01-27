@@ -292,7 +292,7 @@ class GEEService:
                 # Calculate cache coverage: how many requested grid points are covered?
                 # Each cached patch covers approximately one grid point
                 # We consider a grid point "covered" if there's a cached patch nearby
-                coverage_threshold = 0.80  # Require 80% coverage to use cache
+                coverage_threshold = 0.95  # Require 95% coverage to use cache
                 
                 if len(points) > 0:
                     # For each requested point, check if there's a cached patch within tolerance

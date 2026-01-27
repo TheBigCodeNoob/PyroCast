@@ -15,6 +15,7 @@ from typing import List
 import logging
 import urllib.request
 import shutil
+import gc
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -141,9 +142,20 @@ def predict_heatmap(req: PredictionRequest):
         if not raw_patches:
             return {"status": "error", "message": "No valid land points found in this region. The area may be entirely ocean or have missing data."}
 
-        # 2. Run Inference
+        # 2. Run Inference with Chunking (prevent memory overflow on large batches)
         logger.info(f"Running inference on {len(raw_patches)} patches...")
-        probabilities = model_runner.predict_batch(model, raw_patches)
+        MAX_BATCH_SIZE = 100  # Process max 100 patches at a time to prevent memory issues
+        
+        probabilities = []
+        for i in range(0, len(raw_patches), MAX_BATCH_SIZE):
+            chunk = raw_patches[i:i + MAX_BATCH_SIZE]
+            chunk_probs = model_runner.predict_batch(model, chunk)
+            probabilities.extend(chunk_probs)
+            
+            # Log progress for large batches
+            if len(raw_patches) > MAX_BATCH_SIZE:
+                processed = min(i + MAX_BATCH_SIZE, len(raw_patches))
+                logger.info(f"Processed {processed}/{len(raw_patches)} patches...")
 
         # 3. Format Response
         results = []
@@ -153,6 +165,13 @@ def predict_heatmap(req: PredictionRequest):
                 "lon": lon,
                 "prob": float(prob)
             })
+        
+        # 4. Memory Cleanup for large batches
+        if len(raw_patches) > MAX_BATCH_SIZE:
+            del raw_patches, probabilities
+            gc.collect()
+            if tf.config.list_physical_devices('GPU'):
+                tf.keras.backend.clear_session()
         
         logger.info(f"Analysis complete. Returning {len(results)} predictions.")
             
