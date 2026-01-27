@@ -2,6 +2,8 @@ import ee
 import numpy as np
 import concurrent.futures
 import urllib3
+import os
+import json
 
 # Increase urllib3 connection pool size to match our parallel workers
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -9,11 +11,21 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 class GEEService:
     def __init__(self):
         try:
-            ee.Initialize(project='gleaming-glass-426122-k0')
-            print("Google Earth Engine initialized.")
+            # Check for service account credentials (for deployment)
+            if os.getenv('GEE_SERVICE_ACCOUNT'):
+                credentials_json = os.getenv('GEE_SERVICE_ACCOUNT')
+                credentials = json.loads(credentials_json)
+                service_account = credentials['client_email']
+                credentials_obj = ee.ServiceAccountCredentials(service_account, key_data=credentials_json)
+                ee.Initialize(credentials=credentials_obj, project='gleaming-glass-426122-k0')
+                print(f"Google Earth Engine initialized with service account: {service_account}")
+            else:
+                # Local development - use default authentication
+                ee.Initialize(project='gleaming-glass-426122-k0')
+                print("Google Earth Engine initialized with default credentials.")
         except Exception as e:
             print(f"GEE Initialization failed: {e}")
-            print("Try running `earthengine authenticate` or setting a project.")
+            print("Try running `earthengine authenticate` or set GEE_SERVICE_ACCOUNT environment variable.")
             # We don't raise here to allow the app to start, but predictions will fail.
 
             
