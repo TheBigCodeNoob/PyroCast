@@ -1,0 +1,8 @@
+fastapi==0.109.0
+uvicorn==0.27.0
+tensorflow==2.15.0
+numpy==1.26.3
+earthengine-api==0.1.391
+pydantic==2.5.3
+python-multipart==0.0.6
+urllib3==2.1.0
