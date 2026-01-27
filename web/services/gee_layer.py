@@ -276,13 +276,12 @@ class GEEService:
                     else:
                         print("Critical: No weather data found at all.")
 
-            # Check cache first
+            # Check cache first with coverage validation
             if date_str in self.cache:
-                print(f"CACHE HIT for date: {date_str}")
                 cached_data = self.cache[date_str]
-                # We need to filter the cached data for the requested bounds
                 all_patches, all_coords, _ = cached_data
                 
+                # Filter cached patches within requested bounds
                 filtered_patches = []
                 filtered_coords = []
                 for i, (lat, lon) in enumerate(all_coords):
@@ -290,7 +289,41 @@ class GEEService:
                         filtered_patches.append(all_patches[i])
                         filtered_coords.append((lat, lon))
                 
-                return filtered_patches, filtered_coords, date_str
+                # Calculate cache coverage: how many requested grid points are covered?
+                # Each cached patch covers approximately one grid point
+                # We consider a grid point "covered" if there's a cached patch nearby
+                coverage_threshold = 0.80  # Require 80% coverage to use cache
+                
+                if len(points) > 0:
+                    # For each requested point, check if there's a cached patch within tolerance
+                    # Tolerance is approximately the grid step size
+                    if lat_diff > lon_diff:
+                        step = lat_diff / grid_density
+                    else:
+                        step = lon_diff / grid_density
+                    tolerance = step * 1.5  # 1.5x grid spacing to account for slight variations
+                    
+                    covered_points = 0
+                    for point_lon, point_lat in points:
+                        # Check if any cached coord is close to this point
+                        for cached_lat, cached_lon in filtered_coords:
+                            dist_lat = abs(point_lat - cached_lat)
+                            dist_lon = abs(point_lon - cached_lon)
+                            if dist_lat < tolerance and dist_lon < tolerance:
+                                covered_points += 1
+                                break
+                    
+                    coverage_ratio = covered_points / len(points)
+                    
+                    if coverage_ratio >= coverage_threshold:
+                        print(f"CACHE HIT for date: {date_str} ({covered_points}/{len(points)} points = {coverage_ratio*100:.1f}% coverage)")
+                        return filtered_patches, filtered_coords, date_str
+                    else:
+                        print(f"CACHE INSUFFICIENT for date: {date_str} ({covered_points}/{len(points)} points = {coverage_ratio*100:.1f}% coverage < {coverage_threshold*100:.0f}% threshold)")
+                        print(f"Fetching fresh data from GEE to cover full region.")
+                else:
+                    print(f"CACHE HIT for date: {date_str} (no grid points to validate)")
+                    return filtered_patches, filtered_coords, date_str
 
             print(f"CACHE MISS for date: {date_str}. Fetching from GEE.")
             
