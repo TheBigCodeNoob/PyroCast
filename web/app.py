@@ -93,14 +93,14 @@ def load_resources():
     if model_path and os.path.exists(model_path):
         print(f"Loading model from {model_path}...")
         try:
-            # Use Keras 3.x API to load the model
-            model = keras.models.load_model(model_path)
+            # Use Keras 3.x API to load the model with safe_mode=False for better compatibility
+            model = keras.models.load_model(model_path, safe_mode=False)
             print("Model loaded successfully.")
         except Exception as e:
             print(f"ERROR loading model: {e}")
-            print("Attempting to load with compile=False...")
+            print("Attempting to load with compile=False and safe_mode=False...")
             try:
-                model = keras.models.load_model(model_path, compile=False)
+                model = keras.models.load_model(model_path, compile=False, safe_mode=False)
                 print("Model loaded successfully (without compilation).")
             except Exception as e2:
                 print(f"ERROR loading model even without compilation: {e2}")
