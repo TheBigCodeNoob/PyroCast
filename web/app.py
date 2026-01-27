@@ -55,12 +55,21 @@ def load_resources():
     global model, gee_service, model_runner
     
     # 1. Load Model
-    model_path = os.path.join(os.path.dirname(__file__), "..", "best_fire_model.keras")
+    model_path = os.path.join(os.path.dirname(__file__), "fire_model.keras")
     if not os.path.exists(model_path):
         print(f"WARNING: Model not found at {model_path}")
     else:
         print(f"Loading model from {model_path}...")
-        model = tf.keras.models.load_model(model_path)
+        try:
+            # Try loading normally
+            model = tf.keras.models.load_model(model_path)
+        except TypeError as e:
+            if "quantization_config" in str(e):
+                # Keras version mismatch - load with safe_mode=False and compile=False
+                print("Detected Keras version mismatch, loading with compatibility mode...")
+                model = tf.keras.models.load_model(model_path, compile=False, safe_mode=False)
+            else:
+                raise e
         print("Model loaded successfully.")
 
     # 2. Initialize Services

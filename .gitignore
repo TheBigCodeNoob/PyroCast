@@ -46,6 +46,7 @@ wheels/
 *.h5
 *.hdf5
 *.keras
+!web/fire_model.keras
 *.pt
 *.pth
 *.ckpt
