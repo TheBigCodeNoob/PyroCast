@@ -6,4 +6,3 @@ earthengine-api==0.1.391
 pydantic==2.5.3
 python-multipart==0.0.6
 urllib3==2.1.0
-tf_keras==2.20.1
