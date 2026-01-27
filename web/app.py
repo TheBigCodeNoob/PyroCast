@@ -107,9 +107,13 @@ def load_resources():
     else:
         print("WARNING: No valid model available")
 
-    # 2. Initialize Services
+    # 2. Initialize Services & Pre-cache Florida
     gee_service = GEEService()
     model_runner = ModelRunner()
+    
+    # Run Florida pre-caching in a background thread to not block startup
+    import threading
+    threading.Thread(target=gee_service.precache_florida_data, daemon=True).start()
 
 @app.post("/predict_heatmap")
 def predict_heatmap(req: PredictionRequest):

@@ -28,7 +28,7 @@ class GEEService:
             print("Try running `earthengine authenticate` or set GEE_SERVICE_ACCOUNT environment variable.")
             # We don't raise here to allow the app to start, but predictions will fail.
 
-            
+        self.cache = {}
         # Target image size for the model
         self.IMG_SIZE = 256
         # Scale from Dataget.py
@@ -276,6 +276,24 @@ class GEEService:
                     else:
                         print("Critical: No weather data found at all.")
 
+            # Check cache first
+            if date_str in self.cache:
+                print(f"CACHE HIT for date: {date_str}")
+                cached_data = self.cache[date_str]
+                # We need to filter the cached data for the requested bounds
+                all_patches, all_coords, _ = cached_data
+                
+                filtered_patches = []
+                filtered_coords = []
+                for i, (lat, lon) in enumerate(all_coords):
+                    if min_lat <= lat <= max_lat and min_lon <= lon <= max_lon:
+                        filtered_patches.append(all_patches[i])
+                        filtered_coords.append((lat, lon))
+                
+                return filtered_patches, filtered_coords, date_str
+
+            print(f"CACHE MISS for date: {date_str}. Fetching from GEE.")
+            
             image_stack = self._get_image_stack(region_geom.bounds(), target_date, weather_img)
             
             # Neighborhood kernel
@@ -396,9 +414,34 @@ class GEEService:
             for patches, coords in results:
                 all_patches.extend(patches)
                 all_coords.extend(coords)
-                    
-            return all_patches, all_coords, actual_date_str
+                
+            # Store full result in cache before returning
+            print(f"Storing {len(all_patches)} patches in cache for date: {actual_date_str}")
+            self.cache[actual_date_str] = (all_patches, all_coords, actual_date_str)
             
+            return all_patches, all_coords, actual_date_str        
         except Exception as e:
             print(f"GEE Error: {e}")
             raise e
+
+    def precache_florida_data(self):
+        from datetime import datetime
+        today_str = datetime.now().strftime('%Y-%m-%d')
+        print("--- Starting Florida Pre-caching ---")
+        
+        # Bounding box for Florida
+        min_lat = 24.3963
+        max_lat = 31.0010
+        min_lon = -87.6349
+        max_lon = -79.9743
+        
+        # A high grid density to cover the state
+        grid_density = 150 
+        
+        try:
+            self.get_data_from_bounds(
+                min_lat, min_lon, max_lat, max_lon, today_str, grid_density
+            )
+            print("--- Florida Pre-caching Complete ---")
+        except Exception as e:
+            print(f"--- Florida Pre-caching FAILED: {e} ---")
