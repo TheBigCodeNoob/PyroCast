@@ -114,7 +114,7 @@
 <body>
 
     <div id="controls">
-        <h2>🔥 Florida Wildfire Risk Assessment System</h2>
+        <h2>Florida Wildfire Risk Assessment System</h2>
         
         <div class="input-group">
             <label>Latitude</label>
@@ -138,21 +138,19 @@
             <div id="pointEstimate" style="font-size:0.75em; color:#7f8c8d; margin-top:3px;"></div>
         </div>
         
-        <div class="input-group" style="display:flex; align-items:center; gap:8px;">
-            <input type="checkbox" id="advancedMode" onchange="toggleAdvancedMode()" style="width:auto; margin:0;">
-            <label for="advancedMode" style="margin:0; cursor:pointer; font-size:0.9em;">⚡ Advanced Mode (High Density)</label>
-        </div>
-        
         <button id="drawBtn" onclick="toggleDrawMode()">Draw Region</button>
-        <button id="gpsBtn" onclick="useMyLocation()" style="background: #3498db;">📍 Use My Location</button>
-        <button id="demoBtn" onclick="loadDixieFire()" style="background: #9b59b6;">🔥 Demo: Dixie Fire (2021)</button>
+        <button id="gpsBtn" onclick="useMyLocation()" style="background: #3498db;">Use My Location</button>
         <button id="predictBtn" onclick="runPrediction()">Analyze Region</button>
-        <button id="clearBtn" onclick="clearAnalysis()" style="background: #95a5a6; margin-top: 5px;">🗑️ Clear Results</button>
+        <button id="clearBtn" onclick="clearAnalysis()" style="background: #95a5a6; margin-top: 5px;">Clear Results</button>
         <div id="status" class="loading">Select a region to start...</div>
+        
+        <div style="margin-top: 15px; padding: 10px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; font-size: 0.8em; color: #856404;">
+            <strong>Warning:</strong> This is an experimental demo. Results may be inaccurate or incomplete. Not intended for real-world fire prediction.
+        </div>
     </div>
 
     <div id="legend">
-        <h4>🔥 Fire Risk Legend</h4>
+        <h4>Fire Risk Legend</h4>
         <div class="legend-item"><div class="legend-color" style="background: rgba(0, 100, 255, 0.6);"></div>Trace (&lt;5%)</div>
         <div class="legend-item"><div class="legend-color" style="background: rgba(0, 255, 255, 0.7);"></div>Low (5-20%)</div>
         <div class="legend-item"><div class="legend-color" style="background: rgba(0, 255, 0, 0.8);"></div>Moderate-Low (20-40%)</div>
@@ -313,72 +311,12 @@
             }
         }
         
-        // Adaptive Density System
+        // Adaptive Density System - Always use high density mode
         function adjustDensityForRegion() {
-            const advancedMode = document.getElementById('advancedMode').checked;
             const slider = document.getElementById('gridDensity');
-            
-            if (advancedMode) {
-                // Advanced mode: Allow up to 50 density
-                slider.max = 50;
-                updateDensityDisplay();
-                return;
-            }
-            
-            if (!selectedBounds) {
-                // No region selected yet, set default
-                slider.max = 20;
-                updateDensityDisplay();
-                return;
-            }
-            
-            // Calculate region area in square degrees
-            const latRange = selectedBounds.maxLat - selectedBounds.minLat;
-            const lonRange = selectedBounds.maxLon - selectedBounds.minLon;
-            const area = latRange * lonRange;
-            
-            // Adaptive max density to keep total points reasonable
-            // Target: ~100-400 points for normal mode
-            let maxDensity;
-            if (area < 0.01) {        // Very small (<1km): Allow high density
-                maxDensity = 30;
-            } else if (area < 0.05) { // Small (1-5km): Medium-high density
-                maxDensity = 20;
-            } else if (area < 0.2) {  // Medium (5-20km): Medium density
-                maxDensity = 15;
-            } else if (area < 0.5) {  // Large (20-50km): Lower density
-                maxDensity = 10;
-            } else {                   // Very large (>50km): Low density
-                maxDensity = 7;
-            }
-            
-            slider.max = maxDensity;
-            
-            // If current value exceeds new max, adjust it
-            if (parseInt(slider.value) > maxDensity) {
-                slider.value = maxDensity;
-            }
-            
+            // Allow up to 50 density (was advanced mode)
+            slider.max = 50;
             updateDensityDisplay();
-        }
-        
-        function toggleAdvancedMode() {
-            adjustDensityForRegion();
-            updateDensityDisplay();
-            
-            const advancedMode = document.getElementById('advancedMode').checked;
-            if (advancedMode) {
-                const confirm = window.confirm(
-                    "⚡ Advanced Mode Enabled\n\n" +
-                    "This unlocks high density settings (up to 50 points/edge).\n" +
-                    "Large regions with high density may take several minutes to analyze.\n\n" +
-                    "Continue?"
-                );
-                if (!confirm) {
-                    document.getElementById('advancedMode').checked = false;
-                    adjustDensityForRegion();
-                }
-            }
         }
         
         function estimatePointCount() {
@@ -403,43 +341,35 @@
             return latPoints * lonPoints;
         }
         
+        // Max points limit to prevent server crashes
+        const MAX_POINTS = 600;
+        
         function updateDensityDisplay() {
             const slider = document.getElementById('gridDensity');
             const value = slider.value;
-            const max = slider.max;
-            const advancedMode = document.getElementById('advancedMode').checked;
             
             document.getElementById('densityVal').innerText = value;
             
             // Update label
             const label = document.getElementById('densityLabel');
-            if (advancedMode) {
-                label.innerHTML = '<span class="warning-badge">ADVANCED</span> Max: 50';
-            } else if (selectedBounds) {
-                const area = (selectedBounds.maxLat - selectedBounds.minLat) * 
-                            (selectedBounds.maxLon - selectedBounds.minLon);
-                const sizeKm = Math.sqrt(area) * 111;
-                label.textContent = `(Max: ${max} for ~${sizeKm.toFixed(0)}km region)`;
-            } else {
-                label.textContent = '';
-            }
+            label.textContent = '';
             
             // Show point estimate
             if (selectedBounds) {
                 const pointCount = estimatePointCount();
                 const estimateDiv = document.getElementById('pointEstimate');
                 
-                let estimateText = `≈${pointCount} analysis points`;
+                let estimateText = `~${pointCount} analysis points`;
                 let estimateColor = '#7f8c8d';
                 
-                if (pointCount > 500) {
-                    estimateText += ' ⚠️ May take 2-3 minutes';
-                    estimateColor = '#e67e22';
-                } else if (pointCount > 1000) {
-                    estimateText += ' 🔥 May take 5+ minutes';
+                if (pointCount > MAX_POINTS) {
+                    estimateText = `~${pointCount} points (max ${MAX_POINTS} - reduce density)`;
                     estimateColor = '#e74c3c';
+                } else if (pointCount > 400) {
+                    estimateText += ' (may take 3-5 minutes)';
+                    estimateColor = '#e67e22';
                 } else if (pointCount > 200) {
-                    estimateText += ' (1-2 minutes)';
+                    estimateText += ' (1-3 minutes)';
                 }
                 
                 estimateDiv.textContent = estimateText;
@@ -503,32 +433,7 @@
             );
         }
 
-        function loadDixieFire() {
-            // Dixie Fire, CA. Started July 13, 2021.
-            const lat = 39.8700;
-            const lon = -121.3700;
-            const date = "2021-07-06"; // 1 week before
 
-            document.getElementById('lat').value = lat;
-            document.getElementById('lon').value = lon;
-            document.getElementById('date').value = date;
-            
-            map.setView([lat, lon], 12);
-
-            const delta = 0.08; // Roughly 8-9km box
-            const southWest = L.latLng(lat - delta/2, lon - delta/2);
-            const northEast = L.latLng(lat + delta/2, lon + delta/2);
-            
-            setRegion(southWest, northEast);
-            map.fitBounds(L.latLngBounds(southWest, northEast));
-            
-            document.getElementById('status').innerHTML = 'Demo region loaded. Click <strong>Analyze Region</strong> to see fire risk prediction.';
-            document.getElementById('status').style.display = 'block';
-            
-            // Reset advanced mode for demo
-            document.getElementById('advancedMode').checked = false;
-            adjustDensityForRegion();
-        }
         
         function clearAnalysis() {
             // Clear heatmap overlay
@@ -580,6 +485,13 @@
 
             if (!date) {
                 alert("Please select a date.");
+                return;
+            }
+            
+            // Check point count limit
+            const pointCount = estimatePointCount();
+            if (pointCount > MAX_POINTS) {
+                alert(`Too many analysis points (${pointCount}). Maximum is ${MAX_POINTS}.\n\nPlease reduce the grid density or select a smaller region.`);
                 return;
             }
 
@@ -636,9 +548,9 @@
                     const maxRisk = (Math.max(...result.data.map(pt => pt.prob)) * 100).toFixed(1);
                     const highRiskPoints = result.data.filter(pt => pt.prob > 0.6).length;
                     
-                    status.innerHTML = `✅ Analysis Complete!<br>
+                    status.innerHTML = `Analysis Complete!<br>
                         <small>${result.data.length} points analyzed | Avg: ${avgRisk}% | Max: ${maxRisk}%<br>
-                        ${highRiskPoints > 0 ? `⚠️ ${highRiskPoints} high-risk areas detected` : '✓ No high-risk areas'}</small>`;
+                        ${highRiskPoints > 0 ? `${highRiskPoints} high-risk areas detected` : 'No high-risk areas'}</small>`;
                     
                     // Show legend
                     document.getElementById('legend').style.display = 'block';
@@ -652,7 +564,7 @@
             } catch (err) {
                 console.error(err);
                 const errorMsg = err.message || 'Connection failed. Please check if the server is running.';
-                status.innerHTML = `❌ Error: ${errorMsg}`;
+                status.innerHTML = `Error: ${errorMsg}`;
                 
                 // More helpful error messages
                 if (errorMsg.includes('fetch')) {

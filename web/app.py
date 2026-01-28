@@ -121,15 +121,32 @@ def predict_heatmap(req: PredictionRequest):
     if gee_service is None:
         raise HTTPException(status_code=500, detail="Google Earth Engine service not initialized.")
     
+    # Max points limit - increased from 450 after memory optimizations
+    # (reduced parallel workers 10->4, added gc.collect(), smaller inference batches)
+    MAX_POINTS = 600
+    
     try:
         # Validate input bounds
         if req.min_lat >= req.max_lat or req.min_lon >= req.max_lon:
             raise HTTPException(status_code=400, detail="Invalid bounds: min values must be less than max values.")
         
-        # Log region size for monitoring (no hard limit)
+        # Log region size for monitoring
         lat_range = req.max_lat - req.min_lat
         lon_range = req.max_lon - req.min_lon
         logger.info(f"Region size: {lat_range:.3f}° x {lon_range:.3f}° (~{lat_range*111:.1f}km x {lon_range*111:.1f}km)")
+        
+        # Estimate point count and enforce limit
+        if lat_range > lon_range:
+            step = lat_range / req.grid_density
+        else:
+            step = lon_range / req.grid_density
+        estimated_points = int((lat_range / step) * (lon_range / step)) if step > 0 else 0
+        
+        if estimated_points > MAX_POINTS:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Too many analysis points ({estimated_points}). Maximum is {MAX_POINTS}. Reduce grid density or region size."
+            )
         
         # 1. Get Grid Data from GEE
         logger.info(f"Fetching GEE data for bounds: {req.min_lat:.4f}, {req.min_lon:.4f} to {req.max_lat:.4f}, {req.max_lon:.4f}")
@@ -144,18 +161,25 @@ def predict_heatmap(req: PredictionRequest):
 
         # 2. Run Inference with Chunking (prevent memory overflow on large batches)
         logger.info(f"Running inference on {len(raw_patches)} patches...")
-        MAX_BATCH_SIZE = 100  # Process max 100 patches at a time to prevent memory issues
+        MAX_BATCH_SIZE = 50  # Process max 50 patches at a time to limit peak memory (~200MB per chunk)
         
         probabilities = []
-        for i in range(0, len(raw_patches), MAX_BATCH_SIZE):
+        num_patches = len(raw_patches)
+        
+        for i in range(0, num_patches, MAX_BATCH_SIZE):
             chunk = raw_patches[i:i + MAX_BATCH_SIZE]
             chunk_probs = model_runner.predict_batch(model, chunk)
             probabilities.extend(chunk_probs)
             
             # Log progress for large batches
-            if len(raw_patches) > MAX_BATCH_SIZE:
-                processed = min(i + MAX_BATCH_SIZE, len(raw_patches))
-                logger.info(f"Processed {processed}/{len(raw_patches)} patches...")
+            processed = min(i + MAX_BATCH_SIZE, num_patches)
+            if num_patches > MAX_BATCH_SIZE:
+                logger.info(f"Processed {processed}/{num_patches} patches...")
+            
+            # Cleanup chunk memory after each iteration
+            del chunk
+            if processed < num_patches:  # Don't gc on last iteration, we'll do it at the end
+                gc.collect()
 
         # 3. Format Response
         results = []
@@ -166,12 +190,10 @@ def predict_heatmap(req: PredictionRequest):
                 "prob": float(prob)
             })
         
-        # 4. Memory Cleanup for large batches
-        if len(raw_patches) > MAX_BATCH_SIZE:
-            del raw_patches, probabilities
-            gc.collect()
-            if tf.config.list_physical_devices('GPU'):
-                tf.keras.backend.clear_session()
+        # 4. Memory Cleanup - always run for any batch size
+        del raw_patches, probabilities, coordinates
+        gc.collect()
+        tf.keras.backend.clear_session()
         
         logger.info(f"Analysis complete. Returning {len(results)} predictions.")
             

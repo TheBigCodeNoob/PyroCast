@@ -4,6 +4,7 @@ import concurrent.futures
 import urllib3
 import os
 import json
+import gc
 
 # Increase urllib3 connection pool size to match our parallel workers
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -437,16 +438,20 @@ class GEEService:
             for i in range(0, len(points), BATCH_SIZE):
                 batches.append((i // BATCH_SIZE, points[i : i + BATCH_SIZE]))
 
-            # Execute in parallel
-            # Use 10 threads to match urllib3 connection pool size and avoid warnings
-            # This is the optimal balance between speed and resource usage
-            with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+            # Execute in parallel with limited workers to prevent OOM
+            # Reduced from 10 to 4 workers to limit concurrent memory usage
+            # Each patch is ~4MB, so 4 workers * 8 batch = 32 patches = ~128MB concurrent
+            with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
                 results = list(executor.map(fetch_batch, batches))
 
-            # Combine results
+            # Combine results and cleanup
             for patches, coords in results:
                 all_patches.extend(patches)
                 all_coords.extend(coords)
+            
+            # Explicit memory cleanup after combining results
+            del results
+            gc.collect()
                 
             # Store full result in cache before returning
             print(f"Storing {len(all_patches)} patches in cache for date: {actual_date_str}")
