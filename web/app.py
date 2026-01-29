@@ -16,6 +16,8 @@ import logging
 import urllib.request
 import shutil
 import gc
+import json
+from datetime import datetime
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -56,6 +58,11 @@ class PredictionRequest(BaseModel):
     max_lon: float
     date: str
     grid_density: int = 5  # Number of points along the longest edge
+
+class FeedbackRequest(BaseModel):
+    message: str
+    user_agent: str = None
+    timestamp: str = None
 
 @app.on_event("startup")
 def load_resources():
@@ -208,6 +215,67 @@ def predict_heatmap(req: PredictionRequest):
     except Exception as e:
         logger.error(f"Prediction error: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
+
+@app.post("/submit_feedback")
+async def submit_feedback(req: FeedbackRequest, request: Request):
+    """Submit user feedback via Discord webhook or logging."""
+    try:
+        # Get client info
+        client_ip = request.client.host
+        timestamp = datetime.utcnow().isoformat()
+        
+        # Format message
+        feedback_data = {
+            "message": req.message,
+            "timestamp": timestamp,
+            "ip": client_ip,
+            "user_agent": req.user_agent or "Unknown"
+        }
+        
+        # Try Discord webhook if configured
+        discord_webhook_url = os.getenv('DISCORD_WEBHOOK_URL')
+        if discord_webhook_url:
+            try:
+                discord_payload = {
+                    "embeds": [{
+                        "title": "🐛 Bug Report / Feedback",
+                        "description": req.message,
+                        "color": 15158332,  # Red color
+                        "fields": [
+                            {"name": "Timestamp", "value": timestamp, "inline": True},
+                            {"name": "IP", "value": client_ip, "inline": True},
+                            {"name": "User Agent", "value": req.user_agent or "Unknown", "inline": False}
+                        ]
+                    }]
+                }
+                
+                discord_req = urllib.request.Request(
+                    discord_webhook_url,
+                    data=json.dumps(discord_payload).encode('utf-8'),
+                    headers={'Content-Type': 'application/json'}
+                )
+                
+                with urllib.request.urlopen(discord_req) as response:
+                    if response.status == 204:
+                        logger.info(f"Feedback sent to Discord: {req.message[:50]}...")
+                        return {"status": "success", "message": "Feedback submitted successfully!"}
+            except Exception as e:
+                logger.error(f"Failed to send to Discord: {e}")
+        
+        # Fallback: just log it prominently
+        logger.warning("=" * 60)
+        logger.warning(f"USER FEEDBACK RECEIVED:")
+        logger.warning(f"Message: {req.message}")
+        logger.warning(f"Time: {timestamp}")
+        logger.warning(f"IP: {client_ip}")
+        logger.warning(f"User Agent: {req.user_agent or 'Unknown'}")
+        logger.warning("=" * 60)
+        
+        return {"status": "success", "message": "Feedback logged successfully!"}
+        
+    except Exception as e:
+        logger.error(f"Feedback submission error: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail="Failed to submit feedback")
 
 @app.get("/", response_class=HTMLResponse)
 async def read_root():

@@ -50,6 +50,36 @@
 
         .loading { display: none; margin-top: 10px; color: #666; font-size: 0.9em; text-align: center;}
         
+        /* Feedback Section */
+        .feedback-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .feedback-section h3 {
+            margin-top: 0;
+            font-size: 1em;
+            color: #555;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .feedback-status {
+            margin-top: 8px;
+            font-size: 0.85em;
+            color: #27ae60;
+        }
+        
         /* Warning Badge */
         .warning-badge {
             background: #e74c3c;
@@ -117,35 +147,31 @@
         <h2>Florida Wildfire Risk Assessment System</h2>
         
         <div class="input-group">
-            <label>Latitude</label>
-            <input type="text" id="lat" placeholder="e.g. 39.7392">
+            <label for="grid-density">Grid Density (points along longest edge):</label>
+            <input type="number" id="grid-density" value="20" min="5" max="50" />
+            <small style="color: #999; font-size: 0.85em;">Maximum 1500 points total</small>
         </div>
-        
+
         <div class="input-group">
-            <label>Longitude</label>
-            <input type="text" id="lon" placeholder="e.g. -104.9903">
+            <label for="date-input">Analysis Date:</label>
+            <input type="date" id="date-input" value="2024-01-15" />
+        </div>
+
+        <button id="analyze-btn">Analyze Region</button>
+        
+        <div class="loading" id="loading">⏳ Analyzing...</div>
+        
+        <div class="warning-badge">
+            <strong>⚠️ Demo Version</strong><br>
+            This is an experimental system. Results may be inaccurate or incomplete.
         </div>
         
-        <div class="input-group">
-            <label>Date</label>
-            <input type="date" id="date">
-        </div>
-        
-        <div class="input-group">
-            <label>Grid Density (Points per edge) <span id="densityLabel" style="font-size:0.8em; color:#7f8c8d;"></span></label>
-            <input type="range" id="gridDensity" min="3" max="20" value="5" oninput="updateDensityDisplay()">
-            <span id="densityVal" style="font-weight:bold; color:#e67e22;">5</span>
-            <div id="pointEstimate" style="font-size:0.75em; color:#7f8c8d; margin-top:3px;"></div>
-        </div>
-        
-        <button id="drawBtn" onclick="toggleDrawMode()">Draw Region</button>
-        <button id="gpsBtn" onclick="useMyLocation()" style="background: #3498db;">Use My Location</button>
-        <button id="predictBtn" onclick="runPrediction()">Analyze Region</button>
-        <button id="clearBtn" onclick="clearAnalysis()" style="background: #95a5a6; margin-top: 5px;">Clear Results</button>
-        <div id="status" class="loading">Select a region to start...</div>
-        
-        <div style="margin-top: 15px; padding: 10px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; font-size: 0.8em; color: #856404;">
-            <strong>Warning:</strong> The frontend for this is an experimental demo and currently contains <strong>many known bugs</strong>. This is designed as an easy and accessable way to interface with the model. Gradient rendering is not an output by the model and is only a quick visualization of the output. Larger requests will take a long time due to constraints by GEE, but the actual model generates an output in seconds. If professionally implemented, the data would be available on call, reducing the time exponentially.
+        <!-- Feedback Section -->
+        <div class="feedback-section">
+            <h3>Report Bugs / Feedback</h3>
+            <textarea id="feedback-text" placeholder="Found a bug? Have suggestions? Let us know..."></textarea>
+            <button id="feedback-btn" onclick="submitFeedback()">Submit Feedback</button>
+            <div id="feedback-status" class="feedback-status"></div>
         </div>
     </div>
 
@@ -167,7 +193,7 @@
 
     <script>
         // Initialize Map
-        const map = L.map('map').setView([39.7392, -104.9903], 10);
+        const map = L.map('map').setView([27.6648, -81.5158], 7);
         
         // Custom Pane for Heatmap (so we can apply CSS blur to it specifically)
         map.createPane('heatmapPane');
@@ -773,6 +799,51 @@
                 runPrediction(); // Run prediction with Enter key
             }
         });
+
+        // Feedback submission
+        async function submitFeedback() {
+            const feedbackText = document.getElementById('feedback-text').value.trim();
+            const feedbackBtn = document.getElementById('feedback-btn');
+            const feedbackStatus = document.getElementById('feedback-status');
+            
+            if (!feedbackText) {
+                feedbackStatus.textContent = 'Please enter a message';
+                feedbackStatus.style.color = '#e74c3c';
+                return;
+            }
+            
+            feedbackBtn.disabled = true;
+            feedbackStatus.textContent = 'Submitting...';
+            feedbackStatus.style.color = '#666';
+            
+            try {
+                const response = await fetch('/submit_feedback', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: feedbackText,
+                        user_agent: navigator.userAgent,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    feedbackStatus.textContent = '✓ Thank you! Feedback submitted successfully.';
+                    feedbackStatus.style.color = '#27ae60';
+                    document.getElementById('feedback-text').value = '';
+                } else {
+                    throw new Error(result.detail || 'Submission failed');
+                }
+            } catch (error) {
+                feedbackStatus.textContent = '✗ Failed to submit. Please try again.';
+                feedbackStatus.style.color = '#e74c3c';
+                console.error('Feedback error:', error);
+            } finally {
+                feedbackBtn.disabled = false;
+            }
+        }
     </script>
 </body>
 </html>
