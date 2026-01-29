@@ -236,15 +236,20 @@ async def submit_feedback(req: FeedbackRequest, request: Request):
         discord_webhook_url = os.getenv('DISCORD_WEBHOOK_URL')
         if discord_webhook_url:
             try:
+                # Truncate message and user agent to Discord's limits
+                # Discord limits: description=4096, field value=1024
+                safe_message = req.message[:2000] if req.message else "No message"
+                safe_user_agent = (req.user_agent or "Unknown")[:1000]
+                
                 discord_payload = {
                     "embeds": [{
-                        "title": "🐛 Bug Report / Feedback",
-                        "description": req.message,
+                        "title": "Bug Report / Feedback",  # Removed emoji
+                        "description": safe_message,
                         "color": 15158332,  # Red color
                         "fields": [
                             {"name": "Timestamp", "value": timestamp, "inline": True},
                             {"name": "IP", "value": client_ip, "inline": True},
-                            {"name": "User Agent", "value": req.user_agent or "Unknown", "inline": False}
+                            {"name": "User Agent", "value": safe_user_agent, "inline": False}
                         ]
                     }]
                 }
@@ -255,10 +260,14 @@ async def submit_feedback(req: FeedbackRequest, request: Request):
                     headers={'Content-Type': 'application/json'}
                 )
                 
-                with urllib.request.urlopen(discord_req) as response:
-                    if response.status == 204:
-                        logger.info(f"Feedback sent to Discord: {req.message[:50]}...")
+                with urllib.request.urlopen(discord_req, timeout=10) as response:
+                    if response.status == 204 or response.status == 200:
+                        logger.info(f"Feedback sent to Discord: {safe_message[:50]}...")
                         return {"status": "success", "message": "Feedback submitted successfully!"}
+            except urllib.error.HTTPError as e:
+                error_body = e.read().decode('utf-8') if e.fp else "No error details"
+                logger.error(f"Failed to send to Discord: HTTP Error {e.code}: {e.reason}")
+                logger.error(f"Discord response: {error_body}")
             except Exception as e:
                 logger.error(f"Failed to send to Discord: {e}")
         
