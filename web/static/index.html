@@ -147,30 +147,42 @@
         <h2>Florida Wildfire Risk Assessment System</h2>
         
         <div class="input-group">
-            <label for="grid-density">Grid Density (points along longest edge):</label>
-            <input type="number" id="grid-density" value="20" min="5" max="50" />
-            <small style="color: #999; font-size: 0.85em;">Maximum 1500 points total</small>
+            <label>Latitude</label>
+            <input type="text" id="lat" placeholder="e.g. 27.6648" readonly>
         </div>
-
+        
         <div class="input-group">
-            <label for="date-input">Analysis Date:</label>
-            <input type="date" id="date-input" value="2024-01-15" />
+            <label>Longitude</label>
+            <input type="text" id="lon" placeholder="e.g. -81.5158" readonly>
         </div>
-
-        <button id="analyze-btn">Analyze Region</button>
         
-        <div class="loading" id="loading">⏳ Analyzing...</div>
+        <div class="input-group">
+            <label>Date</label>
+            <input type="date" id="date">
+        </div>
         
-        <div class="warning-badge">
-            <strong>⚠️ Demo Version</strong><br>
-            This is an experimental system. Results may be inaccurate or incomplete.
+        <div class="input-group">
+            <label>Grid Density (Points per edge) <span id="densityLabel" style="font-size:0.8em; color:#7f8c8d;"></span></label>
+            <input type="range" id="gridDensity" min="3" max="50" value="20" oninput="updateDensityDisplay()">
+            <span id="densityVal" style="font-weight:bold; color:#e67e22;">20</span>
+            <div id="pointEstimate" style="font-size:0.75em; color:#7f8c8d; margin-top:3px;"></div>
+        </div>
+        
+        <button id="drawBtn" onclick="toggleDrawMode()">Draw Region</button>
+        <button id="gpsBtn" onclick="useMyLocation()" style="background: #3498db;">Use My Location</button>
+        <button id="predictBtn" onclick="runPrediction()">Analyze Region</button>
+        <button id="clearBtn" onclick="clearAnalysis()" style="background: #95a5a6; margin-top: 5px;">Clear Results</button>
+        <div id="status" class="loading"></div>
+        
+        <div style="margin-top: 15px; padding: 10px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; font-size: 0.8em; color: #856404;">
+            <strong>Warning:</strong> This is an experimental demo. Results may be inaccurate or incomplete. Not intended for real-world fire prediction.
         </div>
         
         <!-- Feedback Section -->
         <div class="feedback-section">
             <h3>Report Bugs / Feedback</h3>
             <textarea id="feedback-text" placeholder="Found a bug? Have suggestions? Let us know..."></textarea>
-            <button id="feedback-btn" onclick="submitFeedback()">Submit Feedback</button>
+            <button id="feedback-btn" onclick="submitFeedback()" style="background: #27ae60;">Submit Feedback</button>
             <div id="feedback-status" class="feedback-status"></div>
         </div>
     </div>
