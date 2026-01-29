@@ -392,7 +392,7 @@ class GEEService:
                                 # Skip this point entirely - it's over ocean
                                 continue
                             
-                            img_stack = np.zeros((257, 257, 16)) # Increased to 16 for debug band
+                            img_stack = np.zeros((257, 257, 16), dtype=np.float32) # Increased to 16 for debug band
                             
                             valid_patch = True
                             all_bands = self.BANDS + ['Temp_Raw']
@@ -439,18 +439,18 @@ class GEEService:
                 batches.append((i // BATCH_SIZE, points[i : i + BATCH_SIZE]))
 
             # Execute in parallel with limited workers to prevent OOM
-            # Reduced from 10 to 4 workers to limit concurrent memory usage
-            # Each patch is ~4MB, so 4 workers * 8 batch = 32 patches = ~128MB concurrent
-            with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-                results = list(executor.map(fetch_batch, batches))
-
-            # Combine results and cleanup
-            for patches, coords in results:
-                all_patches.extend(patches)
-                all_coords.extend(coords)
+            # Each patch is ~4MB (256*256*16*4 bytes), so 3 workers * 8 batch = 24 patches = ~96MB concurrent
+            with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+                # Use executor.map to create an iterator that yields results as they complete
+                results_iterator = executor.map(fetch_batch, batches)
+                
+                # Iterate through results as they become available to keep memory low
+                for patches, coords in results_iterator:
+                    all_patches.extend(patches)
+                    all_coords.extend(coords)
             
             # Explicit memory cleanup after combining results
-            del results
+            del results_iterator
             gc.collect()
                 
             # Store full result in cache before returning
