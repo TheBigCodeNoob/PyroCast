@@ -123,7 +123,7 @@ def predict_heatmap(req: PredictionRequest):
     
     # Max points limit - increased from 450 after memory optimizations
     # (reduced parallel workers 10->4, added gc.collect(), smaller inference batches)
-    MAX_POINTS = 600
+    MAX_POINTS = 1500
     
     try:
         # Validate input bounds
