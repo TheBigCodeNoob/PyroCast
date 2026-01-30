@@ -554,24 +554,46 @@
 
             try {
                 console.log('Starting prediction request...');
+                const requestBody = {
+                    min_lat: selectedBounds.minLat,
+                    max_lat: selectedBounds.maxLat,
+                    min_lon: selectedBounds.minLon,
+                    max_lon: selectedBounds.maxLon,
+                    date: date,
+                    grid_density: gridDensity
+                };
+                console.log('Request body:', requestBody);
+                
+                // First try test endpoint to verify connectivity
+                console.log('Testing connectivity with /test_predict...');
+                const testResponse = await fetch('/test_predict', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody),
+                    signal: AbortSignal.timeout(5000) // 5 second timeout for test
+                }).catch(err => {
+                    console.error('Test fetch failed:', err);
+                    throw new Error(`Test request failed: ${err.message}`);
+                });
+                
+                console.log('Test response:', await testResponse.json());
+                
+                // Now try the real prediction
+                console.log('Sending real prediction request...');
                 const response = await fetch('/predict_heatmap', {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'
                     },
-                    body: JSON.stringify({
-                        min_lat: selectedBounds.minLat,
-                        max_lat: selectedBounds.maxLat,
-                        min_lon: selectedBounds.minLon,
-                        max_lon: selectedBounds.maxLon,
-                        date: date,
-                        grid_density: gridDensity
-                    }),
+                    body: JSON.stringify(requestBody),
                     mode: 'cors',
                     credentials: 'same-origin'
                 }).catch(err => {
-                    console.error('Fetch failed:', err);
+                    console.error('Prediction fetch failed:', err);
                     throw new Error(`Network request failed: ${err.message}`);
                 });
                 

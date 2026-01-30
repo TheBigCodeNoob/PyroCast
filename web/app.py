@@ -124,6 +124,13 @@ def load_resources():
 
 @app.post("/predict_heatmap")
 def predict_heatmap(req: PredictionRequest):
+    # Log that request was received
+    logger.info("=" * 60)
+    logger.info("PREDICTION REQUEST RECEIVED")
+    logger.info(f"Bounds: ({req.min_lat}, {req.min_lon}) to ({req.max_lat}, {req.max_lon})")
+    logger.info(f"Date: {req.date}, Grid Density: {req.grid_density}")
+    logger.info("=" * 60)
+    
     if model is None:
         raise HTTPException(status_code=500, detail="Model not loaded. Please ensure best_fire_model.keras exists.")
     
@@ -222,6 +229,20 @@ def predict_heatmap(req: PredictionRequest):
 async def health_check():
     """Simple health check endpoint."""
     return {"status": "ok", "service": "PyroCast API"}
+
+@app.post("/test_predict")
+async def test_predict(req: PredictionRequest):
+    """Test endpoint to verify prediction requests can be received."""
+    logger.info(f"TEST PREDICT: Received request for bounds ({req.min_lat}, {req.min_lon}) to ({req.max_lat}, {req.max_lon})")
+    return {
+        "status": "test_success",
+        "message": "Prediction request payload received successfully",
+        "data": {
+            "bounds": f"({req.min_lat}, {req.min_lon}) to ({req.max_lat}, {req.max_lon})",
+            "date": req.date,
+            "grid_density": req.grid_density
+        }
+    }
 
 @app.get("/debug_webhook")
 async def debug_webhook():
