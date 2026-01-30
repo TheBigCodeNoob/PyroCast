@@ -259,7 +259,10 @@ async def test_webhook():
         req = urllib.request.Request(
             discord_webhook_url,
             data=json.dumps(test_payload).encode('utf-8'),
-            headers={'Content-Type': 'application/json'}
+            headers={
+                'Content-Type': 'application/json',
+                'User-Agent': 'PyroCast-Bot/1.0 (Wildfire Risk Assessment)'
+            }
         )
         
         with urllib.request.urlopen(req, timeout=10) as response:
@@ -320,7 +323,10 @@ async def submit_feedback(req: FeedbackRequest, request: Request):
                 discord_req = urllib.request.Request(
                     discord_webhook_url,
                     data=json.dumps(discord_payload).encode('utf-8'),
-                    headers={'Content-Type': 'application/json'}
+                    headers={
+                        'Content-Type': 'application/json',
+                        'User-Agent': 'PyroCast-Bot/1.0 (Wildfire Risk Assessment)'
+                    }
                 )
                 
                 with urllib.request.urlopen(discord_req, timeout=10) as response:
