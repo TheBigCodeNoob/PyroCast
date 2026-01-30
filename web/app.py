@@ -216,6 +216,41 @@ def predict_heatmap(req: PredictionRequest):
         logger.error(f"Prediction error: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
 
+@app.get("/test_webhook")
+async def test_webhook():
+    """Test Discord webhook with minimal payload."""
+    discord_webhook_url = os.getenv('DISCORD_WEBHOOK_URL')
+    if not discord_webhook_url:
+        return {"status": "error", "message": "DISCORD_WEBHOOK_URL not configured"}
+    
+    try:
+        # Minimal test payload
+        test_payload = {
+            "content": "Test message from PyroCast - webhook is working!"
+        }
+        
+        req = urllib.request.Request(
+            discord_webhook_url,
+            data=json.dumps(test_payload).encode('utf-8'),
+            headers={'Content-Type': 'application/json'}
+        )
+        
+        with urllib.request.urlopen(req, timeout=10) as response:
+            return {
+                "status": "success",
+                "message": "Webhook test successful!",
+                "response_code": response.status
+            }
+    except urllib.error.HTTPError as e:
+        error_body = e.read().decode('utf-8') if e.fp else "No details"
+        return {
+            "status": "error",
+            "message": f"HTTP {e.code}: {e.reason}",
+            "details": error_body
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
 @app.post("/submit_feedback")
 async def submit_feedback(req: FeedbackRequest, request: Request):
     """Submit user feedback via Discord webhook or logging."""
@@ -237,21 +272,13 @@ async def submit_feedback(req: FeedbackRequest, request: Request):
         if discord_webhook_url:
             try:
                 # Truncate message and user agent to Discord's limits
-                # Discord limits: description=4096, field value=1024
                 safe_message = req.message[:2000] if req.message else "No message"
-                safe_user_agent = (req.user_agent or "Unknown")[:1000]
+                safe_user_agent = (req.user_agent or "Unknown")[:500]
+                safe_ip = client_ip[:100]
                 
+                # Use simple content format instead of embeds (more reliable)
                 discord_payload = {
-                    "embeds": [{
-                        "title": "Bug Report / Feedback",  # Removed emoji
-                        "description": safe_message,
-                        "color": 15158332,  # Red color
-                        "fields": [
-                            {"name": "Timestamp", "value": timestamp, "inline": True},
-                            {"name": "IP", "value": client_ip, "inline": True},
-                            {"name": "User Agent", "value": safe_user_agent, "inline": False}
-                        ]
-                    }]
+                    "content": f"**New Feedback Received**\n\n**Message:** {safe_message}\n**Time:** {timestamp}\n**IP:** {safe_ip}\n**User Agent:** {safe_user_agent}"
                 }
                 
                 discord_req = urllib.request.Request(
@@ -261,7 +288,7 @@ async def submit_feedback(req: FeedbackRequest, request: Request):
                 )
                 
                 with urllib.request.urlopen(discord_req, timeout=10) as response:
-                    if response.status == 204 or response.status == 200:
+                    if response.status in (200, 204):
                         logger.info(f"Feedback sent to Discord: {safe_message[:50]}...")
                         return {"status": "success", "message": "Feedback submitted successfully!"}
             except urllib.error.HTTPError as e:
