@@ -553,9 +553,13 @@
             heatmapLayer.clearLayers();
 
             try {
+                console.log('Starting prediction request...');
                 const response = await fetch('/predict_heatmap', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
                     body: JSON.stringify({
                         min_lat: selectedBounds.minLat,
                         max_lat: selectedBounds.maxLat,
@@ -563,8 +567,15 @@
                         max_lon: selectedBounds.maxLon,
                         date: date,
                         grid_density: gridDensity
-                    })
+                    }),
+                    mode: 'cors',
+                    credentials: 'same-origin'
+                }).catch(err => {
+                    console.error('Fetch failed:', err);
+                    throw new Error(`Network request failed: ${err.message}`);
                 });
+                
+                console.log('Response received:', response.status);
 
                 const result = await response.json();
 
@@ -600,18 +611,26 @@
                 }
 
             } catch (err) {
-                console.error(err);
-                const errorMsg = err.message || 'Connection failed. Please check if the server is running.';
-                status.innerHTML = `Error: ${errorMsg}`;
+                console.error('Prediction error:', err);
+                console.error('Error type:', err.name);
+                console.error('Error message:', err.message);
                 
-                // More helpful error messages
-                if (errorMsg.includes('fetch')) {
-                    alert("Connection Error: Could not reach the server. Make sure the backend is running on port 8000.");
-                } else if (errorMsg.includes('timeout')) {
-                    alert("Timeout: The request took too long. Try a smaller region or lower grid density.");
+                let errorMsg = 'Analysis failed';
+                let userMsg = 'Error: ';
+                
+                if (err.message.includes('NetworkError') || err.message.includes('Failed to fetch') || err.message.includes('Network request failed')) {
+                    errorMsg = 'Cannot connect to server';
+                    userMsg = "Connection Error: Cannot reach the server. This might be caused by:\n\n1. A browser extension blocking the request\n2. Network connectivity issues\n3. Server is down\n\nTry:\n- Disabling browser extensions\n- Using a different browser\n- Checking your internet connection";
+                } else if (err.message.includes('timeout')) {
+                    errorMsg = 'Request timed out';
+                    userMsg = "Timeout: The request took too long. Try a smaller region or lower grid density.";
                 } else {
-                    alert("Error: " + errorMsg);
+                    errorMsg = err.message || 'Unknown error';
+                    userMsg = "Error: " + errorMsg;
                 }
+                
+                status.innerHTML = `<span style="color:#e74c3c;">${errorMsg}</span>`;
+                alert(userMsg);
             } finally {
                 clearInterval(timer);
                 btn.disabled = false;
@@ -829,29 +848,54 @@
             feedbackStatus.style.color = '#666';
             
             try {
+                console.log('Submitting feedback to:', window.location.origin + '/submit_feedback');
+                
                 const response = await fetch('/submit_feedback', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
                     body: JSON.stringify({
                         message: feedbackText,
                         user_agent: navigator.userAgent,
                         timestamp: new Date().toISOString()
-                    })
+                    }),
+                    mode: 'cors',
+                    credentials: 'same-origin'
                 });
                 
-                const result = await response.json();
+                console.log('Response status:', response.status);
                 
-                if (response.ok) {
-                    feedbackStatus.textContent = '✓ Thank you! Feedback submitted successfully.';
-                    feedbackStatus.style.color = '#27ae60';
-                    document.getElementById('feedback-text').value = '';
-                } else {
-                    throw new Error(result.detail || 'Submission failed');
+                if (!response.ok) {
+                    throw new Error(`Server error: ${response.status} ${response.statusText}`);
                 }
+                
+                const result = await response.json();
+                console.log('Response data:', result);
+                
+                feedbackStatus.textContent = '✓ Thank you! Feedback submitted successfully.';
+                feedbackStatus.style.color = '#27ae60';
+                document.getElementById('feedback-text').value = '';
+                
             } catch (error) {
-                feedbackStatus.textContent = '✗ Failed to submit. Please try again.';
+                console.error('Feedback error details:', {
+                    message: error.message,
+                    stack: error.stack,
+                    type: error.name
+                });
+                
+                let errorMsg = '✗ Failed to submit. ';
+                if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
+                    errorMsg += 'Network error - check your connection.';
+                } else if (error.message.includes('CORS')) {
+                    errorMsg += 'CORS error - server configuration issue.';
+                } else {
+                    errorMsg += error.message || 'Please try again.';
+                }
+                
+                feedbackStatus.textContent = errorMsg;
                 feedbackStatus.style.color = '#e74c3c';
-                console.error('Feedback error:', error);
             } finally {
                 feedbackBtn.disabled = false;
             }

@@ -38,8 +38,10 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=3600
 )
 
 # Mount static files (HTML/JS/CSS)
@@ -215,6 +217,11 @@ def predict_heatmap(req: PredictionRequest):
     except Exception as e:
         logger.error(f"Prediction error: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
+
+@app.get("/health")
+async def health_check():
+    """Simple health check endpoint."""
+    return {"status": "ok", "service": "PyroCast API"}
 
 @app.get("/debug_webhook")
 async def debug_webhook():
