@@ -216,12 +216,39 @@ def predict_heatmap(req: PredictionRequest):
         logger.error(f"Prediction error: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
 
+@app.get("/debug_webhook")
+async def debug_webhook():
+    """Debug webhook environment variable."""
+    discord_webhook_url = os.getenv('DISCORD_WEBHOOK_URL')
+    if not discord_webhook_url:
+        return {"status": "error", "message": "DISCORD_WEBHOOK_URL not configured"}
+    
+    return {
+        "configured": True,
+        "length": len(discord_webhook_url),
+        "starts_with": discord_webhook_url[:40] + "...",
+        "ends_with": "..." + discord_webhook_url[-20:],
+        "has_whitespace": discord_webhook_url != discord_webhook_url.strip(),
+        "has_newlines": '\n' in discord_webhook_url or '\r' in discord_webhook_url,
+        "stripped_length": len(discord_webhook_url.strip()),
+        "repr": repr(discord_webhook_url[:50])
+    }
+
 @app.get("/test_webhook")
 async def test_webhook():
     """Test Discord webhook with minimal payload."""
     discord_webhook_url = os.getenv('DISCORD_WEBHOOK_URL')
     if not discord_webhook_url:
         return {"status": "error", "message": "DISCORD_WEBHOOK_URL not configured"}
+    
+    # Clean the URL (remove whitespace, newlines)
+    discord_webhook_url = discord_webhook_url.strip()
+    
+    # Log exact URL being used (masked for security)
+    url_parts = discord_webhook_url.split('/')
+    masked_url = '/'.join(url_parts[:-1]) + '/[TOKEN]' if len(url_parts) > 1 else 'INVALID'
+    logger.info(f"Testing webhook URL: {masked_url}")
+    logger.info(f"URL length: {len(discord_webhook_url)} chars")
     
     try:
         # Minimal test payload
@@ -239,17 +266,23 @@ async def test_webhook():
             return {
                 "status": "success",
                 "message": "Webhook test successful!",
-                "response_code": response.status
+                "response_code": response.status,
+                "url_tested": masked_url
             }
     except urllib.error.HTTPError as e:
         error_body = e.read().decode('utf-8') if e.fp else "No details"
+        logger.error(f"Webhook test failed: {e.code} {e.reason}")
+        logger.error(f"Error body: {error_body}")
         return {
             "status": "error",
             "message": f"HTTP {e.code}: {e.reason}",
-            "details": error_body
+            "details": error_body,
+            "url_tested": masked_url,
+            "hint": "Error 1010 means Discord doesn't recognize this webhook. Check: 1) Webhook still exists in Discord, 2) No typos in URL, 3) Webhook wasn't deleted/regenerated"
         }
     except Exception as e:
-        return {"status": "error", "message": str(e)}
+        logger.error(f"Webhook test exception: {str(e)}")
+        return {"status": "error", "message": str(e), "url_tested": masked_url}
 
 @app.post("/submit_feedback")
 async def submit_feedback(req: FeedbackRequest, request: Request):
@@ -271,6 +304,9 @@ async def submit_feedback(req: FeedbackRequest, request: Request):
         discord_webhook_url = os.getenv('DISCORD_WEBHOOK_URL')
         if discord_webhook_url:
             try:
+                # Clean the URL (remove any whitespace/newlines)
+                discord_webhook_url = discord_webhook_url.strip()
+                
                 # Truncate message and user agent to Discord's limits
                 safe_message = req.message[:2000] if req.message else "No message"
                 safe_user_agent = (req.user_agent or "Unknown")[:500]
