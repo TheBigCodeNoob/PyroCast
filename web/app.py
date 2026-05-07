@@ -69,10 +69,20 @@ class FeedbackRequest(BaseModel):
 @app.on_event("startup")
 def load_resources():
     global model, gee_service, model_runner
-    
-    # 1. Load Model
-    model_path = os.path.join(os.path.dirname(__file__), "A-lot-better-post-data-fix_fixed.keras")
-    
+
+    # 1. Load Model.
+    # Prefer v2 (19-channel) when present, otherwise fall back to v1 (15-channel).
+    # ModelRunner adapts to whichever the model expects.
+    here = os.path.dirname(__file__)
+    v2_path = os.path.join(here, "best_robust_fire_model_v2.keras")
+    v1_path = os.path.join(here, "A-lot-better-post-data-fix_fixed.keras")
+    if os.path.exists(v2_path) and os.path.getsize(v2_path) > 10_000_000:
+        model_path = v2_path
+        print(f"Using v2 model at {model_path}")
+    else:
+        model_path = v1_path
+        print(f"v2 model not available; falling back to v1 at {model_path}")
+
     # Check if file exists and is valid (not LFS pointer)
     needs_download = True
     if os.path.exists(model_path):
@@ -118,9 +128,19 @@ def load_resources():
     else:
         print("WARNING: No valid model available")
 
-    # 2. Initialize Services
+    # 2. Initialize Services.
+    # Tell ModelRunner how many channels the loaded model expects so it can adapt
+    # (v1 was 15ch, v2 is 19ch).
+    expected_channels = None
+    if model is not None:
+        try:
+            shape = model.input_shape  # e.g. (None, 256, 256, 19)
+            expected_channels = shape[-1]
+            print(f"Model expects {expected_channels} input channels.")
+        except Exception as e:
+            print(f"Could not introspect model input shape: {e}")
     gee_service = GEEService()
-    model_runner = ModelRunner()
+    model_runner = ModelRunner(expected_channels=expected_channels)
 
 @app.post("/predict_heatmap")
 def predict_heatmap(req: PredictionRequest):

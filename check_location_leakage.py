@@ -4,12 +4,12 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 import tensorflow as tf
 import math
 
-# Same files as Prepare_Florida_Data.py
-TRAIN_FILE = "Training Data Florida/Florida_Train.tfrecord"
-VAL_FILE = "Training Data Florida/Florida_Val.tfrecord"
+# Same files as Prepare_Florida_Data.py (v2 dataset).
+TRAIN_FILE = "Training Data Florida/Florida_Spatial_Train_v2.tfrecord"
+VAL_FILE = "Training Data Florida/Florida_Spatial_Val_v2.tfrecord"
 
-# Same fingerprinting logic
-BANDS_TO_CHECK = ['Elevation', 'Slope', 'Pop_Density']
+# Must match the fingerprinting logic in Prepare_Florida_Data.py.
+BANDS_TO_CHECK = ['Elevation', 'Pop_Density', 'LC_Forest']
 
 def get_fingerprint(record_bytes):
     """Exact same logic as Prepare_Florida_Data.py"""

@@ -35,11 +35,12 @@ class GEEService:
         # Scale from Dataget.py
         self.SCALE = 20 
         
-        # Bands expected by the model (15 channels)
+        # Bands expected by the model (v2: 19 channels).
+        # Order MUST match Dataget_Florida.py / Training_Florida.py BAND_NAMES.
         self.BANDS = [
             'Blue', 'Green', 'Red', 'NIR', 'SWIR1', 'SWIR2', 'NDVI', 'NDMI',
-            'Temp_Max', 'Humidity_Min', 'Wind_Speed', 'Precip',
-            'Elevation', 'Slope', 'Pop_Density'
+            'Temp_Max', 'Humidity_Min', 'Wind_Speed', 'Precip', 'ERC', 'FM100',
+            'Elevation', 'LC_Forest', 'LC_Wetland', 'LC_Open', 'Pop_Density'
         ]
 
     def _get_gfs_daily(self, geom, date_obj):
@@ -83,19 +84,40 @@ class GEEService:
         # Precip in GFS is rate (kg/m^2/s). Convert to daily equivalent (mm).
         pr = snapshot.select('precipitation_rate').multiply(86400).rename('pr')
 
-        # Combine
-        gfs_img = ee.Image.cat([tmmx, rmin, vs, pr])
-        
+        # GFS doesn't carry ERC/FM100 (those are NFDRS indices computed from GRIDMET).
+        # Pull the most-recent-available GRIDMET image for those two bands.
+        # Drought/fuel-moisture indices change slowly, so a 1-3 day lag is acceptable
+        # and far better than dropping the channels entirely (which would zero them out
+        # and break the model's expectations).
+        gridmet_recent = ee.ImageCollection("IDAHO_EPSCOR/GRIDMET") \
+            .filterDate(date_obj.advance(-30, 'day'), date_obj.advance(1, 'day')) \
+            .sort('system:time_start', False) \
+            .limit(1)
+        gridmet_fallback = ee.Image.constant([0, 0]).rename(['erc', 'fm100'])
+        gridmet_img = ee.Image(ee.Algorithms.If(
+            gridmet_recent.size().gt(0),
+            gridmet_recent.first().select(['erc', 'fm100']),
+            gridmet_fallback
+        ))
+        erc = gridmet_img.select('erc').rename('erc')
+        fm100 = gridmet_img.select('fm100').rename('fm100')
+
+        # Combine all weather bands. ERC/FM100 are at GRIDMET resolution (~4km),
+        # while GFS is ~25km — Earth Engine handles the reprojection automatically
+        # when sampleRegions resamples to scale=20m.
+        gfs_img = ee.Image.cat([tmmx, rmin, vs, pr, erc, fm100])
+
         # Resample for smoothness
         gfs_img = gfs_img.resample('bilinear')
-        
-        # Note: We removed the "lazy" clamp. 
+
+        # Note: We removed the "lazy" clamp.
         # If this works, tmmx will be ~280-310K. If it fails, it will be 0.
         return gfs_img
 
     def _get_image_stack(self, geom, date_obj, weather_img=None):
         """
-        Replicates logic from Dataget.py to build the 15-band feature stack.
+        Replicates logic from Dataget_Florida.py to build the 19-band feature stack
+        (v2: dropped Slope, added ERC, FM100, LC_Forest, LC_Wetland, LC_Open).
         Accepts optional weather_img to override GRIDMET fetching.
         """
         # --- 1. OPTICAL (Sentinel-2) ---
@@ -122,67 +144,82 @@ class GEEService:
         ndvi = s2_normalized.normalizedDifference(['NIR', 'Red']).rename('NDVI')
         ndmi = s2_normalized.normalizedDifference(['NIR', 'SWIR1']).rename('NDMI')
 
-        # --- 2. WEATHER ---
+        # --- 2. WEATHER (now 6 bands: tmmx, rmin, vs, pr, erc, fm100) ---
         if weather_img is None:
-            # Default: Fetch GRIDMET
+            # Default: Fetch GRIDMET (which natively has all 6).
             weather_col = ee.ImageCollection("IDAHO_EPSCOR/GRIDMET") \
                 .filterBounds(geom) \
                 .filterDate(date_obj, date_obj.advance(1, 'day'))
-            
-            weather_fallback = ee.Image.constant([0, 0, 0, 0]).rename(['tmmx', 'rmin', 'vs', 'pr'])
-            
+
+            weather_fallback = ee.Image.constant([0, 0, 0, 0, 0, 0]) \
+                .rename(['tmmx', 'rmin', 'vs', 'pr', 'erc', 'fm100'])
+
             weather = ee.Image(ee.Algorithms.If(
                 weather_col.size().gt(0),
-                weather_col.first(),
+                weather_col.first().select(['tmmx', 'rmin', 'vs', 'pr', 'erc', 'fm100']),
                 weather_fallback
             ))
         else:
-            # Use provided GFS image
+            # GFS path: _get_gfs_daily already attached ERC/FM100 from latest GRIDMET.
             weather = weather_img
 
-        # Normalize Weather (Standard for both GRIDMET and GFS units)
-        # Temp (Kelvin) -> Normalized
+        # Normalize Weather (same constants as Dataget_Florida.py).
         tmmx = weather.select('tmmx').subtract(253.15).divide(50.0).clamp(0, 1).rename('Temp_Max')
-        # Humidity (%) -> Normalized (0-1)
         rmin = weather.select('rmin').divide(100.0).rename('Humidity_Min')
-        # Wind (m/s) -> Normalized
         vs = weather.select('vs').divide(20.0).clamp(0, 1).rename('Wind_Speed')
-        # Precip (mm) -> Normalized
         pr = weather.select('pr').divide(50.0).clamp(0, 1).rename('Precip')
-        
-        # Unmask weather explicitly just in case
+        erc = weather.select('erc').divide(130.0).clamp(0, 1).rename('ERC')
+        fm100 = weather.select('fm100').divide(40.0).clamp(0, 1).rename('FM100')
+
+        # Unmask weather explicitly just in case.
         tmmx = tmmx.unmask(0)
         rmin = rmin.unmask(0)
         vs = vs.unmask(0)
         pr = pr.unmask(0)
+        erc = erc.unmask(0)
+        fm100 = fm100.unmask(0)
 
-        # --- 3. TOPOGRAPHY ---
+        # --- 3. TOPOGRAPHY (Slope dropped in v2) ---
         topo = ee.Image('USGS/SRTMGL1_003').unmask(0)
         elevation = topo.select('elevation').divide(4000.0).clamp(0, 1).rename('Elevation').float()
-        slope = ee.Terrain.slope(topo.select('elevation')).divide(45.0).clamp(0, 1).rename('Slope').float()
 
-        # --- 4. POPULATION ---
-        # Note: Dataget.py uses 2020-2021 fixed date.
+        # --- 4. LAND COVER (NLCD 2021) ---
+        nlcd_col = ee.ImageCollection("USGS/NLCD_RELEASES/2021_REL/NLCD") \
+            .filter(ee.Filter.eq('system:index', '2021'))
+        nlcd = ee.Image(ee.Algorithms.If(
+            nlcd_col.size().gt(0),
+            nlcd_col.first().select('landcover'),
+            ee.Image.constant(0).rename('landcover')
+        )).unmask(0)
+        lc_forest = nlcd.eq(41).Or(nlcd.eq(42)).Or(nlcd.eq(43)) \
+            .rename('LC_Forest').float()
+        lc_wetland = nlcd.eq(90).Or(nlcd.eq(95)) \
+            .rename('LC_Wetland').float()
+        lc_open = nlcd.eq(52).Or(nlcd.eq(71)).Or(nlcd.eq(81)).Or(nlcd.eq(82)) \
+            .rename('LC_Open').float()
+
+        # --- 5. POPULATION ---
         pop_col = ee.ImageCollection("WorldPop/GP/100m/pop").filterDate('2020-01-01', '2021-01-01')
-        
+
         pop = ee.Image(ee.Algorithms.If(
-            pop_col.size().gt(0), 
-            pop_col.first(), 
+            pop_col.size().gt(0),
+            pop_col.first(),
             ee.Image.constant(0).rename('population')
         )).unmask(0)
 
         # Log1p implementation: log(x + 1)
         pop = pop.select('population').add(1).log().divide(10.0).clamp(0, 1).rename('Pop_Density').float()
 
-        # --- 5. STACK ALL ---
+        # --- 6. STACK ALL (19 bands + 1 debug band) ---
         full_stack = ee.Image.cat([
-            s2_normalized, ndvi, ndmi,  # 8 Bands
-            tmmx, rmin, vs, pr,         # 4 Bands
-            elevation, slope,           # 2 Bands
-            pop,                        # 1 Band
-            weather.select('tmmx').rename('Temp_Raw') # 16th Band: Raw Temp for Debugging
-        ]).unmask(0) # GLOBAL UNMASK
-        
+            s2_normalized, ndvi, ndmi,                       # 0-7  optical + indices
+            tmmx, rmin, vs, pr, erc, fm100,                  # 8-13 weather + drought
+            elevation,                                       # 14   terrain
+            lc_forest, lc_wetland, lc_open,                  # 15-17 land cover masks
+            pop,                                             # 18   population
+            weather.select('tmmx').rename('Temp_Raw')        # 19   debug-only raw temp
+        ]).unmask(0)
+
         return full_stack
 
     def get_data_from_bounds(self, min_lat, min_lon, max_lat, max_lon, date_str, grid_density):
@@ -392,11 +429,12 @@ class GEEService:
                                 # Skip this point entirely - it's over ocean
                                 continue
                             
-                            img_stack = np.zeros((257, 257, 16), dtype=np.float32) # Increased to 16 for debug band
-                            
+                            # v2: 19 model channels + 1 debug (Temp_Raw) = 20.
+                            img_stack = np.zeros((257, 257, 20), dtype=np.float32)
+
                             valid_patch = True
                             all_bands = self.BANDS + ['Temp_Raw']
-                            
+
                             for idx, band_name in enumerate(all_bands):
                                 if band_name not in props:
                                     if band_name == 'Temp_Raw': continue
@@ -405,10 +443,12 @@ class GEEService:
                                 arr = np.array(props[band_name])
                                 h, w = arr.shape
                                 img_stack[:h, :w, idx] = arr
-                            
+
                             if valid_patch:
-                                # Additional ocean check: If elevation band is all zeros, likely ocean
-                                elevation_band = img_stack[:, :, 12]
+                                # Additional ocean check: if elevation is mostly zero and NDVI is low,
+                                # it's water. Note: Elevation is at index 14 in v2 (was 12 in v1),
+                                # NDVI is still at index 6.
+                                elevation_band = img_stack[:, :, 14]
                                 ndvi_band = img_stack[:, :, 6]
                                 
                                 # If most of the patch has zero elevation and low NDVI, it's water

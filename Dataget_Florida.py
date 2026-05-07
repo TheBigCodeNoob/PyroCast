@@ -1,4 +1,10 @@
 # Generates Florida fire dataset by sampling fire and non-fire locations from Google Earth Engine
+# v2 feature set:
+#   - Drops Slope (uninformative across flat Florida terrain)
+#   - Adds ERC (Energy Release Component) and FM100 (100hr dead fuel moisture) from GRIDMET
+#       -> Capture accumulated drought stress / fuel dryness, the dominant FL fire driver
+#   - Adds Land Cover masks (Forest / Wetland / Open) from NLCD
+#       -> Lets the model differentiate flatwoods vs swamp vs scrub vs prairie
 import ee
 import sys
 
@@ -8,7 +14,7 @@ BATCH_SIZE = 1200
 NUM_BATCHES = int(TOTAL_SAMPLES / BATCH_SIZE)
 KERNEL_RADIUS = 128
 SCALE = 20
-EXPORT_FOLDER = 'Fire_Prediction_Dataset_Florida_v1'
+EXPORT_FOLDER = 'Fire_Prediction_Dataset_Florida_v2'
 
 try:
     ee.Initialize(project=PROJECT_ID)
@@ -44,12 +50,16 @@ def get_feature_stack(feature):
     ndvi = s2_normalized.normalizedDifference(['NIR', 'Red']).rename('NDVI')
     ndmi = s2_normalized.normalizedDifference(['NIR', 'SWIR1']).rename('NDMI')
 
+    # GRIDMET now also gives us ERC (Energy Release Component) and FM100 (100hr fuel moisture).
+    # These are the two NFDRS indices most predictive of large-fire potential in Florida.
     weather_col = ee.ImageCollection("IDAHO_EPSCOR/GRIDMET") \
         .filterBounds(geom) \
         .filterDate(target_date, target_date.advance(1, 'day'))
-    
-    weather_fallback = ee.Image.constant([0, 0, 0, 0]).rename(['tmmx', 'rmin', 'vs', 'pr'])
-    
+
+    weather_fallback = ee.Image.constant([0, 0, 0, 0, 0, 0]).rename(
+        ['tmmx', 'rmin', 'vs', 'pr', 'erc', 'fm100']
+    )
+
     weather = ee.Image(ee.Algorithms.If(
         weather_col.size().gt(0),
         weather_col.first(),
@@ -60,26 +70,53 @@ def get_feature_stack(feature):
     rmin = weather.select('rmin').divide(100.0).rename('Humidity_Min')
     vs = weather.select('vs').divide(20.0).clamp(0, 1).rename('Wind_Speed')
     pr = weather.select('pr').divide(50.0).clamp(0, 1).rename('Precip')
+    # ERC: GRIDMET range ~0-130, divide by 130 to keep [0,1]
+    erc = weather.select('erc').divide(130.0).clamp(0, 1).rename('ERC')
+    # FM100: percent moisture, GRIDMET range ~0-40, divide by 40
+    fm100 = weather.select('fm100').divide(40.0).clamp(0, 1).rename('FM100')
 
+    # Topography: keep elevation, drop slope (Florida is flat enough that slope is noise).
     topo = ee.Image('USGS/SRTMGL1_003').unmask(0)
     elevation = topo.select('elevation').divide(4000.0).clamp(0, 1).rename('Elevation').float()
-    slope = ee.Terrain.slope(topo.select('elevation')).divide(45.0).clamp(0, 1).rename('Slope').float()
+
+    # Land cover via NLCD CONUS — much more informative than slope in Florida.
+    # Use latest NLCD release; fall back to constant 0 if missing.
+    nlcd_col = ee.ImageCollection("USGS/NLCD_RELEASES/2021_REL/NLCD") \
+        .filter(ee.Filter.eq('system:index', '2021'))
+    nlcd_fallback = ee.Image.constant(0).rename('landcover')
+    nlcd = ee.Image(ee.Algorithms.If(
+        nlcd_col.size().gt(0),
+        nlcd_col.first().select('landcover'),
+        nlcd_fallback
+    )).unmask(0)
+
+    # Forest classes: 41 deciduous, 42 evergreen, 43 mixed
+    lc_forest = nlcd.eq(41).Or(nlcd.eq(42)).Or(nlcd.eq(43)) \
+        .rename('LC_Forest').float()
+    # Wetland classes: 90 woody wetland, 95 emergent herbaceous wetland
+    lc_wetland = nlcd.eq(90).Or(nlcd.eq(95)) \
+        .rename('LC_Wetland').float()
+    # Open / fire-prone non-forest: 52 shrub, 71 grass, 81 pasture, 82 cultivated
+    lc_open = nlcd.eq(52).Or(nlcd.eq(71)).Or(nlcd.eq(81)).Or(nlcd.eq(82)) \
+        .rename('LC_Open').float()
 
     pop_col = ee.ImageCollection("WorldPop/GP/100m/pop").filterDate('2020-01-01', '2021-01-01')
-    
+
     pop = ee.Image(ee.Algorithms.If(
-        pop_col.size().gt(0), 
-        pop_col.first(), 
+        pop_col.size().gt(0),
+        pop_col.first(),
         ee.Image.constant(0).rename('population')
     )).unmask(0)
 
     pop = pop.select('population').add(1).log().divide(10.0).clamp(0, 1).rename('Pop_Density').float()
 
+    # 19-channel stack (was 15): dropped Slope, added ERC, FM100, LC_Forest, LC_Wetland, LC_Open.
     full_stack = ee.Image.cat([
-        s2_normalized, ndvi, ndmi,
-        tmmx, rmin, vs, pr,
-        elevation, slope,
-        pop
+        s2_normalized, ndvi, ndmi,                       # 0-7  optical + indices
+        tmmx, rmin, vs, pr, erc, fm100,                  # 8-13 weather + drought
+        elevation,                                       # 14   terrain
+        lc_forest, lc_wetland, lc_open,                  # 15-17 land cover masks
+        pop                                              # 18   population
     ])
     
     patch = full_stack.neighborhoodToArray(
@@ -158,13 +195,15 @@ def run_export_batches():
     
     columns = [
         'Blue', 'Green', 'Red', 'NIR', 'SWIR1', 'SWIR2', 'NDVI', 'NDMI',
-        'Temp_Max', 'Humidity_Min', 'Wind_Speed', 'Precip',
-        'Elevation', 'Slope', 'Pop_Density', 'label'
+        'Temp_Max', 'Humidity_Min', 'Wind_Speed', 'Precip', 'ERC', 'FM100',
+        'Elevation', 'LC_Forest', 'LC_Wetland', 'LC_Open', 'Pop_Density',
+        'label'
     ]
 
     for i in range(NUM_BATCHES):
-        batch_id = (i + 1) + 10
-        current_seed = (i * 12345) + 400000
+        # Clean numbering for v2 folder (v1 had a +10 offset for re-run continuity).
+        batch_id = i + 1
+        current_seed = (i * 12345) + 700000
         
         print(f"\n[Batch {batch_id}/{NUM_BATCHES}] Preparing...")
         

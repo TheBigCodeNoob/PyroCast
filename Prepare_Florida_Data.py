@@ -8,21 +8,28 @@ import random
 import shutil
 import math
 # ================= CONFIGURATION =================
-# Where the Earth Engine exports landed
-RAW_DATA_DIR = "//workspace//PyroCast//Training Data Florida//"
+# Where the Earth Engine exports landed.
+# Resolves relative to the repo root so this works on any machine (the original
+# hard-coded //workspace//PyroCast// path was specific to one cloud VM).
+import pathlib as _pl
+_REPO_ROOT = _pl.Path(__file__).resolve().parent
+RAW_DATA_DIR = str(_REPO_ROOT / "Training Data Florida")
+# v2 dataset uses the same export filename pattern but in a v2-named folder on Drive.
 RAW_PATTERN  = "Export_Florida_Fire_Dataset_Part_*.tfrecord"
 
-# Final Destination
-OUTPUT_TRAIN = "//workspace//PyroCast//Training Data Florida//Florida_Spatial_Train.tfrecord"
-OUTPUT_VAL   = "//workspace//PyroCast//Training Data Florida//Florida_Spatial_Val.tfrecord"
+# Final destination for the merged & shuffled dataset.
+OUTPUT_TRAIN = str(_REPO_ROOT / "Training Data Florida" / "Florida_Spatial_Train_v2.tfrecord")
+OUTPUT_VAL   = str(_REPO_ROOT / "Training Data Florida" / "Florida_Spatial_Val_v2.tfrecord")
 
 # Split Settings
 VAL_SPLIT_PCT = 0.10  # 10% of LOCATIONS go to Validation
 SEED = 42
 
-# Features for Fingerprinting (Static Bands)
-# 12: Elevation, 13: Slope, 14: Pop
-BANDS_TO_CHECK = ['Elevation', 'Slope', 'Pop_Density']
+# Features for spatial fingerprinting (must all be STATIC bands so the same location
+# always produces the same fingerprint regardless of date).
+# v2: dropped 'Slope' (no longer in feature set), kept Elevation + Pop_Density,
+#     added LC_Forest as a third static signal so fingerprints stay unique.
+BANDS_TO_CHECK = ['Elevation', 'Pop_Density', 'LC_Forest']
 
 # ================= FUNCTIONS =================
 

@@ -12,8 +12,11 @@ import glob
 tf.config.optimizer.set_jit(True)
 
 # ================= CONFIGURATION =================
-TRAIN_DATA_PATH = "//workspace//PyroCast//Training Data Florida//Florida_Spatial_Trai*.tfrecord"
-VAL_DATA_PATH   = "//workspace//PyroCast//Training Data Florida//Florida_Spatial_Va*.tfrecord"
+# Paths resolved relative to the repo so this works on any machine.
+import pathlib as _pl
+_REPO_ROOT = _pl.Path(__file__).resolve().parent
+TRAIN_DATA_PATH = str(_REPO_ROOT / "Training Data Florida" / "Florida_Spatial_Train_v2*.tfrecord")
+VAL_DATA_PATH   = str(_REPO_ROOT / "Training Data Florida" / "Florida_Spatial_Val_v2*.tfrecord")
 
 BATCH_SIZE = 64         
 EPOCHS = 30             
@@ -22,13 +25,14 @@ LABEL_SMOOTHING = 0.05
 
 # Dimensions
 TARGET_DIM = 256       # Input size for the model
-CHANNELS = 15         
+# v2: 19 channels (was 15). Dropped Slope, added ERC, FM100, LC_Forest, LC_Wetland, LC_Open.
+CHANNELS = 19
 
-MODEL_OUTPUT = 'best_robust_fire_model.keras'
+MODEL_OUTPUT = 'best_robust_fire_model_v2.keras'
 
 BAND_NAMES = ['Blue', 'Green', 'Red', 'NIR', 'SWIR1', 'SWIR2', 'NDVI', 'NDMI',
-              'Temp_Max', 'Humidity_Min', 'Wind_Speed', 'Precip',
-              'Elevation', 'Slope', 'Pop_Density']
+              'Temp_Max', 'Humidity_Min', 'Wind_Speed', 'Precip', 'ERC', 'FM100',
+              'Elevation', 'LC_Forest', 'LC_Wetland', 'LC_Open', 'Pop_Density']
 
 # ================= UNIVERSAL PARSER =================
 

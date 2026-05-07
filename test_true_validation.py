@@ -7,20 +7,20 @@ import numpy as np
 import math
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
 
-# Files
-TRAIN_FILE = "Training Data Florida/Florida_Train.tfrecord"
-VAL_FILE = "Training Data Florida/Florida_Val.tfrecord"
-MODEL_FILE = "68-precision-91-auc-86-acc.keras"
-# Same fingerprinting logic
-BANDS_TO_CHECK = ['Elevation', 'Slope', 'Pop_Density']
+# Files (v2 dataset + v2 model).
+TRAIN_FILE = "Training Data Florida/Florida_Spatial_Train_v2.tfrecord"
+VAL_FILE = "Training Data Florida/Florida_Spatial_Val_v2.tfrecord"
+MODEL_FILE = "best_robust_fire_model_v2.keras"
+# Must match the fingerprinting logic in Prepare_Florida_Data.py.
+BANDS_TO_CHECK = ['Elevation', 'Pop_Density', 'LC_Forest']
 
 IMG_SIZE = 256
-CHANNELS = 15
+CHANNELS = 19
 
 ALL_BANDS = [
     'Blue', 'Green', 'Red', 'NIR', 'SWIR1', 'SWIR2', 'NDVI', 'NDMI',
-    'Temp_Max', 'Humidity_Min', 'Wind_Speed', 'Precip',
-    'Elevation', 'Slope', 'Pop_Density'
+    'Temp_Max', 'Humidity_Min', 'Wind_Speed', 'Precip', 'ERC', 'FM100',
+    'Elevation', 'LC_Forest', 'LC_Wetland', 'LC_Open', 'Pop_Density'
 ]
 
 def get_fingerprint(record_bytes):
