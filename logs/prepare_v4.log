@@ -1,0 +1,20 @@
+2026-06-17 12:07:17.931461: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+C:\Users\nonna\miniconda3\Lib\site-packages\h5py\__init__.py:36: UserWarning: h5py is running against HDF5 1.14.6 when it was built against 1.14.5, this may cause problems
+  _warn(("h5py is running against HDF5 {0} when it was built against {1}, "
+2026-06-17 12:07:20.421350: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-17 12:07:22.012233: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-17 12:07:22.040942: I tensorflow/core/kernels/data/tf_record_dataset_op.cc:390] TFRecordDataset `buffer_size` is unspecified, default to 262144
+2026-06-17 12:07:28.100633: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+2026-06-17 12:07:34.050511: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+2026-06-17 12:07:45.366812: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+2026-06-17 12:08:08.094228: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+2026-06-17 12:10:05.272118: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+Found 12 shards.
+[Pass 1] assigning locations...
+  scanned 1000  scanned 2000  scanned 3000  scanned 4000  scanned 5000  scanned 6000
+  total=6438, locations=3148
+[Pass 2] writing GZIP split...
+Done. train=5470, val=968
+  C:\Users\nonna\Downloads\PyroCast-1\Training Data Florida\Florida_Spatial_Train_v4.tfrecord.gz
+  C:\Users\nonna\Downloads\PyroCast-1\Training Data Florida\Florida_Spatial_Val_v4.tfrecord.gz

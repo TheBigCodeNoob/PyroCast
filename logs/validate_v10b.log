@@ -1,0 +1,80 @@
+================================================================
+EXHAUSTIVE VALIDATION — v10b FPA-FOD model
+================================================================
+rows=19902 fire=9973 (human=9389, lightning=508) neg=9929
+
+[1] INTEGRITY
+  unique (lon,lat): 19893/19902
+  pos/neg location overlap: 0
+  season mean-month: fire=5.09 neg=5.12
+
+[2] NEGATIVE CONTROLS (sanity: pipeline not leaking)
+  label-shuffled AUC (expect ~0.50): 0.5154
+  with random-noise feature added, AUC: 0.8105 (should be ~unchanged)
+
+[3] CORE METRIC + CRUTCH CONTROLS
+  FULL as-is             0.8093  (test n=4252, fire=1732)
+  pop-matched            0.7552
+  DistDev-matched        0.7088
+
+[4] ROBUSTNESS
+  block 0.5deg: 0.8124
+  block 1.0deg: 0.8093
+  block 2.0deg: 0.8024
+  model hgb : 0.8093
+  model rf  : 0.8108
+  model lgb : 0.8059
+  model lr  : 0.7772
+  fold-config stability: mean=0.8109 std=0.0020
+  bootstrap 95% CI: [0.7959, 0.8208]
+
+[5] GENERALIZATION
+  leave-region-out (8 regions): mean=0.8066 min=0.7622 max=0.8375
+  future-year (train<=2019 -> test 2020): 0.8190
+
+[6] SUBGROUPS + CAUSALITY of human-access
+  human ignitions AUC nan (n_fire=1598) | lightning nan (n_fire=111)
+  DistDev(km) median: human-fire=0.03 lightning-fire=0.07 neg=0.09
+  -> if human fires sit MUCH closer to development than lightning/neg, DistDev is CAUSAL (cause sets location), not pure reporting bias
+  month  1 AUC: 0.8484 (n=332)
+  month  3 AUC: 0.8186 (n=874)
+  month  5 AUC: 0.8378 (n=481)
+  month  7 AUC: 0.8036 (n=238)
+  month 10 AUC: 0.8129 (n=200)
+
+[7] CALIBRATION + OPERATIONAL
+  Brier score: 0.1764 (lower=better; baseline 0.2414)
+  PR-AUC: 0.7215 (prevalence 0.407)
+  top  1% riskiest: precision=0.857, recall=0.021 (captures 2% of fires)
+  top  5% riskiest: precision=0.877, recall=0.107 (captures 11% of fires)
+  top 10% riskiest: precision=0.819, recall=0.201 (captures 20% of fires)
+  top 20% riskiest: precision=0.769, recall=0.378 (captures 38% of fires)
+  calibration (pred-prob bin -> observed fire rate):
+    [0.0-0.2] pred~0.09 -> observed 0.12 (n=1500)
+    [0.2-0.4] pred~0.29 -> observed 0.33 (n=848)
+    [0.4-0.6] pred~0.50 -> observed 0.54 (n=651)
+    [0.6-0.8] pred~0.70 -> observed 0.67 (n=712)
+    [0.8-1.0] pred~0.88 -> observed 0.80 (n=541)
+
+[8] INTERPRETABILITY
+  permutation importance (top 12):
+    [WHERE] DistDev        +0.0636
+    [WHERE] LC_Developed   +0.0379
+    [WHERE] Pop_Density    +0.0301
+    [when ] tmmx_90        +0.0185
+    [WHERE] EVI            +0.0114
+    [when ] pdsi_0         +0.0064
+    [WHERE] NDVI           +0.0062
+    [when ] pr_365         +0.0056
+    [when ] pr_7           +0.0054
+    [when ] pdsi_traj_90   +0.0050
+    [when ] pr_14          +0.0049
+    [when ] rmin_30        +0.0044
+  ablation where(spatial)   0.7868
+  ablation when(temporal)   0.6381
+  ablation human-access     0.7555
+  ablation no-human-access  0.7512
+
+================================================================
+VALIDATION COMPLETE
+================================================================

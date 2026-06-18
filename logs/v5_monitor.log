@@ -1,0 +1,31 @@
+[12:11:12] v5 {'PENDING': 3, 'RUNNING': 3} | csv local: 0 new: 0
+[12:13:13] v5 {'PENDING': 3, 'RUNNING': 3} | csv local: 0 new: 0
+[12:15:15] v5 {'PENDING': 3, 'RUNNING': 3} | csv local: 0 new: 0
+[12:17:16] v5 {'PENDING': 3, 'RUNNING': 3} | csv local: 0 new: 0
+[12:19:17] v5 {'PENDING': 3, 'RUNNING': 3} | csv local: 0 new: 0
+[12:21:18] v5 {'PENDING': 3, 'RUNNING': 3} | csv local: 0 new: 0
+  downloading Fire_Temporal_v5_Part_3.csv
+[12:23:20] v5 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 1} | csv local: 1 new: 1
+[12:25:21] v5 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 1} | csv local: 1 new: 0
+  downloading Fire_Temporal_v5_Part_1.csv
+[12:27:23] v5 {'PENDING': 1, 'RUNNING': 3, 'SUCCEEDED': 2} | csv local: 2 new: 1
+  downloading Fire_Temporal_v5_Part_2.csv
+[12:29:25] v5 {'RUNNING': 3, 'SUCCEEDED': 3} | csv local: 3 new: 1
+[12:31:26] v5 {'RUNNING': 3, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[12:33:27] v5 {'RUNNING': 3, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[12:35:32] v5 {'RUNNING': 3, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[12:37:34] v5 {'RUNNING': 3, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[12:39:35] v5 {'RUNNING': 3, 'SUCCEEDED': 3} | csv local: 3 new: 0
+  downloading Fire_Temporal_v5_Part_4.csv
+[12:41:37] v5 {'RUNNING': 2, 'SUCCEEDED': 4} | csv local: 4 new: 1
+[12:43:38] v5 {'RUNNING': 2, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[12:45:39] v5 {'RUNNING': 2, 'SUCCEEDED': 4} | csv local: 4 new: 0
+  downloading Fire_Temporal_v5_Part_6.csv
+[12:47:41] v5 {'SUCCEEDED': 5, 'RUNNING': 1} | csv local: 5 new: 1
+[12:49:42] v5 {'SUCCEEDED': 5, 'RUNNING': 1} | csv local: 5 new: 0
+[12:51:43] v5 {'SUCCEEDED': 5, 'RUNNING': 1} | csv local: 5 new: 0
+[12:53:44] v5 {'SUCCEEDED': 5, 'RUNNING': 1} | csv local: 5 new: 0
+  downloading Fire_Temporal_v5_Part_5.csv
+[12:55:46] v5 {'SUCCEEDED': 6} | csv local: 6 new: 1
+[12:57:47] v5 {'SUCCEEDED': 6} | csv local: 6 new: 0
+DONE. csv=6

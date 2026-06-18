@@ -1,0 +1,129 @@
+2026-05-14 09:06:17.336613: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+C:\Users\nonna\miniconda3\Lib\site-packages\h5py\__init__.py:36: UserWarning: h5py is running against HDF5 1.14.6 when it was built against 1.14.5, this may cause problems
+  _warn(("h5py is running against HDF5 {0} when it was built against {1}, "
+2026-05-14 09:06:24.113376: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+======================================================================
+AUDIT PART 2: PyroCast v2
+======================================================================
+
+[A] Loading val + computing mean-feature vectors...
+2026-05-14 09:06:28.421263: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-05-14 09:06:28.466107: I tensorflow/core/kernels/data/tf_record_dataset_op.cc:390] TFRecordDataset `buffer_size` is unspecified, default to 262144
+    loaded 100
+    loaded 200
+    loaded 300
+    loaded 400
+    loaded 500
+    loaded 600
+    loaded 700
+    loaded 800
+    loaded 900
+2026-05-14 09:07:04.928227: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+  Shape Xmeans: (990, 19), y: (990,)
+
+[B] Predicting with v2 model (batched, smaller)...
+  AUC=0.9474  P=0.9417  R=0.7609  TP=452 FP=28 FN=142 TN=368
+
+[A] FPs (predicted fire, actually no-fire): 28
+              Band    FP_mean  AllNeg_mean       Diff
+              Blue     0.0356       0.0474    -0.0118
+             Green     0.0508       0.0650    -0.0143
+               Red     0.0444       0.0594    -0.0150
+               NIR     0.1897       0.2298    -0.0401
+             SWIR1     0.1374       0.1815    -0.0441
+             SWIR2     0.0773       0.1096    -0.0324
+              NDVI     0.5427       0.5550    -0.0122
+              NDMI     0.1417       0.1182    +0.0236
+          Temp_Max     0.9249       0.9353    -0.0103
+      Humidity_Min     0.4831       0.4779    +0.0052
+        Wind_Speed     0.1980       0.1780    +0.0201
+            Precip     0.0385       0.0688    -0.0303
+               ERC     0.1730       0.1623    +0.0106
+             FM100     0.4195       0.4323    -0.0128
+         Elevation     0.0066       0.0078    -0.0011
+         LC_Forest     0.3288       0.2520    +0.0769
+        LC_Wetland     0.4952       0.3323    +0.1629
+           LC_Open     0.1060       0.2810    -0.1750
+       Pop_Density     0.0000       0.0000    +0.0000
+
+    FNs (predicted no-fire, actually fire): 142
+              Band    FN_mean  AllPos_mean       Diff
+              Blue     0.0326       0.0285    +0.0041
+             Green     0.0496       0.0449    +0.0047
+               Red     0.0448       0.0383    +0.0065
+               NIR     0.2138       0.2125    +0.0013
+             SWIR1     0.1567       0.1400    +0.0167
+             SWIR2     0.0869       0.0755    +0.0114
+              NDVI     0.6174       0.6727    -0.0553
+              NDMI     0.1564       0.2085    -0.0521
+          Temp_Max     0.8800       0.8601    +0.0199
+      Humidity_Min     0.4634       0.4475    +0.0160
+        Wind_Speed     0.2000       0.1912    +0.0087
+            Precip     0.1207       0.0675    +0.0531
+               ERC     0.1670       0.1801    -0.0130
+             FM100     0.4304       0.4212    +0.0092
+         Elevation     0.0070       0.0078    -0.0008
+         LC_Forest     0.2963       0.3716    -0.0753
+        LC_Wetland     0.4648       0.4510    +0.0138
+           LC_Open     0.1695       0.1141    +0.0555
+       Pop_Density     0.0000       0.0000    +0.0000
+
+[B] Per-location deduplicated metrics:
+   Each unique fingerprint = ONE decision (mean prediction across samples).
+   Unique locations: 385  (samples: 990)
+   Mixed-label fingerprints: 7 (1.8% — fp aliasing some distinct locations)
+   Loc label dist: fire=58, no-fire=327
+   Per-location AUC: 0.9481  (sample-level: 0.9474)
+   t=0.3: TP= 54 FP= 40 FN=  4 TN=287 | P=0.574 R=0.931
+   t=0.5: TP= 44 FP= 23 FN= 14 TN=304 | P=0.657 R=0.759
+   t=0.7: TP= 37 FP= 14 FN= 21 TN=313 | P=0.725 R=0.638
+
+[C] Logistic regression on mean features only (NO CNN):
+    Train LR on val/2, test on val/2 — gives a lower bound on what a trivial model can do.
+    LR AUC: 0.8753  P=0.8105  R=0.8671  (CNN: AUC=0.9474 P=0.9417)
+    LR coefficient ranking (most predictive at top):
+                 Red: +1.3220  ++++++++++++++++++++++++++
+           LC_Forest: +1.1116  ++++++++++++++++++++++
+               SWIR2: -0.9803  -------------------
+          LC_Wetland: +0.9427  ++++++++++++++++++
+               SWIR1: +0.6840  +++++++++++++
+               Green: -0.6769  -------------
+                NDMI: +0.6348  ++++++++++++
+            Temp_Max: -0.5641  -----------
+                 NIR: -0.4760  ---------
+                Blue: -0.4174  --------
+        Humidity_Min: -0.3823  -------
+             LC_Open: +0.3348  ++++++
+           Elevation: -0.3003  ------
+                NDVI: +0.2537  +++++
+                 ERC: +0.1984  +++
+              Precip: +0.1928  +++
+          Wind_Speed: +0.1250  ++
+               FM100: -0.0476  -
+         Pop_Density: +0.0000  -
+
+[D] Temp_Max distribution (proxy for fire-season check):
+    Temp_Max bin distributions (normalized 0-1):
+           bin      pos     neg
+    [0.0-0.1]      0       0
+    [0.1-0.2]      0       0
+    [0.2-0.3]      0       0
+    [0.3-0.4]      0       0
+    [0.4-0.5]      0       0
+    [0.5-0.6]     11       2
+    [0.6-0.7]     49      11
+    [0.7-0.8]     94      24
+    [0.8-0.9]    204      64
+    [0.9-1.0]    236     295
+    pos mean Temp_Max: 0.8601
+    neg mean Temp_Max: 0.9353
+
+======================================================================
+SUMMARY (Part 2):
+======================================================================
+  Sample-level AUC (CNN):        0.9474
+  Sample-level precision (CNN):  0.9417
+  Per-LOCATION AUC (CNN):        0.9481
+  LR baseline AUC (means only):  0.8753
+  LR baseline precision:         0.8105

@@ -20,8 +20,8 @@ from typing import Iterable
 
 import ee
 
-EXPORT_FOLDER = "Fire_Prediction_Dataset_Florida_v2"
-TASK_DESCRIPTION_PREFIX = "Export_Florida_Fire_Dataset_Part_"
+EXPORT_FOLDER = "Fire_Prediction_Dataset_Florida_v3"
+TASK_DESCRIPTION_PREFIX = "Export_Florida_Fire_Dataset_v3_Part_"
 PROJECT_ID = "gleaming-glass-426122-k0"
 LOCAL_DIR = pathlib.Path(__file__).resolve().parent / "Training Data Florida"
 POLL_INTERVAL_SEC = 120  # 2 minutes between Drive scans

@@ -1,0 +1,35 @@
+Samples: 6438 | features: 259 | fire=3219 | locations=3152
+Train: (5460, 259) (2679 locs) | Val: (978, 259) (473 locs)
+================================================================
+
+MODEL                       val_AUC   grouped_CV_AUC
+----------------------------------------------------------------
+  LogReg                     0.6519      0.6505
+  HistGradientBoosting       0.7664      0.7216
+  RandomForest               0.7661      0.7282
+  HGB+RF blend               0.7735      nan
+----------------------------------------------------------------
+  BEST val AUC: 0.7735   (target 0.80)
+  Reference: v3 honest ceiling ~0.70
+
+Top 20 features (permutation importance, HGB on val):
+  VPD_max                  +0.0098
+  PDSI_90dago_p90          +0.0077
+  ERC_30d_p90              +0.0058
+  PDSI_c32mean             +0.0055
+  PDSI_90dago_p10          +0.0054
+  ERC_30d_c32mean          +0.0052
+  Precip_90d_p10           +0.0050
+  NDVI_90d_max             +0.0049
+  ERC_30d_p10              +0.0048
+  NDVI_90d_p50             +0.0043
+  PDSI_90dago_p50          +0.0039
+  Blue_p10                 +0.0036
+  PDSI_mean                +0.0035
+  Humidity_Min_std         +0.0034
+  PDSI_90dago_mean         +0.0034
+  Precip_30d_p10           +0.0030
+  Precip_30d_mean          +0.0028
+  ERC_30d_c64mean          +0.0028
+  NIR_p90                  +0.0026
+  NIR_c64std               +0.0026

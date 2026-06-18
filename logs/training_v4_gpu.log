@@ -1,0 +1,104 @@
+2026-06-17 12:17:35.580828: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-17 12:17:38.010916: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+GPU: NVIDIA GeForce RTX 5070 | keras backend: torch
+Counting samples...
+2026-06-17 12:17:43.144334: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-17 12:17:43.244376: I tensorflow/core/kernels/data/tf_record_dataset_op.cc:390] TFRecordDataset `buffer_size` is unspecified, default to 262144
+2026-06-17 12:18:42.709268: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+2026-06-17 12:18:52.960075: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+train=5470 val=968
+2026-06-17 12:19:04.130421: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 866 of 2048
+2026-06-17 12:19:14.135225: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 1660 of 2048
+2026-06-17 12:19:19.292710: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:483] Shuffle buffer filled.
+Epoch 1/40
+2026-06-17 12:19:31.290025: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 872 of 2048
+2026-06-17 12:19:44.665425: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:483] Shuffle buffer filled.
+2026-06-17 12:20:52.356866: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 723 of 2048
+
+Epoch 1: val_auc improved from None to 0.57981, saving model to best_robust_fire_model_v4.keras
+
+Epoch 1: finished saving model to best_robust_fire_model_v4.keras
+85/85 - 97s - 1s/step - accuracy: 0.5568 - auc: 0.5759 - loss: 0.7372 - precision: 0.5556 - recall: 0.5648 - val_accuracy: 0.5229 - val_auc: 0.5798 - val_loss: 0.6883 - val_precision: 0.5420 - val_recall: 0.2958 - learning_rate: 1.0000e-04
+Epoch 2/40
+2026-06-17 12:21:02.364647: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 1462 of 2048
+2026-06-17 12:21:10.255939: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:483] Shuffle buffer filled.
+2026-06-17 12:22:47.670603: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 743 of 2048
+
+Epoch 2: val_auc improved from 0.57981 to 0.63859, saving model to best_robust_fire_model_v4.keras
+
+Epoch 2: finished saving model to best_robust_fire_model_v4.keras
+85/85 - 115s - 1s/step - accuracy: 0.5897 - auc: 0.6294 - loss: 0.6830 - precision: 0.5890 - recall: 0.5955 - val_accuracy: 0.5792 - val_auc: 0.6386 - val_loss: 0.6695 - val_precision: 0.5809 - val_recall: 0.5688 - learning_rate: 1.0000e-04
+Epoch 3/40
+2026-06-17 12:22:57.672606: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 1492 of 2048
+2026-06-17 12:23:05.149752: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:483] Shuffle buffer filled.
+2026-06-17 12:24:49.941348: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 733 of 2048
+2026-06-17 12:24:59.945717: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 1432 of 2048
+
+Epoch 3: val_auc did not improve from 0.63859
+85/85 - 133s - 2s/step - accuracy: 0.6147 - auc: 0.6645 - loss: 0.6550 - precision: 0.6122 - recall: 0.6289 - val_accuracy: 0.5698 - val_auc: 0.5837 - val_loss: 0.6883 - val_precision: 0.5528 - val_recall: 0.7312 - learning_rate: 1.0000e-04
+Epoch 4/40
+2026-06-17 12:25:08.356528: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:483] Shuffle buffer filled.
+2026-06-17 12:28:27.920800: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 767 of 2048
+2026-06-17 12:28:46.713077: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:483] Shuffle buffer filled.
+
+Epoch 4: val_auc did not improve from 0.63859
+85/85 - 236s - 3s/step - accuracy: 0.6108 - auc: 0.6732 - loss: 0.6464 - precision: 0.6076 - recall: 0.6323 - val_accuracy: 0.5917 - val_auc: 0.6271 - val_loss: 0.6722 - val_precision: 0.6005 - val_recall: 0.5479 - learning_rate: 1.0000e-04
+Epoch 5/40
+2026-06-17 12:32:30.730532: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 765 of 2048
+2026-06-17 12:32:40.728831: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 1430 of 2048
+
+Epoch 5: val_auc improved from 0.63859 to 0.67063, saving model to best_robust_fire_model_v4.keras
+
+Epoch 5: finished saving model to best_robust_fire_model_v4.keras
+85/85 - 225s - 3s/step - accuracy: 0.6485 - auc: 0.7078 - loss: 0.6277 - precision: 0.6444 - recall: 0.6530 - val_accuracy: 0.6062 - val_auc: 0.6706 - val_loss: 0.7165 - val_precision: 0.5768 - val_recall: 0.7979 - learning_rate: 1.0000e-04
+Epoch 6/40
+2026-06-17 12:32:49.751817: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:483] Shuffle buffer filled.
+2026-06-17 12:35:36.611949: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 754 of 2048
+2026-06-17 12:35:46.616242: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 1480 of 2048
+2026-06-17 12:35:54.590929: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:483] Shuffle buffer filled.
+
+Epoch 6: val_auc did not improve from 0.67063
+85/85 - 205s - 2s/step - accuracy: 0.6506 - auc: 0.7185 - loss: 0.6210 - precision: 0.6438 - recall: 0.6734 - val_accuracy: 0.5771 - val_auc: 0.6154 - val_loss: 0.7045 - val_precision: 0.5974 - val_recall: 0.4729 - learning_rate: 1.0000e-04
+Epoch 7/40
+2026-06-17 12:39:31.826537: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 710 of 2048
+
+Epoch 7: val_auc did not improve from 0.67063
+85/85 - 216s - 3s/step - accuracy: 0.6743 - auc: 0.7373 - loss: 0.6102 - precision: 0.6652 - recall: 0.7042 - val_accuracy: 0.5771 - val_auc: 0.6396 - val_loss: 0.6912 - val_precision: 0.5768 - val_recall: 0.5792 - learning_rate: 1.0000e-04
+Epoch 8/40
+2026-06-17 12:39:51.820752: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 1936 of 2048
+2026-06-17 12:39:53.354612: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:483] Shuffle buffer filled.
+2026-06-17 12:42:18.290099: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 743 of 2048
+2026-06-17 12:42:18.736181: W tensorflow/core/kernels/data/prefetch_autotuner.cc:55] Prefetch autotuner tried to allocate 436207872 bytes after encountering the first element of size 436207872 bytes.This already causes the autotune ram budget to be exceeded. To stay within the ram budget, either increase the ram budget or reduce element size
+2026-06-17 12:42:28.289306: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 1434 of 2048
+
+Epoch 8: val_auc improved from 0.67063 to 0.68577, saving model to best_robust_fire_model_v4.keras
+
+Epoch 8: finished saving model to best_robust_fire_model_v4.keras
+85/85 - 165s - 2s/step - accuracy: 0.6741 - auc: 0.7413 - loss: 0.6054 - precision: 0.6682 - recall: 0.6930 - val_accuracy: 0.6177 - val_auc: 0.6858 - val_loss: 0.6714 - val_precision: 0.6375 - val_recall: 0.5458 - learning_rate: 1.0000e-04
+Epoch 9/40
+2026-06-17 12:42:37.108306: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:483] Shuffle buffer filled.
+2026-06-17 12:46:24.274542: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 746 of 2048
+2026-06-17 12:46:34.274916: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 1444 of 2048
+2026-06-17 12:46:42.934224: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:483] Shuffle buffer filled.
+
+Epoch 9: val_auc did not improve from 0.68577
+85/85 - 260s - 3s/step - accuracy: 0.6835 - auc: 0.7584 - loss: 0.5935 - precision: 0.6751 - recall: 0.7069 - val_accuracy: 0.5969 - val_auc: 0.6488 - val_loss: 0.6782 - val_precision: 0.6332 - val_recall: 0.4604 - learning_rate: 1.0000e-04
+Epoch 10/40
+2026-06-17 12:50:07.778962: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 696 of 2048
+2026-06-17 12:50:17.778370: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 1358 of 2048
+
+Epoch 10: val_auc improved from 0.68577 to 0.68613, saving model to best_robust_fire_model_v4.keras
+
+Epoch 10: finished saving model to best_robust_fire_model_v4.keras
+85/85 - 211s - 2s/step - accuracy: 0.6893 - auc: 0.7667 - loss: 0.5855 - precision: 0.6823 - recall: 0.7108 - val_accuracy: 0.6208 - val_auc: 0.6861 - val_loss: 0.6733 - val_precision: 0.6559 - val_recall: 0.5083 - learning_rate: 1.0000e-04
+Epoch 11/40
+2026-06-17 12:50:27.527646: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:483] Shuffle buffer filled.
+2026-06-17 12:52:47.818457: W tensorflow/core/kernels/data/prefetch_autotuner.cc:55] Prefetch autotuner tried to allocate 436207872 bytes after encountering the first element of size 436207872 bytes.This already causes the autotune ram budget to be exceeded. To stay within the ram budget, either increase the ram budget or reduce element size
+2026-06-17 12:52:49.681491: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 614 of 2048
+
+Epoch 11: val_auc did not improve from 0.68613
+85/85 - 161s - 2s/step - accuracy: 0.7026 - auc: 0.7798 - loss: 0.5748 - precision: 0.6949 - recall: 0.7175 - val_accuracy: 0.6198 - val_auc: 0.6818 - val_loss: 0.6685 - val_precision: 0.5966 - val_recall: 0.7396 - learning_rate: 1.0000e-04
+Epoch 12/40
+2026-06-17 12:53:09.673847: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:453] ShuffleDatasetV3:9: Filling up shuffle buffer (this may take a while): 1810 of 2048
+2026-06-17 12:53:13.155760: I tensorflow/core/kernels/data/shuffle_dataset_op.cc:483] Shuffle buffer filled.

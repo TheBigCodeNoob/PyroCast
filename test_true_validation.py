@@ -7,19 +7,19 @@ import numpy as np
 import math
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
 
-# Files (v2 dataset + v2 model).
-TRAIN_FILE = "Training Data Florida/Florida_Spatial_Train_v2.tfrecord"
-VAL_FILE = "Training Data Florida/Florida_Spatial_Val_v2.tfrecord"
-MODEL_FILE = "best_robust_fire_model_v2.keras"
+# Files (v3 dataset + v3 model).
+TRAIN_FILE = "Training Data Florida/Florida_Spatial_Train_v3.tfrecord"
+VAL_FILE = "Training Data Florida/Florida_Spatial_Val_v3.tfrecord"
+MODEL_FILE = "best_robust_fire_model_v3.keras"
 # Must match the fingerprinting logic in Prepare_Florida_Data.py.
 BANDS_TO_CHECK = ['Elevation', 'Pop_Density', 'LC_Forest']
 
 IMG_SIZE = 256
-CHANNELS = 19
+CHANNELS = 20
 
 ALL_BANDS = [
     'Blue', 'Green', 'Red', 'NIR', 'SWIR1', 'SWIR2', 'NDVI', 'NDMI',
-    'Temp_Max', 'Humidity_Min', 'Wind_Speed', 'Precip', 'ERC', 'FM100',
+    'Temp_Max', 'Humidity_Min', 'Wind_Speed', 'Precip', 'ERC', 'FM100', 'PDSI',
     'Elevation', 'LC_Forest', 'LC_Wetland', 'LC_Open', 'Pop_Density'
 ]
 

@@ -1,0 +1,102 @@
+2026-05-14 08:31:05.993755: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+C:\Users\nonna\miniconda3\Lib\site-packages\h5py\__init__.py:36: UserWarning: h5py is running against HDF5 1.14.6 when it was built against 1.14.5, this may cause problems
+  _warn(("h5py is running against HDF5 {0} when it was built against {1}, "
+2026-05-14 08:31:09.597192: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+============================================================
+TRUE VALIDATION PERFORMANCE TEST
+Testing on UNIQUE validation locations only
+============================================================
+Scanning training set for locations...
+2026-05-14 08:31:11.780855: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-05-14 08:31:11.820821: I tensorflow/core/kernels/data/tf_record_dataset_op.cc:390] TFRecordDataset `buffer_size` is unspecified, default to 262144
+  Scanned 1000 training samples...  Scanned 2000 training samples...  Scanned 3000 training samples...  Scanned 4000 training samples...  Scanned 5000 training samples...  Scanned 6000 training samples...  Scanned 7000 training samples...  Scanned 8000 training samples...  Scanned 9000 training samples...2026-05-14 08:34:47.562868: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+
+  Found 3138 unique training locations
+
+Filtering validation set to unique locations...
+  Processed 500 samples...2026-05-14 08:35:11.326962: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+
+  Unique validation samples: 990
+  Leaked samples (excluded): 0
+
+Parsing samples...
+  Parsed 100/990...  Parsed 200/990...  Parsed 300/990...  Parsed 400/990...  Parsed 500/990...  Parsed 600/990...  Parsed 700/990...  Parsed 800/990...  Parsed 900/990...
+  Complete: 990 samples ready
+
+Dataset shape: (990, 256, 256, 19)
+Label distribution: Fire=594, No-Fire=396
+
+Loading model...
+  Model loaded successfully
+
+Running inference on unique validation locations...
+
+[1m 1/31[0m [37m====================[0m [1m33s[0m 1s/step
+[1m 2/31[0m [32m=[0m[37m===================[0m [1m10s[0m 357ms/step
+[1m 3/31[0m [32m=[0m[37m===================[0m [1m10s[0m 372ms/step
+[1m 4/31[0m [32m==[0m[37m==================[0m [1m10s[0m 377ms/step
+[1m 5/31[0m [32m===[0m[37m=================[0m [1m9s[0m 373ms/step 
+[1m 6/31[0m [32m===[0m[37m=================[0m [1m9s[0m 373ms/step
+[1m 7/31[0m [32m====[0m[37m================[0m [1m8s[0m 369ms/step
+[1m 8/31[0m [32m=====[0m[37m===============[0m [1m8s[0m 366ms/step
+[1m 9/31[0m [32m=====[0m[37m===============[0m [1m7s[0m 363ms/step
+[1m10/31[0m [32m======[0m[37m==============[0m [1m7s[0m 361ms/step
+[1m11/31[0m [32m=======[0m[37m=============[0m [1m7s[0m 361ms/step
+[1m12/31[0m [32m=======[0m[37m=============[0m [1m6s[0m 359ms/step
+[1m13/31[0m [32m========[0m[37m============[0m [1m6s[0m 357ms/step
+[1m14/31[0m [32m=========[0m[37m===========[0m [1m6s[0m 354ms/step
+[1m15/31[0m [32m=========[0m[37m===========[0m [1m5s[0m 352ms/step
+[1m16/31[0m [32m==========[0m[37m==========[0m [1m5s[0m 351ms/step
+[1m17/31[0m [32m==========[0m[37m==========[0m [1m4s[0m 349ms/step
+[1m18/31[0m [32m===========[0m[37m=========[0m [1m4s[0m 348ms/step
+[1m19/31[0m [32m============[0m[37m========[0m [1m4s[0m 346ms/step
+[1m20/31[0m [32m============[0m[37m========[0m [1m3s[0m 343ms/step
+[1m21/31[0m [32m=============[0m[37m=======[0m [1m3s[0m 342ms/step
+[1m22/31[0m [32m==============[0m[37m======[0m [1m3s[0m 341ms/step
+[1m23/31[0m [32m==============[0m[37m======[0m [1m2s[0m 339ms/step
+[1m24/31[0m [32m===============[0m[37m=====[0m [1m2s[0m 338ms/step
+[1m25/31[0m [32m================[0m[37m====[0m [1m2s[0m 337ms/step
+[1m26/31[0m [32m================[0m[37m====[0m [1m1s[0m 336ms/step
+[1m27/31[0m [32m=================[0m[37m===[0m [1m1s[0m 336ms/step
+[1m28/31[0m [32m==================[0m[37m==[0m [1m1s[0m 335ms/step
+[1m29/31[0m [32m==================[0m[37m==[0m [1m0s[0m 335ms/step
+[1m30/31[0m [32m===================[0m[37m=[0m [1m0s[0m 334ms/step
+[1m31/31[0m [32m====================[0m[37m[0m [1m0s[0m 342ms/step
+[1m31/31[0m [32m====================[0m[37m[0m [1m11s[0m 343ms/step
+
+============================================================
+TRUE VALIDATION METRICS (Unique Locations Only)
+============================================================
+
+Samples Tested: 990
+Accuracy:       82.83%
+Precision:      94.17%
+Recall:         76.09%
+F1 Score:       0.8417
+AUC:            0.9474
+
+Confusion Matrix:
+  True Negatives:  368
+  False Positives: 28
+  False Negatives: 142
+  True Positives:  452
+
+============================================================
+COMPARISON
+============================================================
+Reported Metrics (With Leakage):
+  Accuracy:  86%
+  AUC:       91%
+  Precision: 68%
+
+True Metrics (Unique Locations):
+  Accuracy:  82.83%
+  AUC:       94.74%
+  Precision: 94.17%
+
+Performance Gap:
+  Accuracy:  -3.2%
+  AUC:       +3.7%
+  Precision: +26.2%
+============================================================

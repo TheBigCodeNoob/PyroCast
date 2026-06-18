@@ -1,0 +1,35 @@
+2026-06-17 08:21:17.280296: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+C:\Users\nonna\miniconda3\Lib\site-packages\h5py\__init__.py:36: UserWarning: h5py is running against HDF5 1.14.6 when it was built against 1.14.5, this may cause problems
+  _warn(("h5py is running against HDF5 {0} when it was built against {1}, "
+2026-06-17 08:21:19.959306: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+Extracting TRAIN features...
+2026-06-17 08:21:21.565356: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-17 08:21:21.595866: I tensorflow/core/kernels/data/tf_record_dataset_op.cc:390] TFRecordDataset `buffer_size` is unspecified, default to 262144
+  Florida_Spatial_Train_v3.tfrecord: 500
+  Florida_Spatial_Train_v3.tfrecord: 1000
+  Florida_Spatial_Train_v3.tfrecord: 1500
+  Florida_Spatial_Train_v3.tfrecord: 2000
+  Florida_Spatial_Train_v3.tfrecord: 2500
+  Florida_Spatial_Train_v3.tfrecord: 3000
+  Florida_Spatial_Train_v3.tfrecord: 3500
+  Florida_Spatial_Train_v3.tfrecord: 4000
+  Florida_Spatial_Train_v3.tfrecord: 4500
+  Florida_Spatial_Train_v3.tfrecord: 5000
+  Florida_Spatial_Train_v3.tfrecord: 5500
+  Florida_Spatial_Train_v3.tfrecord: 6000
+  Florida_Spatial_Train_v3.tfrecord: 6500
+  Florida_Spatial_Train_v3.tfrecord: 7000
+  Florida_Spatial_Train_v3.tfrecord: 7500
+  Florida_Spatial_Train_v3.tfrecord: 8000
+  Florida_Spatial_Train_v3.tfrecord: 8500
+  Florida_Spatial_Train_v3.tfrecord: 9000
+  Florida_Spatial_Train_v3.tfrecord: 9500
+2026-06-17 08:26:22.739685: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+  train: (9660, 200), fire=4830, groups=474
+Extracting VAL features...
+  Florida_Spatial_Val_v3.tfrecord: 500
+  Florida_Spatial_Val_v3.tfrecord: 1000
+2026-06-17 08:26:53.280895: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+  val: (1000, 200), fire=500, groups=48
+Saved v3_features.npz: train (9660, 200), val (1000, 200)

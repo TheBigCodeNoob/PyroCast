@@ -1,0 +1,188 @@
+[18:17:16] v8 {'PENDING': 12, 'RUNNING': 4} | csv local: 0 new: 0
+[18:19:17] v8 {'PENDING': 12, 'RUNNING': 4} | csv local: 0 new: 0
+[18:21:18] v8 {'PENDING': 12, 'RUNNING': 4} | csv local: 0 new: 0
+[18:23:19] v8 {'PENDING': 12, 'RUNNING': 4} | csv local: 0 new: 0
+[18:25:21] v8 {'PENDING': 12, 'RUNNING': 4} | csv local: 0 new: 0
+[18:27:22] v8 {'PENDING': 12, 'RUNNING': 4} | csv local: 0 new: 0
+[18:29:23] v8 {'PENDING': 12, 'RUNNING': 4} | csv local: 0 new: 0
+[18:31:24] v8 {'PENDING': 12, 'RUNNING': 4} | csv local: 0 new: 0
+[18:33:25] v8 {'PENDING': 12, 'RUNNING': 4} | csv local: 0 new: 0
+[18:35:27] v8 {'PENDING': 12, 'RUNNING': 4} | csv local: 0 new: 0
+  downloading Fire_Ignition_v8_pos_4.csv
+  downloading Fire_Ignition_v8_pos_1.csv
+[18:37:30] v8 {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 2} | csv local: 2 new: 2
+[18:39:31] v8 {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 2} | csv local: 2 new: 0
+[18:41:32] v8 {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 2} | csv local: 2 new: 0
+[18:43:34] v8 {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 2} | csv local: 2 new: 0
+[18:45:35] v8 {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 2} | csv local: 2 new: 0
+[18:47:36] v8 {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 2} | csv local: 2 new: 0
+[18:49:37] v8 {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 2} | csv local: 2 new: 0
+[18:51:39] v8 {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 2} | csv local: 2 new: 0
+  downloading Fire_Ignition_v8_pos_2.csv
+[18:53:41] v8 {'PENDING': 10, 'RUNNING': 3, 'SUCCEEDED': 3} | csv local: 3 new: 1
+[18:55:42] v8 {'PENDING': 9, 'RUNNING': 4, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[18:57:43] v8 {'PENDING': 9, 'RUNNING': 4, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[18:59:44] v8 {'PENDING': 9, 'RUNNING': 4, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[19:01:45] v8 {'PENDING': 9, 'RUNNING': 4, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[19:03:47] v8 {'PENDING': 9, 'RUNNING': 4, 'SUCCEEDED': 3} | csv local: 3 new: 0
+  downloading Fire_Ignition_v8_pos_3.csv
+[19:05:49] v8 {'PENDING': 8, 'RUNNING': 4, 'SUCCEEDED': 4} | csv local: 4 new: 1
+  downloading Fire_Ignition_v8_pos_7.csv
+[19:07:51] v8 {'PENDING': 7, 'RUNNING': 4, 'SUCCEEDED': 5} | csv local: 5 new: 1
+[19:09:52] v8 {'PENDING': 7, 'RUNNING': 4, 'SUCCEEDED': 5} | csv local: 5 new: 0
+[19:11:53] v8 {'PENDING': 7, 'RUNNING': 4, 'SUCCEEDED': 5} | csv local: 5 new: 0
+[19:13:55] v8 {'PENDING': 7, 'RUNNING': 4, 'SUCCEEDED': 5} | csv local: 5 new: 0
+[19:15:56] v8 {'PENDING': 7, 'RUNNING': 4, 'SUCCEEDED': 5} | csv local: 5 new: 0
+[19:17:57] v8 {'PENDING': 7, 'RUNNING': 4, 'SUCCEEDED': 5} | csv local: 5 new: 0
+[19:19:59] v8 {'PENDING': 7, 'RUNNING': 4, 'SUCCEEDED': 5} | csv local: 5 new: 0
+  downloading Fire_Ignition_v8_pos_5.csv
+[19:22:01] v8 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 6} | csv local: 6 new: 1
+[19:24:02] v8 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[19:26:03] v8 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[19:28:05] v8 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[19:30:06] v8 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[19:32:07] v8 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[19:34:08] v8 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[19:36:10] v8 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 6} | csv local: 6 new: 0
+  downloading Fire_Ignition_v8_pos_6.csv
+[19:38:12] v8 {'PENDING': 6, 'RUNNING': 3, 'SUCCEEDED': 7} | csv local: 7 new: 1
+  downloading Fire_Ignition_v8_pos_9.csv
+[19:40:14] v8 {'PENDING': 5, 'RUNNING': 3, 'SUCCEEDED': 8} | csv local: 8 new: 1
+[19:42:16] v8 {'PENDING': 5, 'RUNNING': 3, 'SUCCEEDED': 8} | csv local: 8 new: 0
+[19:44:17] v8 {'PENDING': 5, 'RUNNING': 3, 'SUCCEEDED': 8} | csv local: 8 new: 0
+[19:46:18] v8 {'PENDING': 5, 'RUNNING': 3, 'SUCCEEDED': 8} | csv local: 8 new: 0
+[19:48:20] v8 {'PENDING': 5, 'RUNNING': 3, 'SUCCEEDED': 8} | csv local: 8 new: 0
+[19:50:21] v8 {'PENDING': 5, 'RUNNING': 3, 'SUCCEEDED': 8} | csv local: 8 new: 0
+[19:52:22] v8 {'PENDING': 5, 'RUNNING': 3, 'SUCCEEDED': 8} | csv local: 8 new: 0
+[19:54:23] v8 {'PENDING': 5, 'RUNNING': 3, 'SUCCEEDED': 8} | csv local: 8 new: 0
+[19:56:24] v8 {'PENDING': 5, 'RUNNING': 3, 'SUCCEEDED': 8} | csv local: 8 new: 0
+[19:58:26] v8 {'PENDING': 5, 'RUNNING': 3, 'SUCCEEDED': 8} | csv local: 8 new: 0
+[20:00:28] v8 {'PENDING': 5, 'RUNNING': 3, 'SUCCEEDED': 8} | csv local: 8 new: 0
+[20:02:29] v8 {'PENDING': 5, 'RUNNING': 3, 'SUCCEEDED': 8} | csv local: 8 new: 0
+[20:04:30] v8 {'PENDING': 5, 'RUNNING': 3, 'SUCCEEDED': 8} | csv local: 8 new: 0
+[20:06:32] v8 {'PENDING': 5, 'RUNNING': 3, 'SUCCEEDED': 8} | csv local: 8 new: 0
+[20:08:33] v8 {'PENDING': 5, 'RUNNING': 3, 'SUCCEEDED': 8} | csv local: 8 new: 0
+[20:10:35] v8 {'PENDING': 5, 'RUNNING': 3, 'SUCCEEDED': 8} | csv local: 8 new: 0
+  downloading Fire_Ignition_v8_pos_8.csv
+[20:12:37] v8 {'PENDING': 4, 'RUNNING': 3, 'SUCCEEDED': 9} | csv local: 9 new: 1
+[20:14:38] v8 {'PENDING': 4, 'RUNNING': 3, 'SUCCEEDED': 9} | csv local: 9 new: 0
+[20:16:39] v8 {'PENDING': 4, 'RUNNING': 3, 'SUCCEEDED': 9} | csv local: 9 new: 0
+[20:18:41] v8 {'PENDING': 4, 'RUNNING': 3, 'SUCCEEDED': 9} | csv local: 9 new: 0
+[20:20:42] v8 {'PENDING': 4, 'RUNNING': 3, 'SUCCEEDED': 9} | csv local: 9 new: 0
+[20:22:43] v8 {'PENDING': 4, 'RUNNING': 3, 'SUCCEEDED': 9} | csv local: 9 new: 0
+[20:24:45] v8 {'PENDING': 4, 'RUNNING': 3, 'SUCCEEDED': 9} | csv local: 9 new: 0
+[20:26:46] v8 {'PENDING': 4, 'RUNNING': 3, 'SUCCEEDED': 9} | csv local: 9 new: 0
+[20:28:47] v8 {'PENDING': 4, 'RUNNING': 3, 'SUCCEEDED': 9} | csv local: 9 new: 0
+[20:30:48] v8 {'PENDING': 4, 'RUNNING': 3, 'SUCCEEDED': 9} | csv local: 9 new: 0
+[20:32:49] v8 {'PENDING': 3, 'RUNNING': 4, 'SUCCEEDED': 9} | csv local: 9 new: 0
+  downloading Fire_Ignition_v8_neg_1.csv
+[20:34:52] v8 {'PENDING': 3, 'RUNNING': 3, 'SUCCEEDED': 10} | csv local: 10 new: 1
+[20:36:53] v8 {'PENDING': 3, 'RUNNING': 3, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[20:38:54] v8 {'PENDING': 3, 'RUNNING': 3, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[20:40:55] v8 {'PENDING': 3, 'RUNNING': 3, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[20:42:56] v8 {'PENDING': 3, 'RUNNING': 3, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[20:44:58] v8 {'PENDING': 3, 'RUNNING': 3, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[20:46:59] v8 {'PENDING': 2, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[20:49:00] v8 {'PENDING': 2, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[20:51:01] v8 {'PENDING': 2, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+  downloading Fire_Ignition_v8_pos_10.csv
+[20:53:04] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 1
+[20:55:05] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 0
+[20:57:06] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 0
+[20:59:07] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 0
+[21:01:08] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 0
+[21:03:10] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 0
+[21:05:11] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 0
+[21:07:12] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 0
+[21:09:13] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 0
+[21:11:15] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 0
+[21:13:16] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 0
+[21:15:17] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 0
+[21:17:18] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 0
+[21:19:19] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 0
+[21:21:21] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 0
+[21:23:22] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 0
+[21:25:23] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 0
+[21:27:25] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 0
+[21:29:26] v8 {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 0
+  downloading Fire_Ignition_v8_neg_2.csv
+[21:31:27] v8 {'PENDING': 1, 'RUNNING': 3, 'SUCCEEDED': 12} | csv local: 12 new: 1
+[21:33:29] v8 {'PENDING': 1, 'RUNNING': 3, 'SUCCEEDED': 12} | csv local: 12 new: 0
+[21:35:30] v8 {'PENDING': 1, 'RUNNING': 3, 'SUCCEEDED': 12} | csv local: 12 new: 0
+[21:37:31] v8 {'PENDING': 1, 'RUNNING': 3, 'SUCCEEDED': 12} | csv local: 12 new: 0
+[21:39:32] v8 {'PENDING': 1, 'RUNNING': 3, 'SUCCEEDED': 12} | csv local: 12 new: 0
+[21:41:34] v8 {'PENDING': 1, 'RUNNING': 3, 'SUCCEEDED': 12} | csv local: 12 new: 0
+[21:43:35] v8 {'PENDING': 1, 'RUNNING': 3, 'SUCCEEDED': 12} | csv local: 12 new: 0
+[21:45:36] v8 {'PENDING': 1, 'RUNNING': 3, 'SUCCEEDED': 12} | csv local: 12 new: 0
+[21:47:37] v8 {'PENDING': 1, 'RUNNING': 3, 'SUCCEEDED': 12} | csv local: 12 new: 0
+[21:49:38] v8 {'PENDING': 1, 'RUNNING': 3, 'SUCCEEDED': 12} | csv local: 12 new: 0
+[21:51:39] v8 {'PENDING': 1, 'RUNNING': 3, 'SUCCEEDED': 12} | csv local: 12 new: 0
+[21:53:40] v8 {'PENDING': 1, 'RUNNING': 3, 'SUCCEEDED': 12} | csv local: 12 new: 0
+[21:55:42] v8 {'PENDING': 1, 'RUNNING': 3, 'SUCCEEDED': 12} | csv local: 12 new: 0
+[21:57:43] v8 {'PENDING': 1, 'RUNNING': 3, 'SUCCEEDED': 12} | csv local: 12 new: 0
+[21:59:44] v8 {'PENDING': 1, 'RUNNING': 3, 'SUCCEEDED': 12} | csv local: 12 new: 0
+  downloading Fire_Ignition_v8_neg_3.csv
+[22:01:46] v8 {'PENDING': 1, 'RUNNING': 2, 'SUCCEEDED': 13} | csv local: 13 new: 1
+[22:03:47] v8 {'RUNNING': 3, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[22:05:48] v8 {'RUNNING': 3, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[22:07:49] v8 {'RUNNING': 3, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[22:09:51] v8 {'RUNNING': 3, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[22:11:52] v8 {'RUNNING': 3, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[22:13:53] v8 {'RUNNING': 3, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[22:15:54] v8 {'RUNNING': 3, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[22:17:55] v8 {'RUNNING': 3, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[22:19:57] v8 {'RUNNING': 3, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[22:21:59] v8 {'RUNNING': 3, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[22:24:00] v8 {'RUNNING': 3, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[22:26:02] v8 {'RUNNING': 3, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[22:28:03] v8 {'RUNNING': 3, 'SUCCEEDED': 13} | csv local: 13 new: 0
+  downloading Fire_Ignition_v8_neg_4.csv
+[22:30:05] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 1
+[22:32:06] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[22:34:07] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[22:36:08] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[22:38:09] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[22:40:10] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[22:42:11] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[22:44:13] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[22:46:14] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[22:48:15] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[22:50:16] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[22:52:17] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[22:54:19] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[22:56:20] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[22:58:21] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[23:00:23] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[23:02:24] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[23:04:24] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[23:06:26] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[23:08:27] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[23:10:28] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[23:12:29] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[23:14:31] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[23:16:32] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[23:18:33] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[23:20:35] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[23:22:36] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[23:24:37] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[23:26:38] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[23:28:40] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[23:30:41] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[23:32:42] v8 {'RUNNING': 2, 'SUCCEEDED': 14} | csv local: 14 new: 0
+  downloading Fire_Ignition_v8_neg_6.csv
+[23:34:44] v8 {'SUCCEEDED': 15, 'RUNNING': 1} | csv local: 15 new: 1
+[23:36:46] v8 {'SUCCEEDED': 15, 'RUNNING': 1} | csv local: 15 new: 0
+[23:38:47] v8 {'SUCCEEDED': 15, 'RUNNING': 1} | csv local: 15 new: 0
+[23:40:47] v8 {'SUCCEEDED': 15, 'RUNNING': 1} | csv local: 15 new: 0
+[23:42:49] v8 {'SUCCEEDED': 15, 'RUNNING': 1} | csv local: 15 new: 0
+[23:44:49] v8 {'SUCCEEDED': 15, 'RUNNING': 1} | csv local: 15 new: 0
+[23:46:51] v8 {'SUCCEEDED': 15, 'RUNNING': 1} | csv local: 15 new: 0
+[23:48:52] v8 {'SUCCEEDED': 15, 'RUNNING': 1} | csv local: 15 new: 0
+[23:50:53] v8 {'SUCCEEDED': 15, 'RUNNING': 1} | csv local: 15 new: 0
+[23:52:54] v8 {'SUCCEEDED': 15, 'RUNNING': 1} | csv local: 15 new: 0
+[23:54:56] v8 {'SUCCEEDED': 15, 'RUNNING': 1} | csv local: 15 new: 0
+[23:56:57] v8 {'SUCCEEDED': 15, 'RUNNING': 1} | csv local: 15 new: 0
+  downloading Fire_Ignition_v8_neg_5.csv
+[23:58:59] v8 {'SUCCEEDED': 16} | csv local: 16 new: 1
+[00:01:00] v8 {'SUCCEEDED': 16} | csv local: 16 new: 0
+DONE. csv=16

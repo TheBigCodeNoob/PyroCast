@@ -1,0 +1,95 @@
+[09:34:32] v10 {'PENDING': 12, 'RUNNING': 2} | csv local: 0 new: 0
+[09:36:33] v10 {'PENDING': 12, 'RUNNING': 2} | csv local: 0 new: 0
+[09:38:35] v10 {'PENDING': 12, 'RUNNING': 2} | csv local: 0 new: 0
+[09:40:36] v10 {'PENDING': 12, 'RUNNING': 2} | csv local: 0 new: 0
+[09:42:37] v10 {'PENDING': 12, 'RUNNING': 2} | csv local: 0 new: 0
+[09:44:39] v10 {'PENDING': 12, 'RUNNING': 2} | csv local: 0 new: 0
+[09:46:40] v10 {'PENDING': 12, 'RUNNING': 2} | csv local: 0 new: 0
+[09:48:41] v10 {'PENDING': 12, 'RUNNING': 2} | csv local: 0 new: 0
+[09:50:42] v10 {'PENDING': 12, 'RUNNING': 2} | csv local: 0 new: 0
+[09:52:43] v10 {'PENDING': 12, 'RUNNING': 2} | csv local: 0 new: 0
+[09:54:44] v10 {'PENDING': 12, 'RUNNING': 2} | csv local: 0 new: 0
+  downloading Fire_Ignition_v10_pos_2.csv
+[09:56:47] v10 {'PENDING': 11, 'RUNNING': 2, 'SUCCEEDED': 1} | csv local: 1 new: 1
+  downloading Fire_Ignition_v10_pos_1.csv
+[09:58:49] v10 {'PENDING': 10, 'RUNNING': 2, 'SUCCEEDED': 2} | csv local: 2 new: 1
+[10:00:51] v10 {'PENDING': 10, 'RUNNING': 2, 'SUCCEEDED': 2} | csv local: 2 new: 0
+[10:02:52] v10 {'PENDING': 10, 'RUNNING': 2, 'SUCCEEDED': 2} | csv local: 2 new: 0
+[10:04:54] v10 {'PENDING': 10, 'RUNNING': 2, 'SUCCEEDED': 2} | csv local: 2 new: 0
+[10:06:55] v10 {'PENDING': 10, 'RUNNING': 2, 'SUCCEEDED': 2} | csv local: 2 new: 0
+[10:08:56] v10 {'PENDING': 10, 'RUNNING': 2, 'SUCCEEDED': 2} | csv local: 2 new: 0
+[10:10:58] v10 {'PENDING': 10, 'RUNNING': 2, 'SUCCEEDED': 2} | csv local: 2 new: 0
+[10:12:59] v10 {'PENDING': 10, 'RUNNING': 2, 'SUCCEEDED': 2} | csv local: 2 new: 0
+[10:15:00] v10 {'PENDING': 10, 'RUNNING': 2, 'SUCCEEDED': 2} | csv local: 2 new: 0
+[10:17:02] v10 {'PENDING': 10, 'RUNNING': 2, 'SUCCEEDED': 2} | csv local: 2 new: 0
+[10:19:03] v10 {'PENDING': 10, 'RUNNING': 2, 'SUCCEEDED': 2} | csv local: 2 new: 0
+[10:21:04] v10 {'PENDING': 10, 'RUNNING': 2, 'SUCCEEDED': 2} | csv local: 2 new: 0
+[10:23:05] v10 {'PENDING': 10, 'RUNNING': 2, 'SUCCEEDED': 2} | csv local: 2 new: 0
+  downloading Fire_Ignition_v10_pos_3.csv
+[10:25:07] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 1
+[10:27:08] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[10:29:09] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[10:31:10] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[10:33:12] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[10:35:13] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[10:37:15] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[10:39:16] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[10:41:17] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[10:43:18] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[10:45:19] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[10:47:20] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[10:49:22] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[10:51:23] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[10:53:24] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[10:55:25] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[10:57:26] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[10:59:27] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[11:01:29] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[11:03:30] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[11:05:31] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[11:07:32] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[11:09:33] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[11:11:34] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[11:13:35] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[11:15:36] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[11:17:37] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[11:19:38] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[11:21:39] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[11:23:41] v10 {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[11:25:42] v10 {'PENDING': 8, 'RUNNING': 3, 'SUCCEEDED': 3} | csv local: 3 new: 0
+  downloading Fire_Ignition_v10_pos_5.csv
+[11:27:44] v10 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 4} | csv local: 4 new: 1
+[11:29:45] v10 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[11:31:46] v10 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[11:33:47] v10 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[11:35:48] v10 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[11:37:50] v10 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[11:39:51] v10 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[11:41:53] v10 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[11:43:54] v10 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[11:45:55] v10 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[11:47:56] v10 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[11:49:58] v10 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[11:51:59] v10 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[11:54:00] v10 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[11:56:01] v10 {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 4} | csv local: 4 new: 0
+  downloading Fire_Ignition_v10_pos_7.csv
+[11:58:03] v10 {'PENDING': 6, 'RUNNING': 3, 'SUCCEEDED': 5} | csv local: 5 new: 1
+[12:00:05] v10 {'PENDING': 6, 'RUNNING': 3, 'SUCCEEDED': 5} | csv local: 5 new: 0
+[12:02:06] v10 {'PENDING': 6, 'RUNNING': 3, 'SUCCEEDED': 5} | csv local: 5 new: 0
+Traceback (most recent call last):
+  File "C:\Users\nonna\Downloads\PyroCast-1\monitor_ignition_v10.py", line 75, in <module>
+    main()
+  File "C:\Users\nonna\Downloads\PyroCast-1\monitor_ignition_v10.py", line 58, in main
+    for fol in folders(d):
+               ^^^^^^^^^^
+  File "C:\Users\nonna\Downloads\PyroCast-1\monitor_ignition_v10.py", line 28, in folders
+    return d.files().list(q=(f"name='{EXPORT_FOLDER}' and mimeType='application/vnd.google-apps.folder' and trashed=false"), fields="files(id)").execute().get("files", [])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nonna\miniconda3\envs\pyrocast_cuda\Lib\site-packages\googleapiclient\_helpers.py", line 130, in positional_wrapper
+    return wrapped(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\nonna\miniconda3\envs\pyrocast_cuda\Lib\site-packages\googleapiclient\http.py", line 938, in execute
+    raise HttpError(resp, content, uri=self.uri)
+googleapiclient.errors.HttpError: <HttpError 500 when requesting https://www.googleapis.com/drive/v3/files?q=name%3D%27Fire_Ignition_Florida_v10%27+and+mimeType%3D%27application%2Fvnd.google-apps.folder%27+and+trashed%3Dfalse&fields=files%28id%29&alt=json returned "Internal Error". Details: "[{'message': 'Internal Error', 'domain': 'global', 'reason': 'internalError'}]">
+ERROR conda.cli.main_run:execute(127): `conda run python monitor_ignition_v10.py` failed. (See above for error)

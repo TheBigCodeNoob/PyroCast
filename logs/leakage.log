@@ -1,0 +1,48 @@
+2026-05-14 06:34:38.935105: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+C:\Users\nonna\miniconda3\Lib\site-packages\h5py\__init__.py:36: UserWarning: h5py is running against HDF5 1.14.6 when it was built against 1.14.5, this may cause problems
+  _warn(("h5py is running against HDF5 {0} when it was built against {1}, "
+2026-05-14 06:34:46.200936: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+============================================================
+LOCATION LEAKAGE CHECKER
+============================================================
+Using same fingerprinting logic as Prepare_Florida_Data.py
+Fingerprint bands: ['Elevation', 'Pop_Density', 'LC_Forest']
+
+Analyzing TRAINING SET...
+2026-05-14 06:34:49.407222: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-05-14 06:34:49.451560: I tensorflow/core/kernels/data/tf_record_dataset_op.cc:390] TFRecordDataset `buffer_size` is unspecified, default to 262144
+  Processed 1000 samples...  Processed 2000 samples...  Processed 3000 samples...  Processed 4000 samples...  Processed 5000 samples...  Processed 6000 samples...  Processed 7000 samples...  Processed 8000 samples...  Processed 9000 samples...2026-05-14 06:41:47.555221: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+  Complete: 9952 samples
+  Unique Locations: 3138
+  Total Samples: 9952
+  Avg Samples/Location: 3.17
+  Min Samples/Location: 1
+  Max Samples/Location: 428
+
+Analyzing VALIDATION SET...
+2026-05-14 06:42:15.886801: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+  Complete: 990 samples
+  Unique Locations: 336
+  Total Samples: 990
+  Avg Samples/Location: 2.95
+  Min Samples/Location: 1
+  Max Samples/Location: 29
+
+============================================================
+LEAKAGE ANALYSIS
+============================================================
+[OK] NO LEAKAGE DETECTED
+  Train and validation sets have completely separate locations
+
+============================================================
+SUMMARY
+============================================================
+Training Locations:   3138
+Training Samples:     9952
+Validation Locations: 336
+Validation Samples:   990
+Total Unique Locations: 3474
+Overlapping Locations:  0
+Location Isolation:     100.0%
+============================================================

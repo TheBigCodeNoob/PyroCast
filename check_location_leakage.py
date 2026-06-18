@@ -4,9 +4,9 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 import tensorflow as tf
 import math
 
-# Same files as Prepare_Florida_Data.py (v2 dataset).
-TRAIN_FILE = "Training Data Florida/Florida_Spatial_Train_v2.tfrecord"
-VAL_FILE = "Training Data Florida/Florida_Spatial_Val_v2.tfrecord"
+# Same files as Prepare_Florida_Data.py (v3 dataset).
+TRAIN_FILE = "Training Data Florida/Florida_Spatial_Train_v3.tfrecord"
+VAL_FILE = "Training Data Florida/Florida_Spatial_Val_v3.tfrecord"
 
 # Must match the fingerprinting logic in Prepare_Florida_Data.py.
 BANDS_TO_CHECK = ['Elevation', 'Pop_Density', 'LC_Forest']
@@ -88,14 +88,14 @@ def main():
     overlap = train_locs.intersection(val_locs)
     
     if overlap:
-        print(f"🚨 LEAKAGE DETECTED! {len(overlap)} locations appear in BOTH train and val")
+        print(f"!! LEAKAGE DETECTED !! {len(overlap)} locations appear in BOTH train and val")
         print(f"   This represents {len(overlap)/len(train_locs)*100:.2f}% of train locations")
         print(f"   and {len(overlap)/len(val_locs)*100:.2f}% of val locations")
         print("\n   Example overlapping locations:")
         for i, loc in enumerate(list(overlap)[:5]):
             print(f"     {i+1}. {loc}")
     else:
-        print("✓ NO LEAKAGE DETECTED")
+        print("[OK] NO LEAKAGE DETECTED")
         print("  Train and validation sets have completely separate locations")
     
     print("\n" + "="*60)

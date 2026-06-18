@@ -1,0 +1,245 @@
+2026-06-17 08:10:13.019597: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-17 08:10:15.003522: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-06-17 08:10:18.043594: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: SSE3 SSE4.1 SSE4.2 AVX AVX2 AVX512F AVX512_VNNI AVX512_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-06-17 08:10:18.091230: I tensorflow/core/kernels/data/tf_record_dataset_op.cc:390] TFRecordDataset `buffer_size` is unspecified, default to 262144
+======================================================================
+AUDIT: PyroCast v3 (matched temporal negatives + PDSI)
+======================================================================
+
+[1/9] Loading validation set...
+    loaded 100
+    loaded 200
+    loaded 300
+    loaded 400
+    loaded 500
+    loaded 600
+    loaded 700
+    loaded 800
+    loaded 900
+    loaded 1000
+2026-06-17 08:10:30.610610: I tensorflow/core/framework/local_rendezvous.cc:407] Local rendezvous is aborting with status: OUT_OF_RANGE: End of sequence
+  Val shape: (1000, 256, 256, 20)
+  Label distribution: fire=500, no-fire=500
+  Class balance: fire=0.500
+
+[2/9] Per-channel mean by class:
+            Band   pos_mean   neg_mean     diff  pos_std  neg_std
+            Blue     0.0347     0.0386  -0.0039   0.0484   0.0652
+           Green     0.0518     0.0549  -0.0031   0.0472   0.0623
+             Red     0.0462     0.0495  -0.0033   0.0494   0.0630
+             NIR     0.2189     0.2151  +0.0038   0.0686   0.0843
+           SWIR1     0.1575     0.1603  -0.0028   0.0713   0.0779
+           SWIR2     0.0888     0.0916  -0.0028   0.0590   0.0622
+            NDVI     0.6587     0.6200  +0.0387   0.1886   0.2378
+            NDMI     0.1745     0.1492  +0.0253   0.1724   0.1738
+        Temp_Max     0.8710     0.8970  -0.0259   0.1142   0.1065
+    Humidity_Min     0.4407     0.4286  +0.0121   0.1130   0.1124
+      Wind_Speed     0.1941     0.1916  +0.0025   0.0794   0.0751
+          Precip     0.0713     0.0653  +0.0060   0.1790   0.1651
+             ERC     0.1779     0.1962  -0.0183   0.0588   0.0645
+           FM100     0.4246     0.4067  +0.0179   0.0551   0.0563
+            PDSI     0.5947     0.5250  +0.0696   0.1011   0.1116
+       Elevation     0.0073     0.0073  +0.0000   0.0039   0.0039
+       LC_Forest     0.3599     0.3599  +0.0000   0.4800   0.4800
+      LC_Wetland     0.4329     0.4329  +0.0000   0.4955   0.4955
+         LC_Open     0.1387     0.1387  +0.0000   0.3457   0.3457
+     Pop_Density     0.0000     0.0000  +0.0000   0.0000   0.0000
+
+[3/9] Loading v3 model + running predictions...
+  Model input: (None, 256, 256, 20)
+
+[1m 1/63[0m [37m━━━━━━━━━━━━━━━━━━━━[0m [1m19s[0m 319ms/step
+[1m 2/63[0m [37m━━━━━━━━━━━━━━━━━━━━[0m [1m3s[0m 54ms/step  
+[1m 3/63[0m [37m━━━━━━━━━━━━━━━━━━━━[0m [1m3s[0m 54ms/step
+[1m 4/63[0m [32m━[0m[37m━━━━━━━━━━━━━━━━━━━[0m [1m3s[0m 54ms/step
+[1m 5/63[0m [32m━[0m[37m━━━━━━━━━━━━━━━━━━━[0m [1m3s[0m 54ms/step
+[1m 6/63[0m [32m━[0m[37m━━━━━━━━━━━━━━━━━━━[0m [1m3s[0m 55ms/step
+[1m 7/63[0m [32m━━[0m[37m━━━━━━━━━━━━━━━━━━[0m [1m3s[0m 55ms/step
+[1m 8/63[0m [32m━━[0m[37m━━━━━━━━━━━━━━━━━━[0m [1m3s[0m 55ms/step
+[1m 9/63[0m [32m━━[0m[37m━━━━━━━━━━━━━━━━━━[0m [1m2s[0m 54ms/step
+[1m10/63[0m [32m━━━[0m[37m━━━━━━━━━━━━━━━━━[0m [1m2s[0m 54ms/step
+[1m11/63[0m [32m━━━[0m[37m━━━━━━━━━━━━━━━━━[0m [1m2s[0m 54ms/step
+[1m12/63[0m [32m━━━[0m[37m━━━━━━━━━━━━━━━━━[0m [1m2s[0m 54ms/step
+[1m13/63[0m [32m━━━━[0m[37m━━━━━━━━━━━━━━━━[0m [1m2s[0m 54ms/step
+[1m14/63[0m [32m━━━━[0m[37m━━━━━━━━━━━━━━━━[0m [1m2s[0m 54ms/step
+[1m15/63[0m [32m━━━━[0m[37m━━━━━━━━━━━━━━━━[0m [1m2s[0m 55ms/step
+[1m16/63[0m [32m━━━━━[0m[37m━━━━━━━━━━━━━━━[0m [1m2s[0m 55ms/step
+[1m17/63[0m [32m━━━━━[0m[37m━━━━━━━━━━━━━━━[0m [1m2s[0m 55ms/step
+[1m18/63[0m [32m━━━━━[0m[37m━━━━━━━━━━━━━━━[0m [1m2s[0m 55ms/step
+[1m19/63[0m [32m━━━━━━[0m[37m━━━━━━━━━━━━━━[0m [1m2s[0m 55ms/step
+[1m20/63[0m [32m━━━━━━[0m[37m━━━━━━━━━━━━━━[0m [1m2s[0m 55ms/step
+[1m21/63[0m [32m━━━━━━[0m[37m━━━━━━━━━━━━━━[0m [1m2s[0m 55ms/step
+[1m22/63[0m [32m━━━━━━[0m[37m━━━━━━━━━━━━━━[0m [1m2s[0m 55ms/step
+[1m23/63[0m [32m━━━━━━━[0m[37m━━━━━━━━━━━━━[0m [1m2s[0m 55ms/step
+[1m24/63[0m [32m━━━━━━━[0m[37m━━━━━━━━━━━━━[0m [1m2s[0m 55ms/step
+[1m25/63[0m [32m━━━━━━━[0m[37m━━━━━━━━━━━━━[0m [1m2s[0m 55ms/step
+[1m26/63[0m [32m━━━━━━━━[0m[37m━━━━━━━━━━━━[0m [1m2s[0m 55ms/step
+[1m27/63[0m [32m━━━━━━━━[0m[37m━━━━━━━━━━━━[0m [1m1s[0m 55ms/step
+[1m28/63[0m [32m━━━━━━━━[0m[37m━━━━━━━━━━━━[0m [1m1s[0m 55ms/step
+[1m29/63[0m [32m━━━━━━━━━[0m[37m━━━━━━━━━━━[0m [1m1s[0m 55ms/step
+[1m30/63[0m [32m━━━━━━━━━[0m[37m━━━━━━━━━━━[0m [1m1s[0m 55ms/step
+[1m31/63[0m [32m━━━━━━━━━[0m[37m━━━━━━━━━━━[0m [1m1s[0m 55ms/step
+[1m32/63[0m [32m━━━━━━━━━━[0m[37m━━━━━━━━━━[0m [1m1s[0m 55ms/step
+[1m33/63[0m [32m━━━━━━━━━━[0m[37m━━━━━━━━━━[0m [1m1s[0m 55ms/step
+[1m34/63[0m [32m━━━━━━━━━━[0m[37m━━━━━━━━━━[0m [1m1s[0m 56ms/step
+[1m35/63[0m [32m━━━━━━━━━━━[0m[37m━━━━━━━━━[0m [1m1s[0m 55ms/step
+[1m36/63[0m [32m━━━━━━━━━━━[0m[37m━━━━━━━━━[0m [1m1s[0m 55ms/step
+[1m37/63[0m [32m━━━━━━━━━━━[0m[37m━━━━━━━━━[0m [1m1s[0m 55ms/step
+[1m38/63[0m [32m━━━━━━━━━━━━[0m[37m━━━━━━━━[0m [1m1s[0m 55ms/step
+[1m39/63[0m [32m━━━━━━━━━━━━[0m[37m━━━━━━━━[0m [1m1s[0m 55ms/step
+[1m40/63[0m [32m━━━━━━━━━━━━[0m[37m━━━━━━━━[0m [1m1s[0m 55ms/step
+[1m41/63[0m [32m━━━━━━━━━━━━━[0m[37m━━━━━━━[0m [1m1s[0m 55ms/step
+[1m42/63[0m [32m━━━━━━━━━━━━━[0m[37m━━━━━━━[0m [1m1s[0m 55ms/step
+[1m43/63[0m [32m━━━━━━━━━━━━━[0m[37m━━━━━━━[0m [1m1s[0m 55ms/step
+[1m44/63[0m [32m━━━━━━━━━━━━━[0m[37m━━━━━━━[0m [1m1s[0m 55ms/step
+[1m45/63[0m [32m━━━━━━━━━━━━━━[0m[37m━━━━━━[0m [1m0s[0m 55ms/step
+[1m46/63[0m [32m━━━━━━━━━━━━━━[0m[37m━━━━━━[0m [1m0s[0m 55ms/step
+[1m47/63[0m [32m━━━━━━━━━━━━━━[0m[37m━━━━━━[0m [1m0s[0m 55ms/step
+[1m48/63[0m [32m━━━━━━━━━━━━━━━[0m[37m━━━━━[0m [1m0s[0m 55ms/step
+[1m49/63[0m [32m━━━━━━━━━━━━━━━[0m[37m━━━━━[0m [1m0s[0m 55ms/step
+[1m50/63[0m [32m━━━━━━━━━━━━━━━[0m[37m━━━━━[0m [1m0s[0m 55ms/step
+[1m51/63[0m [32m━━━━━━━━━━━━━━━━[0m[37m━━━━[0m [1m0s[0m 55ms/step
+[1m52/63[0m [32m━━━━━━━━━━━━━━━━[0m[37m━━━━[0m [1m0s[0m 56ms/step
+[1m53/63[0m [32m━━━━━━━━━━━━━━━━[0m[37m━━━━[0m [1m0s[0m 55ms/step
+[1m54/63[0m [32m━━━━━━━━━━━━━━━━━[0m[37m━━━[0m [1m0s[0m 55ms/step
+[1m55/63[0m [32m━━━━━━━━━━━━━━━━━[0m[37m━━━[0m [1m0s[0m 55ms/step
+[1m56/63[0m [32m━━━━━━━━━━━━━━━━━[0m[37m━━━[0m [1m0s[0m 55ms/step
+[1m57/63[0m [32m━━━━━━━━━━━━━━━━━━[0m[37m━━[0m [1m0s[0m 55ms/step
+[1m58/63[0m [32m━━━━━━━━━━━━━━━━━━[0m[37m━━[0m [1m0s[0m 55ms/step
+[1m59/63[0m [32m━━━━━━━━━━━━━━━━━━[0m[37m━━[0m [1m0s[0m 55ms/step
+[1m60/63[0m [32m━━━━━━━━━━━━━━━━━━━[0m[37m━[0m [1m0s[0m 55ms/step
+[1m61/63[0m [32m━━━━━━━━━━━━━━━━━━━[0m[37m━[0m [1m0s[0m 55ms/step
+[1m62/63[0m [32m━━━━━━━━━━━━━━━━━━━[0m[37m━[0m [1m0s[0m 55ms/step
+[1m63/63[0m [32m━━━━━━━━━━━━━━━━━━━━[0m[37m[0m [1m4s[0m 55ms/step
+  Predictions: min=0.0064, max=0.9574, mean=0.5629
+  Pos predictions mean: 0.6101
+  Neg predictions mean: 0.5158
+
+[4/9] Prediction-probability histogram (val):
+         bin   total   fire  nofire
+  [0.0-0.1]      7      0       7
+  [0.1-0.2]     27      8      19
+  [0.2-0.3]     27      1      26
+  [0.3-0.4]     53     16      37
+  [0.4-0.5]    119     34      85
+  [0.5-0.6]    337    163     174
+  [0.6-0.7]    291    178     113
+  [0.7-0.8]    112     73      39
+  [0.8-0.9]     20     20       0
+  [0.9-1.0]      7      7       0
+
+[5/9] Precision/recall at multiple thresholds:
+  t=0.1: TP= 500 FP= 493 FN=   0 TN=   7 | P=0.504 R=1.000
+  t=0.2: TP= 492 FP= 474 FN=   8 TN=  26 | P=0.509 R=0.984
+  t=0.3: TP= 491 FP= 448 FN=   9 TN=  52 | P=0.523 R=0.982
+  t=0.4: TP= 475 FP= 411 FN=  25 TN=  89 | P=0.536 R=0.950
+  t=0.5: TP= 441 FP= 326 FN=  59 TN= 174 | P=0.575 R=0.882
+  t=0.6: TP= 278 FP= 152 FN= 222 TN= 348 | P=0.647 R=0.556
+  t=0.7: TP= 100 FP=  39 FN= 400 TN= 461 | P=0.719 R=0.200
+  t=0.8: TP=  27 FP=   0 FN= 473 TN= 500 | P=1.000 R=0.054
+  t=0.9: TP=   7 FP=   0 FN= 493 TN= 500 | P=1.000 R=0.014
+  AUC: 0.6934
+
+[6/9] Ablation: feature-group importance
+  Strategy: replace channel groups with 0.5 (neutral) and re-score AUC.
+  AUC, weather wiped:       0.5033  (full: 0.6934, delta -0.1901)
+  AUC, S2 imagery wiped:    0.5907  (full: 0.6934, delta -0.1027)
+  AUC, terrain/LC wiped:    0.5752  (full: 0.6934, delta -0.1181)
+  AUC, ONLY weather:        0.5129  (full: 0.6934, delta -0.1805)
+  AUC, ONLY S2 imagery:     0.4408  (full: 0.6934, delta -0.2526)
+  AUC, ONLY terrain/LC:     0.5001  (full: 0.6934, delta -0.1933)
+
+[7/9] Zero-fingerprint cluster:
+  Val samples with FP (0,0,0): 0 of 1000 (0.0%)
+  Top 5 most-common val fingerprints:
+    (0.01, 0.0, 0.654)  count=60  fire=30 nofire=30  pred_mean=0.568
+    (0.001, 0.0, 0.008)  count=60  fire=30 nofire=30  pred_mean=0.536
+    (0.013, 0.0, 0.008)  count=20  fire=10 nofire=10  pred_mean=0.611
+    (0.005, 0.0, 0.166)  count=20  fire=10 nofire=10  pred_mean=0.598
+    (0.003, 0.0, 0.103)  count=20  fire=10 nofire=10  pred_mean=0.563
+
+[8/9] Examining FPs and FNs at default threshold 0.5:
+  FPs (predicted fire, actually no-fire): 326
+              Band    FP_mean  AllNeg_mean     Diff
+              Blue     0.0356       0.0386  -0.0030
+             Green     0.0521       0.0549  -0.0029
+               Red     0.0472       0.0495  -0.0023
+               NIR     0.2113       0.2151  -0.0038
+             SWIR1     0.1580       0.1603  -0.0023
+             SWIR2     0.0899       0.0916  -0.0017
+              NDVI     0.6068       0.6200  -0.0132
+              NDMI     0.1461       0.1492  -0.0032
+          Temp_Max     0.8794       0.8970  -0.0175
+      Humidity_Min     0.4453       0.4286  +0.0167
+        Wind_Speed     0.2005       0.1916  +0.0089
+            Precip     0.0664       0.0653  +0.0011
+               ERC     0.1863       0.1962  -0.0099
+             FM100     0.4170       0.4067  +0.0104
+              PDSI     0.5489       0.5250  +0.0239
+         Elevation     0.0068       0.0073  -0.0005
+         LC_Forest     0.3288       0.3599  -0.0311
+        LC_Wetland     0.4574       0.4329  +0.0245
+           LC_Open     0.1369       0.1387  -0.0018
+       Pop_Density     0.0000       0.0000  +0.0000
+
+  FNs (predicted no-fire, actually fire): 59
+              Band    FN_mean  AllPos_mean     Diff
+              Blue     0.0712       0.0347  +0.0365
+             Green     0.0882       0.0518  +0.0364
+               Red     0.0806       0.0462  +0.0344
+               NIR     0.2567       0.2189  +0.0377
+             SWIR1     0.2023       0.1575  +0.0448
+             SWIR2     0.1283       0.0888  +0.0395
+              NDVI     0.5956       0.6587  -0.0631
+              NDMI     0.1339       0.1745  -0.0406
+          Temp_Max     0.9622       0.8710  +0.0912
+      Humidity_Min     0.4105       0.4407  -0.0301
+        Wind_Speed     0.2079       0.1941  +0.0138
+            Precip     0.0813       0.0713  +0.0100
+               ERC     0.2110       0.1779  +0.0332
+             FM100     0.3969       0.4246  -0.0277
+              PDSI     0.5156       0.5947  -0.0790
+         Elevation     0.0072       0.0073  -0.0001
+         LC_Forest     0.3857       0.3599  +0.0258
+        LC_Wetland     0.3968       0.4329  -0.0361
+           LC_Open     0.1469       0.1387  +0.0082
+       Pop_Density     0.0000       0.0000  +0.0000
+
+[9/9] Quick single-pixel logistic regression baseline:
+  Question: how much do the mean-feature values alone predict fire?
+  Logistic regression on mean features only, AUC: 0.7262
+  Logistic regression coefficients (standardized):
+             SWIR2: +1.5379
+              PDSI: +0.7771
+              NDMI: +0.5069
+              Blue: -0.4592
+             SWIR1: -0.4260
+             FM100: +0.3552
+              NDVI: +0.3334
+               NIR: -0.3307
+            Precip: -0.1596
+               ERC: -0.1353
+             Green: -0.1312
+        LC_Wetland: +0.0980
+           LC_Open: +0.0974
+         LC_Forest: -0.0767
+      Humidity_Min: +0.0652
+          Temp_Max: +0.0604
+               Red: -0.0550
+        Wind_Speed: -0.0545
+         Elevation: +0.0033
+       Pop_Density: +0.0000
+
+======================================================================
+SUMMARY
+======================================================================
+  Full model AUC:                0.6934
+  AUC w/o weather:               0.5033  (drop: 0.1901)
+  AUC w/o S2:                    0.5907  (drop: 0.1027)
+  AUC w/o terrain:               0.5752  (drop: 0.1181)
+  AUC weather-only:              0.5129
+  AUC S2-only:                   0.4408
+  AUC terrain-only:              0.5001
+  LR baseline on mean features:  0.7262
+======================================================================

@@ -1,0 +1,37 @@
+Google Earth Engine initialized successfully.
+============================================================
+FLORIDA/SE FIRE DATASET v4 (temporal trends + many more unique fires)
+============================================================
+Region: Southeast US | MTBS 2017-01-01+ | 3219 unique fires
+Schema: 1 positive + 1 matched-1yr-prior negative per fire -> 6438 samples
+Channels: 26 (v3 was 20; dropped Pop_Density, added 7 temporal)
+============================================================
+[Batch 1/12] part in [0.000,0.083) -> submitting Export_Florida_Fire_Dataset_v4_Part_1
+  Task ID: OHCPQAEAETUVMND5WPFF6C4U (Submitted)
+[Batch 2/12] part in [0.083,0.167) -> submitting Export_Florida_Fire_Dataset_v4_Part_2
+  Task ID: M7NGQW5NLA2COADTVFHPFQQK (Submitted)
+[Batch 3/12] part in [0.167,0.250) -> submitting Export_Florida_Fire_Dataset_v4_Part_3
+  Task ID: SMIHNBMYFC36WZNUI5CSKAII (Submitted)
+[Batch 4/12] part in [0.250,0.333) -> submitting Export_Florida_Fire_Dataset_v4_Part_4
+  Task ID: IMHBD7JMTWFT332ZGLX65HFG (Submitted)
+[Batch 5/12] part in [0.333,0.417) -> submitting Export_Florida_Fire_Dataset_v4_Part_5
+  Task ID: GOXMDAZEH5FUXN3Y2KCIEIT5 (Submitted)
+[Batch 6/12] part in [0.417,0.500) -> submitting Export_Florida_Fire_Dataset_v4_Part_6
+  Task ID: UZGGDB4PDW6HHHVWEIWQVN2Y (Submitted)
+[Batch 7/12] part in [0.500,0.583) -> submitting Export_Florida_Fire_Dataset_v4_Part_7
+  Task ID: P3SGHV6XVEZBLMQAN67W3ORT (Submitted)
+[Batch 8/12] part in [0.583,0.667) -> submitting Export_Florida_Fire_Dataset_v4_Part_8
+  Task ID: GQQOI7IXHRBACQ73CKAQ7AUC (Submitted)
+[Batch 9/12] part in [0.667,0.750) -> submitting Export_Florida_Fire_Dataset_v4_Part_9
+  Task ID: 4W7PWTJ2Z3SJ73TYD2MB6DRU (Submitted)
+[Batch 10/12] part in [0.750,0.833) -> submitting Export_Florida_Fire_Dataset_v4_Part_10
+  Task ID: TLTXK2MVOTGYF344LFQRHQP2 (Submitted)
+[Batch 11/12] part in [0.833,0.917) -> submitting Export_Florida_Fire_Dataset_v4_Part_11
+  Task ID: PDVFM4LTKI26CACUUEW2SHK2 (Submitted)
+[Batch 12/12] part in [0.917,1.000) -> submitting Export_Florida_Fire_Dataset_v4_Part_12
+  Task ID: AFRIDEDTCM6N5BKTNDPJYY2I (Submitted)
+
+============================================================
+All v4 tasks submitted. Monitor at https://code.earthengine.google.com/tasks
+Download from Drive folder: 'Fire_Prediction_Dataset_Florida_v4' into 'Training Data Florida/v4/'
+============================================================

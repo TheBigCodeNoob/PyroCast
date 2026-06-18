@@ -1,0 +1,128 @@
+Output dir: C:\Users\nonna\Downloads\PyroCast-1\Training Data Florida\v4
+[08:38:10] v4 tasks (12): {'PENDING': 10, 'RUNNING': 2}
+  shards local: 0 | newly downloaded: 0
+[08:41:12] v4 tasks (12): {'PENDING': 10, 'RUNNING': 2}
+  shards local: 0 | newly downloaded: 0
+[08:44:13] v4 tasks (12): {'PENDING': 10, 'RUNNING': 2}
+  shards local: 0 | newly downloaded: 0
+[08:47:14] v4 tasks (12): {'PENDING': 10, 'RUNNING': 2}
+  shards local: 0 | newly downloaded: 0
+[08:50:17] v4 tasks (12): {'PENDING': 10, 'RUNNING': 2}
+  shards local: 0 | newly downloaded: 0
+[08:53:18] v4 tasks (12): {'PENDING': 10, 'RUNNING': 2}
+  shards local: 0 | newly downloaded: 0
+[08:56:19] v4 tasks (12): {'PENDING': 10, 'RUNNING': 2}
+  shards local: 0 | newly downloaded: 0
+[08:59:20] v4 tasks (12): {'PENDING': 10, 'RUNNING': 2}
+  shards local: 0 | newly downloaded: 0
+[09:02:21] v4 tasks (12): {'PENDING': 10, 'RUNNING': 2}
+  shards local: 0 | newly downloaded: 0
+[09:05:22] v4 tasks (12): {'PENDING': 10, 'RUNNING': 2}
+  shards local: 0 | newly downloaded: 0
+[09:08:23] v4 tasks (12): {'PENDING': 10, 'RUNNING': 2}
+  shards local: 0 | newly downloaded: 0
+[09:11:24] v4 tasks (12): {'PENDING': 10, 'RUNNING': 2}
+  shards local: 0 | newly downloaded: 0
+[09:14:25] v4 tasks (12): {'PENDING': 9, 'RUNNING': 2, 'SUCCEEDED': 1}
+  Downloading Export_Florida_Fire_Dataset_v4_Part_2.tfrecord.gz (615.0 MB) ...
+  shards local: 1 | newly downloaded: 1
+[09:18:55] v4 tasks (12): {'PENDING': 8, 'RUNNING': 2, 'SUCCEEDED': 2}
+  Downloading Export_Florida_Fire_Dataset_v4_Part_1.tfrecord.gz (702.7 MB) ...
+  shards local: 2 | newly downloaded: 1
+[09:22:55] v4 tasks (12): {'PENDING': 8, 'RUNNING': 2, 'SUCCEEDED': 2}
+  shards local: 2 | newly downloaded: 0
+[09:25:56] v4 tasks (12): {'PENDING': 8, 'RUNNING': 2, 'SUCCEEDED': 2}
+  shards local: 2 | newly downloaded: 0
+[09:28:57] v4 tasks (12): {'PENDING': 8, 'RUNNING': 2, 'SUCCEEDED': 2}
+  shards local: 2 | newly downloaded: 0
+[09:31:58] v4 tasks (12): {'PENDING': 8, 'RUNNING': 2, 'SUCCEEDED': 2}
+  shards local: 2 | newly downloaded: 0
+[09:34:59] v4 tasks (12): {'PENDING': 8, 'RUNNING': 2, 'SUCCEEDED': 2}
+  shards local: 2 | newly downloaded: 0
+[09:38:01] v4 tasks (12): {'PENDING': 8, 'RUNNING': 2, 'SUCCEEDED': 2}
+  shards local: 2 | newly downloaded: 0
+[09:41:02] v4 tasks (12): {'PENDING': 7, 'RUNNING': 2, 'SUCCEEDED': 3}
+  Downloading Export_Florida_Fire_Dataset_v4_Part_4.tfrecord.gz (654.7 MB) ...
+  shards local: 3 | newly downloaded: 1
+[09:45:08] v4 tasks (12): {'PENDING': 7, 'RUNNING': 2, 'SUCCEEDED': 3}
+  shards local: 3 | newly downloaded: 0
+[09:48:08] v4 tasks (12): {'PENDING': 7, 'RUNNING': 2, 'SUCCEEDED': 3}
+  shards local: 3 | newly downloaded: 0
+[09:51:09] v4 tasks (12): {'PENDING': 7, 'RUNNING': 2, 'SUCCEEDED': 3}
+  shards local: 3 | newly downloaded: 0
+[09:54:10] v4 tasks (12): {'PENDING': 7, 'RUNNING': 2, 'SUCCEEDED': 3}
+  shards local: 3 | newly downloaded: 0
+[09:57:11] v4 tasks (12): {'PENDING': 7, 'RUNNING': 2, 'SUCCEEDED': 3}
+  shards local: 3 | newly downloaded: 0
+[10:00:12] v4 tasks (12): {'PENDING': 7, 'RUNNING': 2, 'SUCCEEDED': 3}
+  shards local: 3 | newly downloaded: 0
+[10:03:13] v4 tasks (12): {'PENDING': 7, 'RUNNING': 2, 'SUCCEEDED': 3}
+  shards local: 3 | newly downloaded: 0
+[10:06:14] v4 tasks (12): {'PENDING': 7, 'RUNNING': 2, 'SUCCEEDED': 3}
+  shards local: 3 | newly downloaded: 0
+[10:09:15] v4 tasks (12): {'PENDING': 7, 'RUNNING': 2, 'SUCCEEDED': 3}
+  shards local: 3 | newly downloaded: 0
+[10:12:16] v4 tasks (12): {'PENDING': 7, 'RUNNING': 2, 'SUCCEEDED': 3}
+  shards local: 3 | newly downloaded: 0
+[10:15:17] v4 tasks (12): {'PENDING': 7, 'RUNNING': 2, 'SUCCEEDED': 3}
+  shards local: 3 | newly downloaded: 0
+[10:18:17] v4 tasks (12): {'PENDING': 6, 'RUNNING': 2, 'SUCCEEDED': 4}
+  Downloading Export_Florida_Fire_Dataset_v4_Part_5.tfrecord.gz (673.6 MB) ...
+  shards local: 4 | newly downloaded: 1
+[10:22:54] v4 tasks (12): {'PENDING': 6, 'RUNNING': 2, 'SUCCEEDED': 4}
+  shards local: 4 | newly downloaded: 0
+[10:25:55] v4 tasks (12): {'PENDING': 4, 'RUNNING': 3, 'SUCCEEDED': 5}
+  Downloading Export_Florida_Fire_Dataset_v4_Part_3.tfrecord.gz (691.8 MB) ...
+  shards local: 5 | newly downloaded: 1
+[10:30:01] v4 tasks (12): {'PENDING': 4, 'RUNNING': 3, 'SUCCEEDED': 5}
+  shards local: 5 | newly downloaded: 0
+[10:33:02] v4 tasks (12): {'PENDING': 4, 'RUNNING': 3, 'SUCCEEDED': 5}
+  shards local: 5 | newly downloaded: 0
+[10:36:03] v4 tasks (12): {'PENDING': 4, 'RUNNING': 3, 'SUCCEEDED': 5}
+  shards local: 5 | newly downloaded: 0
+[10:39:05] v4 tasks (12): {'PENDING': 4, 'RUNNING': 3, 'SUCCEEDED': 5}
+  shards local: 5 | newly downloaded: 0
+[10:42:06] v4 tasks (12): {'PENDING': 3, 'RUNNING': 3, 'SUCCEEDED': 6}
+  Downloading Export_Florida_Fire_Dataset_v4_Part_7.tfrecord.gz (693.8 MB) ...
+  shards local: 6 | newly downloaded: 1
+[10:52:55] v4 tasks (12): {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 7}
+  Downloading Export_Florida_Fire_Dataset_v4_Part_6.tfrecord.gz (748.2 MB) ...
+  shards local: 7 | newly downloaded: 1
+[11:01:17] v4 tasks (12): {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 7}
+  shards local: 7 | newly downloaded: 0
+[11:04:18] v4 tasks (12): {'PENDING': 1, 'RUNNING': 3, 'SUCCEEDED': 8}
+  Downloading Export_Florida_Fire_Dataset_v4_Part_8.tfrecord.gz (719.8 MB) ...
+  shards local: 8 | newly downloaded: 1
+[11:08:24] v4 tasks (12): {'RUNNING': 3, 'SUCCEEDED': 9}
+  Downloading Export_Florida_Fire_Dataset_v4_Part_10.tfrecord.gz (689.3 MB) ...
+  shards local: 9 | newly downloaded: 1
+[11:12:28] v4 tasks (12): {'RUNNING': 3, 'SUCCEEDED': 9}
+  shards local: 9 | newly downloaded: 0
+[11:15:29] v4 tasks (12): {'RUNNING': 3, 'SUCCEEDED': 9}
+  shards local: 9 | newly downloaded: 0
+[11:18:30] v4 tasks (12): {'RUNNING': 2, 'SUCCEEDED': 10}
+  Downloading Export_Florida_Fire_Dataset_v4_Part_11.tfrecord.gz (671.2 MB) ...
+  shards local: 10 | newly downloaded: 1
+[11:22:26] v4 tasks (12): {'SUCCEEDED': 11, 'RUNNING': 1}
+  Downloading Export_Florida_Fire_Dataset_v4_Part_12.tfrecord.gz (647.1 MB) ...
+  shards local: 11 | newly downloaded: 1
+[11:26:26] v4 tasks (12): {'SUCCEEDED': 11, 'RUNNING': 1}
+  shards local: 11 | newly downloaded: 0
+[11:29:26] v4 tasks (12): {'SUCCEEDED': 11, 'RUNNING': 1}
+  shards local: 11 | newly downloaded: 0
+[11:32:27] v4 tasks (12): {'SUCCEEDED': 11, 'RUNNING': 1}
+  shards local: 11 | newly downloaded: 0
+[11:35:28] v4 tasks (12): {'SUCCEEDED': 11, 'RUNNING': 1}
+  shards local: 11 | newly downloaded: 0
+[11:38:29] v4 tasks (12): {'SUCCEEDED': 11, 'RUNNING': 1}
+  shards local: 11 | newly downloaded: 0
+[11:41:30] v4 tasks (12): {'SUCCEEDED': 11, 'RUNNING': 1}
+  shards local: 11 | newly downloaded: 0
+[11:44:31] v4 tasks (12): {'SUCCEEDED': 11, 'RUNNING': 1}
+  shards local: 11 | newly downloaded: 0
+[11:47:32] v4 tasks (12): {'SUCCEEDED': 12}
+  Downloading Export_Florida_Fire_Dataset_v4_Part_9.tfrecord.gz (673.9 MB) ...
+  shards local: 12 | newly downloaded: 1
+[11:52:39] v4 tasks (12): {'SUCCEEDED': 12}
+  shards local: 12 | newly downloaded: 0
+DONE. All tasks terminal. shards=12. failed=[]

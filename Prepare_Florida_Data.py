@@ -14,12 +14,12 @@ import math
 import pathlib as _pl
 _REPO_ROOT = _pl.Path(__file__).resolve().parent
 RAW_DATA_DIR = str(_REPO_ROOT / "Training Data Florida")
-# v2 dataset uses the same export filename pattern but in a v2-named folder on Drive.
-RAW_PATTERN  = "Export_Florida_Fire_Dataset_Part_*.tfrecord"
+# v3 dataset: matched-temporal-negatives schema. Drive filenames carry the v3 tag.
+RAW_PATTERN  = "Export_Florida_Fire_Dataset_v3_Part_*.tfrecord*"
 
 # Final destination for the merged & shuffled dataset.
-OUTPUT_TRAIN = str(_REPO_ROOT / "Training Data Florida" / "Florida_Spatial_Train_v2.tfrecord")
-OUTPUT_VAL   = str(_REPO_ROOT / "Training Data Florida" / "Florida_Spatial_Val_v2.tfrecord")
+OUTPUT_TRAIN = str(_REPO_ROOT / "Training Data Florida" / "Florida_Spatial_Train_v3.tfrecord")
+OUTPUT_VAL   = str(_REPO_ROOT / "Training Data Florida" / "Florida_Spatial_Val_v3.tfrecord")
 
 # Split Settings
 VAL_SPLIT_PCT = 0.10  # 10% of LOCATIONS go to Validation
@@ -58,8 +58,9 @@ def process_dataset():
     print("DATASET PROCESSOR: MERGE + SPATIAL SPLIT + SHUFFLE")
     print("="*60)
     
-    # 1. Gather Files
-    files = glob.glob(os.path.join(RAW_DATA_DIR, RAW_PATTERN))
+    # 1. Gather Files (recursive: Drive dumps each shard in its own
+    #    drive-download-*/ subfolder, e.g. Training Data Florida/v3/drive-download-*/)
+    files = glob.glob(os.path.join(RAW_DATA_DIR, "**", RAW_PATTERN), recursive=True)
     if not files:
         print(f"CRITICAL ERROR: No files found matching {RAW_PATTERN}")
         return
@@ -76,7 +77,7 @@ def process_dataset():
     random.seed(SEED)
     
     for f in files:
-        ds = tf.data.TFRecordDataset(f, compression_type=None)
+        ds = tf.data.TFRecordDataset(f, compression_type=('GZIP' if f.endswith('.gz') else None))
         for record in ds:
             fp = get_fingerprint(record.numpy())
             
@@ -99,9 +100,10 @@ def process_dataset():
     # 3. Write & Shuffle (Pass 2)
     print("\n[Phase 2] Writing & Shuffling...")
     
-    # We use a memory buffer to shuffle before writing
-    # Buffer size: 5000 records (~1GB RAM). Larger = Better Shuffle.
-    SHUFFLE_BUFFER_SIZE = 5000
+    # In-memory shuffle buffer. v2 records are ~4 MB each (19 channels at 257x257
+    # float32), so 5000 records would be ~20 GB and OOM on a 32 GB machine.
+    # 1000 records (~4 GB peak) is still ample for a 12k-sample dataset.
+    SHUFFLE_BUFFER_SIZE = 1000
     
     train_buffer = []
     val_buffer = []
@@ -121,7 +123,7 @@ def process_dataset():
 
     # Read all files again
     for f in files:
-        ds = tf.data.TFRecordDataset(f, compression_type=None)
+        ds = tf.data.TFRecordDataset(f, compression_type=('GZIP' if f.endswith('.gz') else None))
         for record in ds:
             rec_bytes = record.numpy()
             fp = get_fingerprint(rec_bytes)
