@@ -171,3 +171,20 @@ merged=43615 (24942 fire + 18673 neg). Blocked space+time:
 JOURNEY: 0.81 (v10b) -> 0.827 (v11c context) -> 0.835 (v11d ag-burning) -> 0.840 (v11e scale 25k)
   -> 0.852 (v11h canopy). crutch-free 0.755 -> 0.811. EVERY gain survived crutch matching.
 Saved best_model_v11h.joblib. Levers: terrain NULL, canopy WIN. Remaining: 52k scale (marginal).
+
+## === BRANCH v12-final-push (last session) ===
+### WHERE x WHEN operational product (model_wherewhen.py)
+Two specialists on the 10k v10b+crossover data, spatial leave-block-out:
+  WHERE alone (full task) 0.722 | WHEN alone 0.709 | WHERE x WHEN PRODUCT 0.796
+  (specialists on own task: WHERE 0.852, WHEN 0.806)
+-> product beats either specialist by +0.07: place-proneness and day-danger are complementary.
+   PyroCast = full place-AND-day forecaster (~0.80 on the hardest task), not just a where-model.
+### Figures generated (figures/): journey, ROC, calibration, precision@k, importance x2,
+    honesty-bracket, causality, SE+Florida risk maps, by-cause/month, where-x-when.
+
+### FINAL MODEL VALIDATION (validate_final.py, full 49792-row dataset)
+neg-control label-shuffle 0.4964 (clean). Headline 0.8504 [CI 0.8436,0.8579].
+pop-matched 0.8255 | dev500-matched 0.7967 | NO-human 0.8165 | ENV floor 0.7956 | ENV+pop 0.7726.
+human 0.8537 | lightning 0.8156 | Florida 0.7719 (pop 0.7177) | leave-region mean 0.8421 min 0.7960.
+Brier 0.1555 (vs 0.2424) | PR-AUC 0.7829 | top5% precision 0.896, top1% 0.924.
+-> AUTHORITATIVE FINAL: 0.850 as-is (CI 0.844-0.858) / 0.826 crutch-free / ~0.80 env-floor / 0.77 Florida.
