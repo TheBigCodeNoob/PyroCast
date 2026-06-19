@@ -228,3 +228,11 @@ but ANTI-predicts lightning (0.448) -> genuinely causal, not reporting bias. BUT
    gHM is REDUNDANT with existing human-access. Real gain = +0.006 from GHSL built-surface only.
    LESSON: always evaluate on COMPLETE data; a too-good jump is the red flag, not the prize.
 KEEP: built (+0.006). DROP: ghm/ghm_2km/built_2km/wsf (redundant/null).
+
+### v13 combined (human-pressure + VCF fuel) on FINAL model (inner-join, artifact-proof)
+base 0.8590 | +gHM-human 0.8642 | +VCF-fuel 0.8591 (NULL) | +ALL 0.8652. pop-matched 0.8277->0.8343.
+Importance: built +0.0315 (only real one). gHM ~0, vcf_herb ~0, wsf negative.
+-> VCF fuel REDUNDANT (canopy/treecover/NLCD already capture it). gHM REDUNDANT. Only GHSL
+   built-surface adds +0.006 (survives matching). NEW BEST best_model_v13.joblib = final + built.
+SESSION VERDICT: model at data-limited ceiling ~0.86. Big wins already banked (canopy, moisture);
+   v13 exploration added only +0.006 (built). Lightning is the unfillable gap (error analysis).

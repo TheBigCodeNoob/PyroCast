@@ -10,8 +10,9 @@ from Dataget_v11h_canopy import extra as canopy_extra
 from Dataget_v12_moisture import extra as moist_extra
 from Dataget_v11e import COLUMNS as C_BASE
 
-DATE = '2020-04-15'                       # peak SE spring fire season
-TARGET_MS = int(datetime.datetime(2020, 4, 15, tzinfo=datetime.timezone.utc).timestamp() * 1000)
+DATE = next((a for a in sys.argv[1:] if a[0] != '-'), '2020-04-15')   # YYYY-MM-DD, any date
+_y, _m, _d = (int(x) for x in DATE.split('-'))
+TARGET_MS = int(datetime.datetime(_y, _m, _d, tzinfo=datetime.timezone.utc).timestamp() * 1000)
 LAT0, LAT1, LON0, LON1, STEP = 24.6, 35.0, -88.0, -79.0, 0.1
 EXPORT_FOLDER = 'Fire_grid'
 BATCHES = 16
