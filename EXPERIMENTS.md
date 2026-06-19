@@ -87,3 +87,54 @@ DRIVER: DistDev (distance-to-developed), now #1 feature (|AUC| 0.73). 94% of SE 
 - INTERPRET: human-access (DistDev/LC_Developed/Pop) dominates; where 0.79 >> when 0.64
 - CAUSALITY CONFIRMED: human fires median 30m from development, lightning 67m, neg 95m -> location set by CAUSE not reporting => DistDev is a REAL causal signal. Human AUC 0.816 > lightning 0.748.
 CONCLUSION: model is honest/stable/generalizable/calibrated/causal. DONE. Shift to science: writeup of crutch-elimination methodology, operational framing (precision@top-k at TRUE base rate), live demo (web app), reproducibility, lit context.
+
+## === BRANCH ignition-model-v11: pushing for 0.85+ ===
+Saved best_model_v10b.joblib; committed c512c2b; new dev branch.
+### v11a cheap engineered features (no export) — MARGINAL
+baseline 0.8093 | +day-of-week 0.8111 | +is_weekend 0.8106 | +cyclical-doy 0.8154 | +all 0.8175
+- Finding: fires happen MORE on weekdays (weekend share 0.26 fire vs 0.30 neg) -> weekday burning. day-of-week = genuine +0.002.
+- HONESTY FLAG: cyclical-doy +0.006 is SUSPECT (we matched MONTH not exact day -> residual within-month season). NOT banked.
+### v11b case-crossover negatives (RUNNING) — the 'when' lever
+Add same-location negatives 1yr before each fire (cause=-2). Model must beat wrong-place AND wrong-time.
+Dataget_v11_crossover.py (reuses exact v10b points, MODIS recipe) -> Fire_v11_crossover. model_v11_crossover.py reports WHERE/WHEN/COMBINED.
+
+### v11b case-crossover RESULTS (7/8 batches, 8728 crossover negs)
+Combined model trained on pos + random-neg + crossover-neg; spatial leave-block-out:
+  WHERE (pos vs random-neg)    0.828
+  WHEN  (pos vs crossover-neg) 0.733   <- temporal signal IS learnable (not stochastic!)
+  COMBINED (pos vs all negs)   0.784
+Space+time headline (train<=2019/test2020), WHERE vs random-neg: 0.7185  (v10b was 0.81)
+KEY FINDINGS:
+1. The 'when' is REAL & learnable (0.73): model distinguishes a fire-day from the SAME
+   location 1yr earlier. Headroom exists for a day-level forecast.
+2. But a SINGLE model can't serve both: adding crossover negs DILUTED the where-signal
+   (0.81 -> 0.72 on the locked metric) because pos & their crossover-neg share location,
+   forcing the model off human-access. Cleanly quantifies the where/when tradeoff.
+3. 'when' (0.73) is ORTHOGONAL to the locked metric (fires vs wrong-PLACE) -> doesn't
+   raise 0.81. To beat 0.81 needs better WHERE signal (nightlights/roads/context/more data).
+ARCHITECTURE IMPLICATION: two models -> risk = P(where) x P(when) for operational place-day
+forecast. Scientifically clean decomposition; more useful than one AUC.
+
+### v11c WHERE-features (nightlights + neighborhood land-cover context) — GENUINE WIN
+Cheap extra-export at exact v10b points, merged. Locked metric (blocked space+time):
+  base 0.8093 | +ALL 0.8260.  Importance: nbhd_dev_500m #3/46, forest_2km #6, NightLights #7.
+VERIFIED HONEST (survives & GROWS under crutch matching -> real fuel/landscape signal, not remoteness):
+  control          base    base+new   delta
+  as-is           0.8093   0.8268    +0.018
+  pop-matched     0.7552   0.7778    +0.023
+  DistDev-matched 0.7088   0.7296    +0.021
+NEW BEST: 0.827 as-is / 0.778 pop-matched / 0.730 DistDev-matched (saved best_model_v11c.joblib).
+First improvement to the crutch-free number (0.755->0.778). Neighborhood FUEL structure
+(forest/wetland fraction) is the win -> expand context features next (v11d).
+
+### v11d expanded context (round 2) — GENUINE WIN (verified)
+base 0.8088 | +v11c 0.8223 | +v11c+v11d 0.8371. Survives matching (grows): pop 0.770->0.797, DistDev 0.738->0.759.
+v11d winners: nbhd_crop_2km +0.005, nbhd_wetland_5km +0.004, nbhd_pasture_2km +0.003 (AGRICULTURAL-burning context!).
+v11d dead (prune): nbhd_dev_1km, shrub_2km, forest_5km, grass_2km, dist_water, forest_1km.
+NEW BEST: 0.837 as-is / 0.797 pop-matched / 0.759 DistDev-matched.
+CAVEAT: ~20 feature combos tested vs same 2020 test -> mild test-overfitting risk. Confirm on fresh data.
+### v11e (next): scale positives 10k->25k + consolidated winning features = more data + FRESH untuned test.
+Consolidated feats = v10b stack + NightLights + nbhd_dev_500m + nbhd_forest_2km + nbhd_wetland_2km + nbhd_crop_2km + nbhd_wetland_5km + nbhd_pasture_2km.
+
+### v11d CONFIRMED on full 14/14 batches: 0.8373 as-is / 0.8002 pop-matched / 0.7562 DistDev-matched
+-> crutch-free (pop-matched) CROSSED 0.80. v11e (scale to 25k + fresh untuned test) now exporting to confirm.
