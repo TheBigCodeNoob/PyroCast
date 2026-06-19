@@ -188,3 +188,8 @@ pop-matched 0.8255 | dev500-matched 0.7967 | NO-human 0.8165 | ENV floor 0.7956 
 human 0.8537 | lightning 0.8156 | Florida 0.7719 (pop 0.7177) | leave-region mean 0.8421 min 0.7960.
 Brier 0.1555 (vs 0.2424) | PR-AUC 0.7829 | top5% precision 0.896, top1% 0.924.
 -> AUTHORITATIVE FINAL: 0.850 as-is (CI 0.844-0.858) / 0.826 crutch-free / ~0.80 env-floor / 0.77 Florida.
+
+### Ensemble (ensemble_test.py) — small honest modeling gain
+single: hgb 0.8504 | rf 0.8431 | et 0.8371 | lgb 0.8536 (lgb beats hgb).
+rank-average ensemble (hgb+rf+et+lgb) = 0.8549 (+0.0045, honest — same features, just modeling).
+-> final model can be the ensemble (~0.855) or just LightGBM (0.854).
