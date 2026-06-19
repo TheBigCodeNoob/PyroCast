@@ -138,3 +138,36 @@ Consolidated feats = v10b stack + NightLights + nbhd_dev_500m + nbhd_forest_2km 
 
 ### v11d CONFIRMED on full 14/14 batches: 0.8373 as-is / 0.8002 pop-matched / 0.7562 DistDev-matched
 -> crutch-free (pop-matched) CROSSED 0.80. v11e (scale to 25k + fresh untuned test) now exporting to confirm.
+
+### v11e SCALE-UP (25k pos) on FRESH untuned data — CONFIRMS + IMPROVES (overfitting concern RESOLVED)
+rows=39529 (24942 fire + 14587 neg; 5 neg batches still exporting). Blocked space+time:
+  as-is 0.8404 (95% CI [0.831,0.849]) | pop-matched 0.8025 | DistDev-m 0.7742 | dev500-matched 0.7820 (STRICTER)
+  NO-human-access 0.7947 | ENV floor 0.7639 | ENV+pop-matched 0.7464 | leave-region-out mean 0.8275 (min 0.782)
+  FLORIDA-only: as-is 0.7491 / pop-matched 0.6617
+KEY: gains HELD/IMPROVED on 15k fires never used for feature selection -> not test-overfitting.
+More data lifted crutch-free numbers (pop 0.784->0.803, env-floor 0.72->0.764). NEW BEST.
+
+### v11f terrain/fuel — NULL result (legit finding: SE-US is flat)
+Full model: prev 0.8350 -> +v11f 0.8351 (nothing). Env-floor: 0.7608 -> 0.7702 (+0.009 tiny).
+Importance: tpi +0.0013, northness +0.0006, slope +0.0004; ruggedness/eastness/wildland ~0/neg.
+-> Topography does NOT predict SE-US ignition (flat coastal plain; terrain matters in mountain regimes).
+   Terrain lever EXHAUSTED. Don't add to model.
+
+### v11g VERTICAL FUEL STRUCTURE (canopy height + tree cover) — GENUINE WIN (unimpeachable)
+Full model: 0.8346 -> 0.8436 (+0.009). ENV FLOOR: 0.7623 -> 0.7891 (+0.027, biggest floor gain yet!).
+dev500-matched 0.7731->0.7866 (+0.014); pop-matched 0.7844->0.8009 (crosses 0.80).
+Winners: treecover +0.0136, canopy_ht +0.0098 (point versions; 2km redundant ~0).
+Canopy structure = fuel, CANNOT be reporting bias -> most defensible gain. tall pine vs scrub vs marsh.
+-> confirm on 25k (v11h canopy at v11e points) -> new best, near 0.85.
+
+### v11h = v11e(25k) + canopy/treecover — *** 0.85 GOAL REACHED (honest) ***
+merged=43615 (24942 fire + 18673 neg). Blocked space+time:
+  as-is:          0.8403 -> 0.8518   95% CI [0.8445, 0.8601]   <<< >=0.85
+  pop-matched:    0.7972 -> 0.8105   (crutch-free crosses 0.81)
+  dev500-matched: 0.7895 -> 0.8013   (strictest crosses 0.80)
+  ENV floor:      0.7645 -> 0.7917   (all human stripped, +0.027)
+  leave-region-out mean 0.8412 (min 0.7937)
+  FLORIDA-only:   0.7511 -> 0.7511   (NO FL gain: FL is uniformly low-canopy; signal helps the varied N. SE)
+JOURNEY: 0.81 (v10b) -> 0.827 (v11c context) -> 0.835 (v11d ag-burning) -> 0.840 (v11e scale 25k)
+  -> 0.852 (v11h canopy). crutch-free 0.755 -> 0.811. EVERY gain survived crutch matching.
+Saved best_model_v11h.joblib. Levers: terrain NULL, canopy WIN. Remaining: 52k scale (marginal).
