@@ -193,3 +193,17 @@ Brier 0.1555 (vs 0.2424) | PR-AUC 0.7829 | top5% precision 0.896, top1% 0.924.
 single: hgb 0.8504 | rf 0.8431 | et 0.8371 | lgb 0.8536 (lgb beats hgb).
 rank-average ensemble (hgb+rf+et+lgb) = 0.8549 (+0.0045, honest — same features, just modeling).
 -> final model can be the ensemble (~0.855) or just LightGBM (0.854).
+
+### v12 MOISTURE / WATER-STRESS — FINAL WIN (model_final.py, full coverage, HGB native-NaN)
+Apples-to-apples on full 49792 rows (with vs without moisture):
+  as-is          0.8504 -> 0.8574  (+0.0070)   95% CI [0.8511, 0.8639]
+  pop-matched    0.8255 -> 0.8308
+  dev500-matched 0.7967 -> 0.8089
+  ENV floor      0.7956 -> 0.8085  (nature-only floor crosses 0.81)
+neg-control 0.4988 | Brier 0.1521 | top5% precision 0.920 | Florida 0.7639.
+Winners: ET-stress, PET, NDMI (vegetation moisture). soil-moisture/LST weak. Moisture = physical
+state, can't be reporting bias; gain GROWS under matching -> unimpeachable.
+*** FINAL MODEL: best_model_final.joblib = base+context+agriculture+canopy+MOISTURE.
+    0.857 as-is (CI 0.851-0.864) / 0.831 crutch-free / 0.809 nature-only floor / 0.764 Florida.
+    Ensemble ~0.860. where x when product 0.796 (full place-and-day task). ***
+TWO-SESSION CLIMB: 0.81 -> 0.857 honest (every step crutch-checked). Nulls: terrain, calendar feats.

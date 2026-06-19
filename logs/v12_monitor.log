@@ -1,0 +1,32 @@
+[07:04:01] v12_moisture {'PENDING': 24, 'RUNNING': 3} | csv local: 0 new: 0
+  downloading Fire_v12_pos_3.csv
+[07:06:06] v12_moisture {'PENDING': 23, 'RUNNING': 2, 'SUCCEEDED': 2} | csv local: 2 new: 1
+  downloading Fire_v12_pos_4.csv
+[07:08:08] v12_moisture {'PENDING': 21, 'RUNNING': 3, 'SUCC  downloading Fire_v12_pos_5.csv
+[07:10:10] v12_moisture {'PENDING': 19, 'RUNNING': 3, 'SUCCEEDED': 5} | csv local: 5 new: 0
+[07:12:12] v12_moisture {'PENDING': 18, 'RUNNING': 3, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[07:14:13] v12_moisture {'PENDING': 17, 'RUNNING': 3, 'SUCCEEDED': 7} | csv local: 7 new: 0
+  downloading Fire_v12_pos_10.csv
+  downloading Fire_v12_pos_9.csv
+[07:16:16] v12_moisture {'PENDING': 14, 'RUNNING': 3, 'SUCCEEDED': 10} | csv local: 10 new: 2
+  downloading Fire_v12_pos_11.csv
+[07:18:19] v12_moisture {'PENDING': 13, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 1
+[07:20:21] v12_moisture {'PENDING': 12, 'RUNNING': 3, 'SUCCEEDED': 12} | csv local: 12 new: 0
+  downloading Fire_v12_pos_15.csv
+  downloading Fire_v12_pos_13.csv
+[07:22:30] v12_moisture {'PENDING': 10, 'RUNNING': 3, 'SUCCEEDED': 14} | csv local: 14 new  dow[07:24:31] v12_moisture {'PENDING': 9, 'RUNNING': 3, 'SUCCEEDED': 15} | csv local: 15 new: 0
+  downloading Fire_v12_neg_2.csv
+[07:26:33] v12_moisture {'PENDING': 8, 'RUNNING': 3, 'SUCCEEDED': 16} | csv local: 16 new:[07:[07:28:35] v12_moisture {'PENDING': 8, 'RUNNING': 3, 'SUCCEEDED': 16} | csv local: 16 new:[07:  downloading Fire_v12_neg_1.csv
+[07:30:37] v12_moisture {'PENDING': 7, 'RUNNING': 3, 'SU  downloading Fire_v12_neg_3.csv
+[07:[07:32:39] v12_moisture {'PENDING': 6, 'RUNNING': 3, 'SUCCEEDED': 18} | csv local: 18 new:[07:  downloading Fire_v12_neg_5.csv
+[07:34:40] v12_moisture {'PENDING': 5, 'RUNNING': 3, 'SU[07:35:45] v12_moisture {'PENDING': 5,[07:36:42] v12_moisture {'PENDING': 5, 'RUNNING': 3, 'SU  downloading Fire_v12_neg_4.csv
+  do  downloading Fire_v12_neg_7.csv
+[07:38:44] v12_moisture {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 22} | csv local: 22 new:[07:[07:40:46] v12_moisture {'PENDING': 2, 'RUNNING': 3, 'SUCCEEDED': 22} | csv local: 22 new:[07:  downloading Fire_v12_neg_9.csv
+  downloading Fire_v12_neg_8.csv
+[07:42:49] v12_moistur[07:43:53] v12_moisture {'RUNNING': 3, 'SUCCEEDED': 24} | csv local: 24 [07:44:5[07:45:59] v12_moisture {'RUNNING': 3, 'SUCCEEDED': 24} | csv local: 24 [07:46:5  downloading Fire_v12_neg_11.csv
+  downloading Fire_v12_neg_12.csv
+[0[07:48:53] v12_moisture {'SUCCEEDED': 26, 'RUNNING': 1} | csv local: 26 new: 0  [07:50:54] v12_moisture {'SUCCEEDED': 27} | csv local: 27 new: 0
+DONE. csv=27
+ local: 27 new: 1
+[07:52:05] v12_moisture {'SUCCEEDED': 27} | csv local: 27 new: 0
+DONE. csv=27

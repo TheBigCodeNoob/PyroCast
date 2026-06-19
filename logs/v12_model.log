@@ -1,0 +1,18 @@
+merged=34323 fire=20796 neg=13527
+
+=== v12 moisture/water-stress on the final model ===
+  as-is:          prev 0.8376  ->  +moisture 0.8468
+  pop-matched:    prev 0.7927  ->  +moisture 0.8069
+  dev500-matched: prev 0.7883  ->  +moisture 0.7992
+  ENV floor:      prev 0.7726  ->  +moisture 0.7906
+
+  v12 feature importance:
+    pet            +0.0097
+    et_stress      +0.0091
+    ndmi           +0.0085
+    lst_day        +0.0013
+    smap_root      +0.0011
+    lst_range      -0.0000
+    et             -0.0001
+    smap_surface   -0.0001
+    lst_night      -0.0005

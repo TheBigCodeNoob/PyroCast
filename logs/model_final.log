@@ -1,0 +1,13 @@
+FINAL dataset: rows=38779 fire=20796 feats=57
+
+=== FINAL MODEL VALIDATION (base + canopy + moisture) ===
+  negative control (label-shuffle): 0.4928
+  HEADLINE as-is:   0.8496   95% CI [0.8412, 0.8579]
+  HEADLINE ensemble:0.8512
+  pop-matched:      0.8118
+  dev500-matched:   0.7921
+  ENV floor:        0.7960
+  Florida-only:     0.7441
+  Brier 0.1588 | top5% precision 0.929
+
+Saved best_model_final.joblib (57 feats, 38779 rows)

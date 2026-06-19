@@ -21,10 +21,14 @@ def _safe(g):
 
 ve = _safe('Training Data Florida/v11e/*.csv').dropna()
 vh = _safe('Training Data Florida/v11h_canopy/*.csv').dropna()
+vm = _safe('Training Data Florida/v12_moisture/*.csv')
 CANF = ['canopy_ht', 'treecover', 'canopy_ht_2km', 'treecover_2km']
-for d in (ve, vh):
+V12 = ['ndmi', 'smap_root', 'lst_day', 'pet']
+for d in (ve, vh, vm):
     d['k'] = d.lon.round(5).astype(str) + '_' + d.lat.round(5).astype(str)
-df = ve.merge(vh[['k'] + CANF].drop_duplicates('k'), on='k').reset_index(drop=True)
+vm['et_stress'] = vm.et / (vm.pet + 1)
+df = (ve.merge(vh[['k'] + CANF].drop_duplicates('k'), on='k')
+        .merge(vm[['k'] + V12 + ['et_stress']].drop_duplicates('k'), on='k', how='left')).reset_index(drop=True)
 df['pdsi_traj_90'] = df.pdsi_0 - df.pdsi_90; df['vpd_trend'] = df.vpd_7 - df.vpd_90
 df['pr_deficit'] = df.pr_365 / 4 - df.pr_90; df['fm100_trend'] = df.fm100_30 - df.fm100_90
 df['dryness'] = df.vpd_30 + df.erc_30 - df.pr_90 / 50
@@ -32,7 +36,7 @@ META = ['lon', 'lat', 'label', 'cause', 'month', 'year', 'doy', 'k']
 FEATS = [c for c in df.columns if c not in META]
 y = df.label.astype(int).values
 block = (np.floor(df.lon).astype(int).astype(str) + '_' + np.floor(df.lat).astype(int).astype(str)).values
-yr = df.year.values; X = np.nan_to_num(df[FEATS].values.astype('float32'))
+yr = df.year.values; X = df[FEATS].values.astype('float32')  # keep NaN -> HGB handles it
 oof = np.full(len(y), np.nan)
 for tg, eg in GroupKFold(5).split(X, y, block):
     tr = tg[yr[tg] <= 2019]; te = eg[yr[eg] >= 2020]
