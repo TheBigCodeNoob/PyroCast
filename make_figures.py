@@ -29,13 +29,15 @@ print('loading...')
 ve = _safe('Training Data Florida/v11e/*.csv').dropna()
 vh = _safe('Training Data Florida/v11h_canopy/*.csv').dropna()
 vm = _safe('Training Data Florida/v12_moisture/*.csv')
+v13 = _safe('Training Data Florida/v13_human/*.csv')
 CANF = ['canopy_ht', 'treecover', 'canopy_ht_2km', 'treecover_2km']
 V12 = ['ndmi', 'smap_root', 'lst_day', 'pet']  # moisture winners (null ones dropped)
-for d in (ve, vh, vm):
+for d in (ve, vh, vm, v13):
     d['k'] = d.lon.round(5).astype(str) + '_' + d.lat.round(5).astype(str)
 vm['et_stress'] = vm.et / (vm.pet + 1)
 df = (ve.merge(vh[['k'] + CANF].drop_duplicates('k'), on='k')
-        .merge(vm[['k'] + V12 + ['et_stress']].drop_duplicates('k'), on='k', how='left')).reset_index(drop=True)
+        .merge(vm[['k'] + V12 + ['et_stress']].drop_duplicates('k'), on='k', how='left')
+        .merge(v13[['k', 'built']].dropna().drop_duplicates('k'), on='k', how='left')).reset_index(drop=True)
 df['pdsi_traj_90'] = df.pdsi_0 - df.pdsi_90; df['vpd_trend'] = df.vpd_7 - df.vpd_90
 df['pr_deficit'] = df.pr_365 / 4 - df.pr_90; df['fm100_trend'] = df.fm100_30 - df.fm100_90
 df['dryness'] = df.vpd_30 + df.erc_30 - df.pr_90 / 50
@@ -63,9 +65,9 @@ AUC = roc_auc_score(yt, pt)
 print(f'  held-out AUC {AUC:.4f}, n={mask.sum()}')
 
 # ---- Fig 1: the honesty journey ----
-vers = ['v2\nCNN', 'v3', 'v6', 'v7', 'v8\nFIRMS', 'v10b\nFPA-FOD', 'v11', 'v12\nfinal']
-raw = [0.95, 0.71, 0.93, 0.80, 0.72, 0.811, 0.835, 0.857]
-honest = [0.55, 0.71, 0.60, 0.67, 0.716, 0.755, 0.797, 0.831]
+vers = ['v2\nCNN', 'v3', 'v6', 'v7', 'v8\nFIRMS', 'v10b', 'v11\ncanopy', 'v12\nmoist', 'v13\nfinal']
+raw = [0.95, 0.71, 0.93, 0.80, 0.72, 0.811, 0.835, 0.857, 0.862]
+honest = [0.55, 0.71, 0.60, 0.67, 0.716, 0.755, 0.797, 0.831, 0.834]
 xs = np.arange(len(vers))
 fig, ax = plt.subplots(figsize=(10, 5.2))
 ax.plot(xs, raw, 'o--', color=C['gray'], lw=2, ms=8, label='What we first reported (raw)')
@@ -118,7 +120,7 @@ fig.savefig('figures/04_precision_at_k.png'); plt.close(fig)
 
 # ---- Fig 5: feature importance by category ----
 def cat(f):
-    if f in ['Pop_Density', 'DistDev', 'LC_Developed', 'NightLights', 'nbhd_dev_500m']:
+    if f in ['Pop_Density', 'DistDev', 'LC_Developed', 'NightLights', 'nbhd_dev_500m', 'built']:
         return 'human access'
     if f in ['canopy_ht', 'treecover', 'canopy_ht_2km', 'treecover_2km']:
         return 'canopy / fuel structure'
@@ -151,7 +153,7 @@ fig.savefig('figures/06_importance_top.png'); plt.close(fig)
 
 # ---- Fig 7: the honesty bracket (crutch decomposition) ----
 labels = ['as-is\n(operational)', 'remoteness\nremoved', 'strictest\nsingle', 'ALL human\nstripped (floor)']
-vals = [0.857, 0.831, 0.809, 0.809]
+vals = [0.862, 0.834, 0.826, 0.796]
 fig, ax = plt.subplots(figsize=(6.6, 4.6))
 bars = ax.bar(labels, vals, color=[C['ok'], C['blue'], C['blue'], C['gray']])
 ax.axhline(0.5, color=C['gray'], ls='--'); ax.text(3.1, 0.51, 'chance', color=C['gray'], fontsize=9, ha='right')
