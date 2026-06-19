@@ -1,0 +1,16 @@
+[09:19:31] v13_vcf {'PENDING': 27} | csv local: 0 new: 0
+[09:21:32] v13_vcf {'PENDING': 27} | csv local: 0 new: 0
+[09:23:34] v13_vcf {'PENDING': 27} | csv local: 0 new: 0
+[09:25:34] v13_vcf {'PENDING': 27} | csv local: 0 new: 0
+[09:27:35] v13_vcf {'PENDING': 27} | csv local: 0 new: 0
+[09:29:37] v13_vcf {'PENDING': 27} | csv local: 0 new: 0
+[09:31:38] v13_vcf {'PENDING': 21, 'RUNNING': 2, 'SUCCEEDED': 4} | csv local: 0 new: 0
+[09:33:39] v13_vcf {'PENDING': 15, 'RUNNING': 3, 'SUCCEEDED': 9} | csv local: 0 new: 0
+[09:35:39] v13_vcf {'PENDING': 9, 'RUNNING': 3, 'SUCCEEDED': 15} | csv local: 0 new: 0
+[09:37:40] v13_vcf {'PENDING': 7, 'RUNNING': 3, 'SUCCEEDED': 17} | csv local: 0 new: 0
+[09:39:42] v13_vcf {'PENDING': 4, 'RUNNING': 3, 'SUCCEEDED': 20} | csv local: 0 new: 0
+[09:41:43] v13_vcf {'RUNNING': 3, 'SUCCEEDED': 24} | csv local: 0 new: 0
+[09:43:43] v13_vcf {'SUCCEEDED': 27} | csv local: 0 new: 0
+DONE. csv=0
+
+DONE. csv=0

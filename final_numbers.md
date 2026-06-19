@@ -56,3 +56,21 @@ human-access there and lands ~0.76 instead of 0.86.
 01 journey · 02 ROC · 03 calibration · 04 precision@k · 05 importance by category ·
 06 top features · 07 honesty bracket · 08 causality · 09 SE risk map · 09b Florida risk map ·
 10 by cause & month · 11 where × when.
+
+---
+## v13 session update ("anything goes")
+
+- **Best model: ~0.86** (0.857 validated [base+canopy+moisture]; **0.862** with GHSL built-surface;
+  **~0.866** with a 4-model ensemble). The session's only real new gain was built-surface (+0.006).
+- **The honest catch:** the gHM (roads/power/infrastructure) feature first looked like +0.040 — a
+  huge win. It was a phantom: an incomplete-download NaN pattern leaking through the spatial CV. On
+  complete data it's +0.006 and gHM's own importance is ~0. Caught it because the jump was too big.
+  (gHM did give a clean causality result: it predicts human fires but ANTI-predicts lightning, 0.448 —
+  confirming human-access is causal, not reporting bias.)
+- **VCF continuous fuel: null.** **Lightning: unfillable** — no lightning data in GEE; ERA5 convective
+  precip is hourly-only and computationally prohibitive at 25k points.
+- **Why the ceiling is real:** error analysis shows the misses are remote, forested, wet, lightning-
+  driven wildland fires — the least human-predictable category. ~0.86 is a genuine data-limited
+  ceiling, not a modeling shortfall.
+- **New tool:** an operational gridded ignition-risk-map generator (`Dataget_grid.py <date>` ->
+  `render_grid.py`). Figures `12_operational_map.png` / `12b_operational_florida.png`. See `TOOL.md`.

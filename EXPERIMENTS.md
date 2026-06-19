@@ -236,3 +236,13 @@ Importance: built +0.0315 (only real one). gHM ~0, vcf_herb ~0, wsf negative.
    built-surface adds +0.006 (survives matching). NEW BEST best_model_v13.joblib = final + built.
 SESSION VERDICT: model at data-limited ceiling ~0.86. Big wins already banked (canopy, moisture);
    v13 exploration added only +0.006 (built). Lightning is the unfillable gap (error analysis).
+
+### Lightning-lever exploration (the identified ceiling) — confirmed unfillable
+Error analysis said missed fires are lightning-driven. Tried to find a lightning proxy:
+- No lightning/LIS/GLM climatology in this GEE catalog.
+- ERA5 convective_precipitation exists but ONLY hourly -> multi-week per-point means over 25k
+  points = tens of millions of reads, computationally prohibitive. No monthly convective product.
+-> Lightning ignition (5% of fires, the missed remote-forest category) is genuinely unfillable
+   with available free data. The ~0.86 ceiling is REAL and data-limited, not a modeling failure.
+### SESSION NET (v13): 0.857 -> 0.862 (built-surface only real gain). gHM phantom caught, VCF null,
+   lightning infeasible. Model at honest data ceiling. Value = the catch + the operational tool.

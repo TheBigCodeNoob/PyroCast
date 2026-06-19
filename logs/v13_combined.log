@@ -1,0 +1,21 @@
+merged=49614 | human=True vcf=True
+
+  base (final model)        0.8590
+  + human-pressure (gHM)    0.8642
+  + VCF fuel                0.8591
+  + ALL v13                 0.8652
+
+  crutch controls (base -> +ALL):
+    pop-matched     0.8277 -> 0.8343
+    dev500-matched  0.8194 -> 0.8261
+
+  v13 importance:
+    built          +0.0315
+    ghm            +0.0011
+    vcf_herb       +0.0011
+    built_2km      +0.0008
+    ghm_2km        +0.0006
+    vcf_tree       +0.0005
+    vcf_bare       -0.0000
+    vcf_herb_2km   -0.0007
+    wsf_2km        -0.0026

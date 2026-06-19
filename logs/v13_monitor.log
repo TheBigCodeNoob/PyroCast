@@ -1,0 +1,35 @@
+[09:15:11] v13_human {'PENDING': 24, 'RUNNING': 3} | csv local: 0 new: 0
+[09:17:12] v13_human {'PENDING': 21, 'RUNNING': 3, 'SUCCEEDED': 3} | csv local: 3 new: 0
+[09:19:14] v13_human {'PENDING': 17, 'RUNNING': 3, 'SUCCEEDED': 7} | csv local: 7 new: 0
+  downloading Fire_v13_pos_8.csv
+  downloading Fire_v13_pos_10.csv
+  downloading Fire_v13_pos_9.csv
+[09:21:17] v13_human {'PENDING': 13, 'RUNNING': 3, 'SUCCEEDED': 11} | csv local: 11 new: 3
+  downloading Fire_v13_pos_15.csv
+  downloading Fire_v13_pos_14.csv
+[09:23:21] v13_human {'PENDING': 9, 'RUNNING': 3, 'SUCCEEDED': 15} | csv local: 15 new: 2
+  downloading Fire_v13_neg_4.csv
+  downloading Fire_v13_neg_3.csv
+  downloading Fire_v13_neg_2.csv
+  downloading Fire_v13_neg_1.csv
+[09:25:25] v13_human {'PENDING': 5, 'RUNNING': 3, 'SUCCEEDED': 19} | csv local: 19 new: 4
+  downloading Fire_v13_neg_6.csv
+  downloading Fire_v13_neg_5.csv
+[09:27:28] v13_human {'PENDING': 3, 'RUNNING': 3, 'SUCCEEDED': 21} | csv local: 21 new: 2
+  downloading Fire_v13_neg_7.csv
+  downloading Fire_v13_neg_9.csv
+  downloading Fire_v13_neg_8.csv
+[09:29:31] v13_human {'RUNNING': 3, 'SUCCEEDED': 24} | csv local: 24 new: 3
+  downloading Fire_v13_neg_11.csv
+  downloading Fire_v13_neg_10.csv
+[09:31:34] v13_human {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 2
+  downloading Fire_v13_neg_12.csv
+[09:33:37] v13_human {'SUCCEEDED': 27} | csv local: 27 new: 1
+[09:35:38] v13_human {'SUCCEEDED': 27} | csv local: 27 new: 0
+DONE. csv=27
+g Fire_v13_neg_10.csv
+[09:31:34] v13_human {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 2
+  downloading Fire_v13_neg_12.csv
+[09:33:36] v13_human {'SUCCEEDED': 27} | csv local: 27 new: 1
+[09:35:38] v13_human {'SUCCEEDED': 27} | csv local: 27 new: 0
+DONE. csv=27

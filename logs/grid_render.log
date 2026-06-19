@@ -1,0 +1,5 @@
+grid points: 8775
+land cells 4582 | risk: med 0.251 max 0.976
+saved figures/12_operational_map.png
+saved figures/12b_operational_florida.png
+saved operational_risk_grid.csv (the scored grid)

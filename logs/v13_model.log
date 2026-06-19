@@ -1,0 +1,14 @@
+merged=49792 v13 coverage 88%
+
+=== v13 human-pressure on the final model ===
+  as-is:          prev 0.8574  ->  +v13 0.8969
+  pop-matched:    prev 0.8308  ->  +v13 0.8710
+  dev500-matched: prev 0.8089  ->  +v13 0.8611
+  ghm-matched:    prev 0.8464  ->  +v13 0.8540  (does it survive matching on itself?)
+
+  v13 importance:
+    ghm          +0.0481
+    built        +0.0210
+    ghm_2km      +0.0085
+    built_2km    +0.0041
+    wsf_2km      -0.0009
