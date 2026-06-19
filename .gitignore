@@ -85,3 +85,15 @@ desktop.ini
 *.bak
 *.swp
 *~
+
+# Large intermediate experiment data (regenerable from Dataget_*.py) + stale model
+*.tfrecord.gz
+v7_best_model.joblib
+Training Data Florida/v3/
+Training Data Florida/v4/
+Training Data Florida/v5/
+Training Data Florida/v6/
+Training Data Florida/v7/
+Training Data Florida/v8/
+Training Data Florida/v9dyn/
+Training Data Florida/v10/
