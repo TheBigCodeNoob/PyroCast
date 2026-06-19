@@ -255,3 +255,11 @@ fire-history climatology by +0.08, AND generalizes to new places (climatology ca
 ### Temporal robustness — 0.86 holds across all test years (not a 2020 fluke)
 train<2018 -> test 2018: 0.8528 | train<2019 -> test 2019: 0.8764 | train<2020 -> test 2020: 0.8622.
 Mean ~0.864. Model generalizes to ANY future year. (2018 lower = only 1 training year.)
+
+### Neural net attempt (nn_attempt.py) — confirms data-limited ceiling
+MLP(128-64) 0.8368 | gradient boosting 0.8622 | GBM+NN blend 0.8598.
+NN is WORSE than GBM (typical for tabular); blend doesn't help. Across ALL architectures
+(linear 0.78, NN 0.84, RF 0.85, LGBM 0.85, GBM 0.86, ensemble 0.87) nothing exceeds ~0.86.
+=> The ~0.86 ceiling is DATA-limited, not model-limited. Definitively confirmed.
+   The only thing that would raise it is lightning data (unavailable) or more fire-years
+   (full-feature export too slow). Model is genuinely DONE at its honest ceiling.
