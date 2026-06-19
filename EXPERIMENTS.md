@@ -207,3 +207,14 @@ state, can't be reporting bias; gain GROWS under matching -> unimpeachable.
     0.857 as-is (CI 0.851-0.864) / 0.831 crutch-free / 0.809 nature-only floor / 0.764 Florida.
     Ensemble ~0.860. where x when product 0.796 (full place-and-day task). ***
 TWO-SESSION CLIMB: 0.81 -> 0.857 honest (every step crutch-checked). Nulls: terrain, calendar feats.
+
+## === BRANCH v13-anything-goes (12hr free session) ===
+### Error analysis (error_analysis.py) — explains the ceiling
+Missed fires (low-scored real fires) are systematically: farther from dev (DistDev 0.067 vs 0.030),
+DENSE FOREST (treecover 75% vs 7%), WETTER veg (NDMI 0.14 vs 0.05), higher elevation, more lightning.
+-> Model misses REMOTE FORESTED LIGHTNING-DRIVEN wildland fires (least human-predictable). Caught
+   fires are human-access-driven near development. Ceiling is LIGHTNING-LIMITED (no lightning data in GEE).
+   Also explains Florida being easier per-fire (FL fires are human/development-driven).
+False alarms = background points in fire-prone settings (unavoidable in presence/background framing).
+### New feature exports (running): v13a human-pressure (gHM=roads+power+infra, GHSL built, WSF),
+    v13c VCF continuous fuel (% tree/herb/bare). Cheap-merge at 25k. Auto-evals armed.
