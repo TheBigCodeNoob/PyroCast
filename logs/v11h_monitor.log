@@ -1,0 +1,36 @@
+  downloading Fire_v11h_pos_3.csv
+  downloading Fire_v11h_pos_1.csv
+[01:30:00] v11h_canopy {'PENDING': 24, 'SUCCEEDED': 2, 'RUNNING': 1} | csv local: 2 new: 2
+  downloading Fire_v11h_pos_8.csv
+  downloading Fire_v11h_pos_7.csv
+  downloading Fire_v11h_pos_6.csv
+  downloading Fire_v11h_pos_2.csv
+  downloading Fire_v11h_pos_5.csv
+  downloading Fire_v11h_pos_4.csv
+[01:32:04] v11h_canopy {'PENDING': 17, 'RUNNING': 2, 'SUCCEEDED': 8} | csv local: 8 new: 6
+  downloading Fire_v11h_pos_14.csv
+  downloading Fire_v11h_pos_12.csv
+  downloading Fire_v11h_pos_11.csv
+  downloading Fire_v11h_pos_10.csv
+  downloading Fire_v11h_pos_9.csv
+[01:34:08] v11h_canopy {'PENDING': 13, 'SUCCEEDED': 13, 'RUNNING': 1} | csv local: 13 new: 5
+  downloading Fire_v11h_neg_1.csv
+  downloading Fire_v11h_neg_2.csv
+  downloading Fire_v11h_pos_15.csv
+  downloading Fire_v11h_pos_13.csv
+[01:36:11] v11h_canopy {'PENDING': 8, 'RUNNING': 2, 'SUCCEEDED': 17} | csv local: 17 new: 4
+  downloading Fire_v11h_neg_5.csv
+  downloading Fire_v11h_neg_4.csv
+  downloading Fire_v11h_neg_3.csv
+[01:38:14] v11h_canopy {'PENDING': 5, 'RUNNING': 2, 'SUCCEEDED': 20} | csv local: 20 new: 3
+  downloading Fire_v11h_neg_9.csv
+  downloading Fire_v11h_neg_8.csv
+  downloading Fire_v11h_neg_7.csv
+  downloading Fire_v11h_neg_6.csv
+[01:40:17] v11h_canopy {'PENDING': 2, 'RUNNING': 1, 'SUCCEEDED': 24} | csv local: 24 new: 4
+  downloading Fire_v11h_neg_12.csv
+  downloading Fire_v11h_neg_11.csv
+  downloading Fire_v11h_neg_10.csv
+[01:42:20] v11h_canopy {'SUCCEEDED': 27} | csv local: 27 new: 3
+[01:44:21] v11h_canopy {'SUCCEEDED': 27} | csv local: 27 new: 0
+DONE. csv=27

@@ -1,0 +1,17 @@
+v10b=19902 extra=20000 merged=19902
+
+LOCKED metric (blocked space+time):
+  base (v10b feats)            0.8093
+  + NightLights       0.8124
+  + nbhd_dev_2km      0.8097
+  + nbhd_dev_500m     0.8128
+  + nbhd_forest_2km   0.8116
+  + nbhd_wetland_2km  0.8142
+  + ALL new                    0.8260
+
+  new-feature importance rank (among all):
+    # 3/46  nbhd_dev_500m      +0.0201
+    # 6/46  nbhd_forest_2km    +0.0135
+    # 7/46  NightLights        +0.0096
+    # 8/46  nbhd_wetland_2km   +0.0093
+    #45/46  nbhd_dev_2km       -0.0019

@@ -1,0 +1,22 @@
+merged=18495
+
+LOCKED metric (full model):
+  prev (base+v11c+v11d)   0.8350
+  + v11f terrain/fuel     0.8351
+
+ENVIRONMENTAL FLOOR (human-access stripped) — the honest test:
+  env-only (no v11f)      0.7608
+  env-only + v11f         0.7702
+  env+v11f, pop-matched   0.7127
+  env+v11f, dev500-matched0.7240
+
+stricter crutch metric on FULL model (match nbhd_dev_500m):
+  prev   0.7667  ->  +v11f 0.7726
+
+  v11f importance:
+    tpi                +0.0013
+    northness          +0.0006
+    slope              +0.0004
+    eastness           -0.0003
+    ruggedness         -0.0009
+    nbhd_wildland_2km  -0.0011

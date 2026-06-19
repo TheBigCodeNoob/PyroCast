@@ -1,0 +1,14 @@
+rows=39529 fire=24942 neg=14587  (48 feats)
+
+=== LOCKED metric on FRESH 25k data ===
+  as-is             0.8404   95% CI [0.8312, 0.8492]
+  pop-matched       0.8025
+  DistDev-matched   0.7742
+  dev500-matched    0.7820   (STRICTER: strongest single human-access lever)
+  NO human-access   0.7947
+  ENV floor (no human, no land-use)  0.7639
+  ENV floor + pop-matched            0.7464
+  FLORIDA-only (n=6363): as-is 0.7491 / pop-matched 0.6617
+  [tuned 10k for reference: as-is 0.835 / pop 0.784 / dev500 0.773 / env-floor 0.72]
+
+  leave-region-out (8): mean=0.8275 min=0.7823 max=0.8780

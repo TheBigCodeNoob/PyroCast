@@ -1,0 +1,311 @@
+  downloading Fire_v11e_pos_3.csv
+[18:13:50] v11e {'PENDING': 23, 'RUNNING': 3, 'SUCCEEDED': 1} | csv local: 1 new: 1
+  downloading Fire_v11e_pos_4.csv
+  downloading Fire_v11e_pos_2.csv
+  downloading Fire_v11e_pos_1.csv
+[18:15:54] v11e {'PENDING': 20, 'RUNNING': 3, 'SUCCEEDED': 4} | csv local: 4 new: 3
+  downloading Fire_v11e_pos_5.csv
+[18:17:56] v11e {'PENDING': 19, 'RUNNING': 3, 'SUCCEEDED': 5} | csv local: 5 new: 1
+[18:19:58] v11e {'PENDING': 19, 'RUNNING': 3, 'SUCCEEDED': 5} | csv local: 5 new: 0
+  downloading Fire_v11e_pos_6.csv
+[18:22:00] v11e {'PENDING': 17, 'RUNNING': 4, 'SUCCEEDED': 6} | csv local: 6 new: 1
+[18:24:02] v11e {'PENDING': 17, 'RUNNING': 4, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[18:26:03] v11e {'PENDING': 17, 'RUNNING': 4, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[18:28:05] v11e {'PENDING': 17, 'RUNNING': 4, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[18:30:06] v11e {'PENDING': 17, 'RUNNING': 4, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[18:32:07] v11e {'PENDING': 17, 'RUNNING': 4, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[18:34:09] v11e {'PENDING': 17, 'RUNNING': 4, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[18:36:11] v11e {'PENDING': 17, 'RUNNING': 4, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[18:38:12] v11e {'PENDING': 17, 'RUNNING': 4, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[18:40:13] v11e {'PENDING': 17, 'RUNNING': 4, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[18:42:15] v11e {'PENDING': 17, 'RUNNING': 4, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[18:44:16] v11e {'PENDING': 17, 'RUNNING': 4, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[18:46:18] v11e {'PENDING': 17, 'RUNNING': 4, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[18:48:19] v11e {'PENDING': 17, 'RUNNING': 4, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[18:50:21] v11e {'PENDING': 17, 'RUNNING': 4, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[18:52:22] v11e {'PENDING': 17, 'RUNNING': 4, 'SUCCEEDED': 6} | csv local: 6 new: 0
+[18:54:23] v11e {'PENDING': 17, 'RUNNING': 4, 'SUCCEEDED': 6} | csv local: 6 new: 0
+  downloading Fire_v11e_pos_8.csv
+[18:56:27] v11e {'PENDING': 16, 'RUNNING': 4, 'SUCCEEDED': 7} | csv local: 7 new: 1
+[18:58:28] v11e {'PENDING': 16, 'RUNNING': 4, 'SUCCEEDED': 7} | csv local: 7 new: 0
+[19:00:30] v11e {'PENDING': 16, 'RUNNING': 4, 'SUCCEEDED': 7} | csv local: 7 new: 0
+[19:02:31] v11e {'PENDING': 16, 'RUNNING': 4, 'SUCCEEDED': 7} | csv local: 7 new: 0
+[19:04:33] v11e {'PENDING': 16, 'RUNNING': 4, 'SUCCEEDED': 7} | csv local: 7 new: 0
+[19:06:35] v11e {'PENDING': 16, 'RUNNING': 4, 'SUCCEEDED': 7} | csv local: 7 new: 0
+[19:08:36] v11e {'PENDING': 16, 'RUNNING': 4, 'SUCCEEDED': 7} | csv local: 7 new: 0
+[19:10:39] v11e {'PENDING': 16, 'RUNNING': 4, 'SUCCEEDED': 7} | csv local: 7 new: 0
+[19:12:42] v11e {'PENDING': 16, 'RUNNING': 4, 'SUCCEEDED': 7} | csv local: 7 new: 0
+[19:14:44] v11e {'PENDING': 16, 'RUNNING': 4, 'SUCCEEDED': 7} | csv local: 7 new: 0
+  downloading Fire_v11e_pos_7.csv
+[19:16:46] v11e {'PENDING': 15, 'RUNNING': 4, 'SUCCEEDED': 8} | csv local: 8 new: 1
+[19:18:48] v11e {'PENDING': 15, 'RUNNING': 4, 'SUCCEEDED': 8} | csv local: 8 new: 0
+[19:20:49] v11e {'PENDING': 15, 'RUNNING': 4, 'SUCCEEDED': 8} | csv local: 8 new: 0
+  downloading Fire_v11e_pos_10.csv
+[19:22:52] v11e {'PENDING': 14, 'RUNNING': 4, 'SUCCEEDED': 9} | csv local: 9 new: 1
+[19:24:53] v11e {'PENDING': 14, 'RUNNING': 4, 'SUCCEEDED': 9} | csv local: 9 new: 0
+[19:26:55] v11e {'PENDING': 14, 'RUNNING': 4, 'SUCCEEDED': 9} | csv local: 9 new: 0
+[19:28:57] v11e {'PENDING': 14, 'RUNNING': 4, 'SUCCEEDED': 9} | csv local: 9 new: 0
+  downloading Fire_v11e_pos_9.csv
+[19:30:59] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 1
+[19:33:04] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[19:35:05] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[19:37:06] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[19:39:08] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[19:41:09] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[19:43:11] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[19:45:13] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[19:47:14] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[19:49:15] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[19:51:17] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[19:53:19] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[19:55:20] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[19:57:22] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[19:59:24] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[20:01:25] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[20:03:27] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[20:05:29] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[20:07:30] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+[20:09:32] v11e {'PENDING': 13, 'RUNNING': 4, 'SUCCEEDED': 10} | csv local: 10 new: 0
+  downloading Fire_v11e_pos_13.csv
+[20:11:34] v11e {'PENDING': 12, 'RUNNING': 4, 'SUCCEEDED': 11} | csv local: 11 new: 1
+[20:13:36] v11e {'PENDING': 12, 'RUNNING': 4, 'SUCCEEDED': 11} | csv local: 11 new: 0
+[20:15:37] v11e {'PENDING': 12, 'RUNNING': 4, 'SUCCEEDED': 11} | csv local: 11 new: 0
+  downloading Fire_v11e_pos_12.csv
+[20:17:40] v11e {'PENDING': 11, 'RUNNING': 4, 'SUCCEEDED': 12} | csv local: 12 new: 1
+  downloading Fire_v11e_pos_11.csv
+[20:19:42] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 1
+[20:21:44] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[20:23:46] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[20:25:48] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[20:27:50] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[20:29:51] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[20:31:53] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[20:33:55] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[20:35:56] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[20:37:58] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[20:40:00] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[20:42:02] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[20:44:03] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[20:46:04] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[20:48:06] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[20:50:08] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[20:52:10] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[20:54:11] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[20:56:13] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[20:58:14] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[21:00:16] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[21:02:18] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[21:04:20] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[21:06:22] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[21:08:23] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+[21:10:25] v11e {'PENDING': 10, 'RUNNING': 4, 'SUCCEEDED': 13} | csv local: 13 new: 0
+  downloading Fire_v11e_pos_14.csv
+[21:12:28] v11e {'PENDING': 9, 'RUNNING': 4, 'SUCCEEDED': 14} | csv local: 14 new: 1
+[21:14:29] v11e {'PENDING': 9, 'RUNNING': 4, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[21:16:31] v11e {'PENDING': 9, 'RUNNING': 4, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[21:18:32] v11e {'PENDING': 9, 'RUNNING': 4, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[21:20:34] v11e {'PENDING': 9, 'RUNNING': 4, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[21:22:36] v11e {'PENDING': 9, 'RUNNING': 4, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[21:24:38] v11e {'PENDING': 9, 'RUNNING': 4, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[21:26:40] v11e {'PENDING': 9, 'RUNNING': 4, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[21:28:41] v11e {'PENDING': 9, 'RUNNING': 4, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[21:30:43] v11e {'PENDING': 9, 'RUNNING': 4, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[21:32:45] v11e {'PENDING': 9, 'RUNNING': 4, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[21:34:46] v11e {'PENDING': 9, 'RUNNING': 4, 'SUCCEEDED': 14} | csv local: 14 new: 0
+[21:36:48] v11e {'PENDING': 9, 'RUNNING': 4, 'SUCCEEDED': 14} | csv local: 14 new: 0
+  downloading Fire_v11e_pos_15.csv
+[21:38:51] v11e {'PENDING': 8, 'RUNNING': 4, 'SUCCEEDED': 15} | csv local: 15 new: 1
+[21:40:53] v11e {'PENDING': 8, 'RUNNING': 4, 'SUCCEEDED': 15} | csv local: 15 new: 0
+  downloading Fire_v11e_neg_2.csv
+[21:42:56] v11e {'PENDING': 7, 'RUNNING': 4, 'SUCCEEDED': 16} | csv local: 16 new: 1
+[21:44:57] v11e {'PENDING': 7, 'RUNNING': 4, 'SUCCEEDED': 16} | csv local: 16 new: 0
+[21:46:59] v11e {'PENDING': 7, 'RUNNING': 4, 'SUCCEEDED': 16} | csv local: 16 new: 0
+[21:49:00] v11e {'PENDING': 7, 'RUNNING': 4, 'SUCCEEDED': 16} | csv local: 16 new: 0
+[21:51:02] v11e {'PENDING': 7, 'RUNNING': 4, 'SUCCEEDED': 16} | csv local: 16 new: 0
+[21:53:04] v11e {'PENDING': 7, 'RUNNING': 4, 'SUCCEEDED': 16} | csv local: 16 new: 0
+[21:55:05] v11e {'PENDING': 7, 'RUNNING': 4, 'SUCCEEDED': 16} | csv local: 16 new: 0
+[21:57:07] v11e {'PENDING': 7, 'RUNNING': 4, 'SUCCEEDED': 16} | csv local: 16 new: 0
+[21:59:08] v11e {'PENDING': 7, 'RUNNING': 4, 'SUCCEEDED': 16} | csv local: 16 new: 0
+  downloading Fire_v11e_neg_1.csv
+[22:01:11] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 1
+[22:03:12] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+[22:05:14] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+[22:07:16] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+[22:09:17] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+[22:11:19] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+[22:13:21] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+[22:15:22] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+[22:17:24] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+[22:19:26] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+[22:21:27] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+[22:23:29] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+[22:25:31] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+[22:27:32] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+[22:29:34] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+[22:31:36] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+[22:33:37] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+[22:35:39] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+[22:37:40] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+[22:39:42] v11e {'PENDING': 6, 'RUNNING': 4, 'SUCCEEDED': 17} | csv local: 17 new: 0
+  downloading Fire_v11e_neg_5.csv
+[22:41:45] v11e {'PENDING': 5, 'RUNNING': 4, 'SUCCEEDED': 18} | csv local: 18 new: 1
+[22:43:46] v11e {'PENDING': 5, 'RUNNING': 4, 'SUCCEEDED': 18} | csv local: 18 new: 0
+[22:45:48] v11e {'PENDING': 5, 'RUNNING': 4, 'SUCCEEDED': 18} | csv local: 18 new: 0
+[22:47:49] v11e {'PENDING': 5, 'RUNNING': 4, 'SUCCEEDED': 18} | csv local: 18 new: 0
+[22:49:51] v11e {'PENDING': 5, 'RUNNING': 4, 'SUCCEEDED': 18} | csv local: 18 new: 0
+[22:51:52] v11e {'PENDING': 5, 'RUNNING': 4, 'SUCCEEDED': 18} | csv local: 18 new: 0
+[22:53:54] v11e {'PENDING': 5, 'RUNNING': 4, 'SUCCEEDED': 18} | csv local: 18 new: 0
+[22:55:56] v11e {'PENDING': 5, 'RUNNING': 4, 'SUCCEEDED': 18} | csv local: 18 new: 0
+[22:57:58] v11e {'PENDING': 5, 'RUNNING': 4, 'SUCCEEDED': 18} | csv local: 18 new: 0
+[23:00:00] v11e {'PENDING': 5, 'RUNNING': 4, 'SUCCEEDED': 18} | csv local: 18 new: 0
+  downloading Fire_v11e_neg_4.csv
+[23:02:02] v11e {'PENDING': 4, 'RUNNING': 4, 'SUCCEEDED': 19} | csv local: 19 new: 1
+[23:04:04] v11e {'PENDING': 4, 'RUNNING': 4, 'SUCCEEDED': 19} | csv local: 19 new: 0
+[23:06:05] v11e {'PENDING': 4, 'RUNNING': 4, 'SUCCEEDED': 19} | csv local: 19 new: 0
+[23:08:07] v11e {'PENDING': 4, 'RUNNING': 4, 'SUCCEEDED': 19} | csv local: 19 new: 0
+[23:10:08] v11e {'PENDING': 4, 'RUNNING': 4, 'SUCCEEDED': 19} | csv local: 19 new: 0
+[23:12:10] v11e {'PENDING': 4, 'RUNNING': 4, 'SUCCEEDED': 19} | csv local: 19 new: 0
+[23:14:12] v11e {'PENDING': 4, 'RUNNING': 4, 'SUCCEEDED': 19} | csv local: 19 new: 0
+[23:16:13] v11e {'PENDING': 4, 'RUNNING': 4, 'SUCCEEDED': 19} | csv local: 19 new: 0
+[23:18:15] v11e {'PENDING': 4, 'RUNNING': 4, 'SUCCEEDED': 19} | csv local: 19 new: 0
+[23:20:17] v11e {'PENDING': 4, 'RUNNING': 4, 'SUCCEEDED': 19} | csv local: 19 new: 0
+[23:22:19] v11e {'PENDING': 4, 'RUNNING': 4, 'SUCCEEDED': 19} | csv local: 19 new: 0
+[23:24:20] v11e {'PENDING': 4, 'RUNNING': 4, 'SUCCEEDED': 19} | csv local: 19 new: 0
+[23:26:22] v11e {'PENDING': 4, 'RUNNING': 4, 'SUCCEEDED': 19} | csv local: 19 new: 0
+[23:28:24] v11e {'PENDING': 4, 'RUNNING': 4, 'SUCCEEDED': 19} | csv local: 19 new: 0
+[23:30:25] v11e {'PENDING': 4, 'RUNNING': 4, 'SUCCEEDED': 19} | csv local: 19 new: 0
+[23:32:27] v11e {'PENDING': 4, 'RUNNING': 4, 'SUCCEEDED': 19} | csv local: 19 new: 0
+  downloading Fire_v11e_neg_3.csv
+[23:34:29] v11e {'PENDING': 3, 'RUNNING': 4, 'SUCCEEDED': 20} | csv local: 20 new: 1
+  downloading Fire_v11e_neg_6.csv
+[23:36:32] v11e {'PENDING': 2, 'RUNNING': 4, 'SUCCEEDED': 21} | csv local: 21 new: 1
+[23:38:33] v11e {'PENDING': 2, 'RUNNING': 4, 'SUCCEEDED': 21} | csv local: 21 new: 0
+[23:40:35] v11e {'PENDING': 2, 'RUNNING': 4, 'SUCCEEDED': 21} | csv local: 21 new: 0
+  downloading Fire_v11e_neg_7.csv
+[23:42:37] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 1
+[23:44:39] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+[23:46:40] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+[23:48:41] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+[23:50:43] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+[23:52:45] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+[23:54:46] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+[23:56:48] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+[23:58:50] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+[00:00:52] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+[00:02:53] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+[00:04:55] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+[00:06:56] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+[00:08:58] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+[00:10:59] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+[00:13:00] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+[00:15:02] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+[00:17:03] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+[00:19:05] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+[00:21:06] v11e {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 22} | csv local: 22 new: 0
+  downloading Fire_v11e_neg_11.csv
+[00:23:09] v11e {'RUNNING': 4, 'SUCCEEDED': 23} | csv local: 23 new: 1
+[00:25:10] v11e {'RUNNING': 4, 'SUCCEEDED': 23} | csv local: 23 new: 0
+[00:27:11] v11e {'RUNNING': 4, 'SUCCEEDED': 23} | csv local: 23 new: 0
+[00:29:13] v11e {'RUNNING': 4, 'SUCCEEDED': 23} | csv local: 23 new: 0
+[00:31:14] v11e {'RUNNING': 4, 'SUCCEEDED': 23} | csv local: 23 new: 0
+[00:33:15] v11e {'RUNNING': 4, 'SUCCEEDED': 23} | csv local: 23 new: 0
+[00:35:17] v11e {'RUNNING': 4, 'SUCCEEDED': 23} | csv local: 23 new: 0
+[00:37:19] v11e {'RUNNING': 4, 'SUCCEEDED': 23} | csv local: 23 new: 0
+[00:39:20] v11e {'RUNNING': 4, 'SUCCEEDED': 23} | csv local: 23 new: 0
+  downloading Fire_v11e_neg_9.csv
+[00:41:23] v11e {'RUNNING': 3, 'SUCCEEDED': 24} | csv local: 24 new: 1
+[00:43:24] v11e {'RUNNING': 3, 'SUCCEEDED': 24} | csv local: 24 new: 0
+  downloading Fire_v11e_neg_10.csv
+[00:45:27] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 1
+[00:47:28] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+[00:49:30] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+[00:51:31] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+[00:53:33] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+[00:55:34] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+[00:57:36] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+[00:59:37] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+[01:01:39] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+[01:03:40] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+[01:05:42] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+[01:07:43] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+[01:09:46] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+[01:11:47] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+[01:13:48] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+[01:15:50] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+[01:17:52] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+[01:19:57] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+[01:22:00] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+[01:24:01] v11e {'RUNNING': 2, 'SUCCEEDED': 25} | csv local: 25 new: 0
+  downloading Fire_v11e_neg_8.csv
+[01:26:03] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 1
+[01:28:05] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[01:30:07] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[01:32:08] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[01:34:10] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[01:36:12] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[01:38:13] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[01:40:15] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[01:42:16] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[01:44:17] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[01:46:19] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[01:48:21] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[01:50:22] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[01:52:24] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[01:54:25] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[01:56:27] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[01:58:29] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:00:30] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:02:31] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:04:32] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:06:34] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:08:35] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:10:36] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:12:38] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:14:39] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:16:41] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:18:42] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:20:44] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:22:46] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:24:47] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:26:48] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:28:51] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:30:53] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:32:54] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:34:56] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:36:57] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:38:58] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:41:00] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:43:01] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:45:03] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:47:04] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:49:06] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:51:07] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:53:09] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:55:10] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:57:12] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[02:59:13] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:01:15] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:03:16] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:05:17] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:07:19] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:09:21] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:11:22] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:13:24] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:15:26] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:17:28] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:19:29] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:21:31] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:23:32] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:25:34] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:27:35] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:29:37] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:31:38] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:33:39] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:35:41] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:37:42] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:39:43] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+[03:41:45] v11e {'RUNNING': 1, 'SUCCEEDED': 26} | csv local: 26 new: 0
+  downloading Fire_v11e_neg_12.csv
+[03:43:47] v11e {'SUCCEEDED': 27} | csv local: 27 new: 1
+[03:45:49] v11e {'SUCCEEDED': 27} | csv local: 27 new: 0
+DONE. csv=27

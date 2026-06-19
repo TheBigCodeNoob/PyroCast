@@ -1,0 +1,19 @@
+merged=19902
+
+LOCKED metric (full model):
+  prev (base+v11c+v11d)   0.8346
+  + v11g canopy/treecover 0.8436
+
+ENVIRONMENTAL FLOOR (human-access stripped):
+  env-only (no v11g)      0.7623
+  env-only + v11g         0.7891
+
+stricter crutch metric (match nbhd_dev_500m):
+  prev 0.7731 -> +v11g 0.7866
+pop-matched: prev 0.7844 -> +v11g 0.8009
+
+  v11g importance:
+    treecover        +0.0136
+    canopy_ht        +0.0098
+    treecover_2km    +0.0004
+    canopy_ht_2km    -0.0016

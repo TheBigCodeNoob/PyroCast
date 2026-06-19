@@ -1,0 +1,22 @@
+merged=19902
+
+LOCKED metric stacking:
+  base               0.8093
+  base+v11c          0.8268
+  base+v11c+v11d     0.8373
+
+crutch controls (base+v11c  vs  base+v11c+v11d):
+  as-is           0.8268 -> 0.8373  (+0.0105)
+  pop-matched     0.7778 -> 0.8002  (+0.0225)
+  DistDev-matched 0.7296 -> 0.7562  (+0.0266)
+
+  v11d feature importance:
+    nbhd_wetland_5km   +0.0052
+    nbhd_crop_2km      +0.0043
+    nbhd_pasture_2km   +0.0009
+    dist_water         +0.0005
+    nbhd_grass_2km     -0.0005
+    nbhd_forest_1km    -0.0020
+    nbhd_shrub_2km     -0.0022
+    nbhd_forest_5km    -0.0024
+    nbhd_dev_1km       -0.0034

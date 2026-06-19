@@ -1,0 +1,25 @@
+  downloading Fire_v11g_pos_1.csv
+[01:07:49] v11g_extra {'PENDING': 12, 'RUNNING': 1, 'SUCCEEDED': 1} | csv local: 1 new: 1
+  downloading Fire_v11g_pos_2.csv
+[01:09:52] v11g_extra {'PENDING': 11, 'RUNNING': 1, 'SUCCEEDED': 2} | csv local: 2 new: 1
+  downloading Fire_v11g_pos_5.csv
+  downloading Fire_v11g_pos_4.csv
+  downloading Fire_v11g_pos_3.csv
+[01:11:54] v11g_extra {'PENDING': 8, 'RUNNING': 1, 'SUCCEEDED': 5} | csv local: 5 new: 3
+  downloading Fire_v11g_pos_6.csv
+[01:13:56] v11g_extra {'PENDING': 7, 'RUNNING': 1, 'SUCCEEDED': 6} | csv local: 6 new: 1
+  downloading Fire_v11g_neg_1.csv
+  downloading Fire_v11g_pos_7.csv
+[01:15:58] v11g_extra {'PENDING': 5, 'RUNNING': 1, 'SUCCEEDED': 8} | csv local: 8 new: 2
+  downloading Fire_v11g_neg_3.csv
+  downloading Fire_v11g_neg_2.csv
+[01:18:01] v11g_extra {'PENDING': 3, 'RUNNING': 1, 'SUCCEEDED': 10} | csv local: 10 new: 2
+  downloading Fire_v11g_neg_4.csv
+[01:20:02] v11g_extra {'PENDING': 2, 'RUNNING': 1, 'SUCCEEDED': 11} | csv local: 11 new: 1
+  downloading Fire_v11g_neg_5.csv
+[01:22:04] v11g_extra {'PENDING': 1, 'RUNNING': 1, 'SUCCEEDED': 12} | csv local: 12 new: 1
+  downloading Fire_v11g_neg_7.csv
+  downloading Fire_v11g_neg_6.csv
+[01:24:06] v11g_extra {'SUCCEEDED': 14} | csv local: 14 new: 2
+[01:26:07] v11g_extra {'SUCCEEDED': 14} | csv local: 14 new: 0
+DONE. csv=14

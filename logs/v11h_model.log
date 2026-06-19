@@ -1,0 +1,9 @@
+merged=43615 fire=24942 neg=18673
+
+=== v11h = v11e(25k) + canopy/treecover ===
+  as-is:            prev 0.8403  ->  +canopy 0.8518   95% CI [0.8445,0.8601]
+  pop-matched:      prev 0.7972  ->  +canopy 0.8105
+  dev500-matched:   prev 0.7895  ->  +canopy 0.8013
+  ENV floor:        prev 0.7645  ->  +canopy 0.7917
+  FLORIDA-only (n=6832): prev 0.7511  ->  +canopy 0.7511
+  leave-region-out (8): mean=0.8412 min=0.7937

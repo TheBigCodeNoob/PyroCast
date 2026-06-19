@@ -1,0 +1,54 @@
+[15:36:41] v11cross {'PENDING': 5, 'RUNNING': 3} | csv local: 0 new: 0
+[15:38:42] v11cross {'PENDING': 5, 'RUNNING': 3} | csv local: 0 new: 0
+[15:40:43] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+[15:42:44] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+[15:44:46] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+[15:46:47] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+[15:48:48] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+[15:50:49] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+[15:52:51] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+[15:54:52] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+[15:56:53] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+[15:58:54] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+[16:00:55] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+[16:02:56] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+[16:04:57] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+[16:06:58] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+[16:08:59] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+[16:11:00] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+[16:13:02] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+[16:15:03] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+[16:17:04] v11cross {'PENDING': 4, 'RUNNING': 4} | csv local: 0 new: 0
+  downloading Fire_v11cross_2.csv
+[16:19:06] v11cross {'PENDING': 3, 'RUNNING': 4, 'SUCCEEDED': 1} | csv local: 1 new: 1
+[16:21:07] v11cross {'PENDING': 3, 'RUNNING': 4, 'SUCCEEDED': 1} | csv local: 1 new: 0
+[16:23:09] v11cross {'PENDING': 3, 'RUNNING': 4, 'SUCCEEDED': 1} | csv local: 1 new: 0
+  downloading Fire_v11cross_1.csv
+[16:25:11] v11cross {'PENDING': 2, 'RUNNING': 4, 'SUCCEEDED': 2} | csv local: 2 new: 1
+  downloading Fire_v11cross_4.csv
+[16:27:13] v11cross {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 3} | csv local: 3 new: 1
+[16:29:14] v11cross {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 3} | csv local: 3 new: 0
+  downloading Fire_v11cross_3.csv
+[16:31:18] v11cross {'PENDING': 1, 'RUNNING': 4, 'SUCCEEDED': 3} | csv local: 4 new: 1
+[16:33:19] v11cross {'RUNNING': 4, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[16:35:21] v11cross {'RUNNING': 4, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[16:37:23] v11cross {'RUNNING': 4, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[16:39:24] v11cross {'RUNNING': 4, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[16:41:26] v11cross {'RUNNING': 4, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[16:43:27] v11cross {'RUNNING': 4, 'SUCCEEDED': 4} | csv local: 4 new: 0
+[16:45:28] v11cross {'RUNNING': 4, 'SUCCEEDED': 4} | csv local: 4 new: 0
+  downloading Fire_v11cross_8.csv
+[16:47:30] v11cross {'SUCCEEDED': 5, 'RUNNING': 3} | csv local: 5 new: 1
+[16:49:31] v11cross {'SUCCEEDED': 5, 'RUNNING': 3} | csv local: 5 new: 0
+  downloading Fire_v11cross_6.csv
+[16:51:33] v11cross {'SUCCEEDED': 6, 'RUNNING': 2} | csv local: 6 new: 1
+[16:53:34] v11cross {'SUCCEEDED': 6, 'RUNNING': 2} | csv local: 6 new: 0
+[16:55:35] v11cross {'SUCCEEDED': 6, 'RUNNING': 2} | csv local: 6 new: 0
+  downloading Fire_v11cross_5.csv
+[16:57:37] v11cross {'SUCCEEDED': 7, 'RUNNING': 1} | csv local: 7 new: 1
+[16:59:39] v11cross {'SUCCEEDED': 7, 'RUNNING': 1} | csv local: 7 new: 0
+[17:01:40] v11cross {'SUCCEEDED': 7, 'RUNNING': 1} | csv local: 7 new: 0
+  downloading Fire_v11cross_7.csv
+[17:03:42] v11cross {'SUCCEEDED': 8} | csv local: 8 new: 1
+[17:05:43] v11cross {'SUCCEEDED': 8} | csv local: 8 new: 0
+DONE. csv=8
