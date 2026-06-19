@@ -218,3 +218,13 @@ DENSE FOREST (treecover 75% vs 7%), WETTER veg (NDMI 0.14 vs 0.05), higher eleva
 False alarms = background points in fire-prone settings (unavoidable in presence/background framing).
 ### New feature exports (running): v13a human-pressure (gHM=roads+power+infra, GHSL built, WSF),
     v13c VCF continuous fuel (% tree/herb/bare). Cheap-merge at 25k. Auto-evals armed.
+
+### v13a human-pressure (gHM) — PHANTOM GAIN CAUGHT
+At 88% coverage (incomplete download): +v13 showed +0.040 as-is (0.857->0.897), gHM importance +0.048.
+RED FLAG (too big for a 0.60-univariate feature). Causality test: gHM predicts human fires (uni 0.604)
+but ANTI-predicts lightning (0.448) -> genuinely causal, not reporting bias. BUT on COMPLETE 100% data:
+  as-is 0.8574 -> 0.8629 (+0.0055), gHM importance +0.0007 (~ZERO), built +0.029.
+-> The +0.040 was a NaN-coverage ARTIFACT (missing batches clustered in the spatial CV leaked).
+   gHM is REDUNDANT with existing human-access. Real gain = +0.006 from GHSL built-surface only.
+   LESSON: always evaluate on COMPLETE data; a too-good jump is the red flag, not the prize.
+KEEP: built (+0.006). DROP: ghm/ghm_2km/built_2km/wsf (redundant/null).

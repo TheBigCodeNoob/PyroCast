@@ -36,10 +36,12 @@ df = (ve.merge(vh[['k'] + CANF].drop_duplicates('k'), on='k')
         .merge(vm[['k'] + MOIST].drop_duplicates('k'), on='k', how='left'))
 HAVE_H = len(v13) > 0 and 'ghm' in v13.columns
 HAVE_V = len(vcf) > 0 and 'vcf_tree' in vcf.columns
+# INNER-join the v13 features (no NaN rows) so incomplete downloads can't leak via the
+# spatial CV (the gHM phantom-gain lesson). prev vs +v13 compared on identical complete rows.
 if HAVE_H:
-    df = df.merge(v13[['k'] + HUM].drop_duplicates('k'), on='k', how='left')
+    df = df.merge(v13[['k'] + HUM].dropna().drop_duplicates('k'), on='k')
 if HAVE_V:
-    df = df.merge(vcf[['k'] + VCF].drop_duplicates('k'), on='k', how='left')
+    df = df.merge(vcf[['k'] + VCF].dropna().drop_duplicates('k'), on='k')
 df = df.reset_index(drop=True)
 df['pdsi_traj_90'] = df.pdsi_0 - df.pdsi_90; df['vpd_trend'] = df.vpd_7 - df.vpd_90
 df['pr_deficit'] = df.pr_365 / 4 - df.pr_90; df['fm100_trend'] = df.fm100_30 - df.fm100_90
