@@ -246,3 +246,8 @@ Error analysis said missed fires are lightning-driven. Tried to find a lightning
    with available free data. The ~0.86 ceiling is REAL and data-limited, not a modeling failure.
 ### SESSION NET (v13): 0.857 -> 0.862 (built-surface only real gain). gHM phantom caught, VCF null,
    lightning infeasible. Model at honest data ceiling. Value = the catch + the operational tool.
+
+### Baseline comparison (baselines.py, figures/13_baselines.png)
+Blocked space+time AUC: DistDev-only 0.731 | pop 0.653 | dryness 0.608 | spatial fire climatology 0.782
+| linear(all feats) 0.809 | PyroCast 0.861. -> model beats best naive predictor by +0.13 and the
+fire-history climatology by +0.08, AND generalizes to new places (climatology can't). Contextualizes 0.86.
