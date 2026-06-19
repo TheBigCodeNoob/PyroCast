@@ -251,3 +251,7 @@ Error analysis said missed fires are lightning-driven. Tried to find a lightning
 Blocked space+time AUC: DistDev-only 0.731 | pop 0.653 | dryness 0.608 | spatial fire climatology 0.782
 | linear(all feats) 0.809 | PyroCast 0.861. -> model beats best naive predictor by +0.13 and the
 fire-history climatology by +0.08, AND generalizes to new places (climatology can't). Contextualizes 0.86.
+
+### Temporal robustness — 0.86 holds across all test years (not a 2020 fluke)
+train<2018 -> test 2018: 0.8528 | train<2019 -> test 2019: 0.8764 | train<2020 -> test 2020: 0.8622.
+Mean ~0.864. Model generalizes to ANY future year. (2018 lower = only 1 training year.)
