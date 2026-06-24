@@ -8,15 +8,15 @@ _MODEL_PATHS = [ROOT / 'best_model_fl.joblib', ROOT / 'best_model_v13.joblib', R
 
 # human-readable factor groups (feature -> plain English bucket)
 FACTOR_GROUPS = {
-    'Near people & development': ['DistDev', 'Pop_Density', 'nbhd_dev_500m', 'LC_Developed', 'NightLights', 'built'],
-    'Drought & dryness': ['pdsi_0', 'pdsi_30', 'pdsi_90', 'pdsi_180', 'pdsi_traj_90', 'dryness', 'pr_deficit',
-                          'pr_7', 'pr_14', 'pr_30', 'pr_60', 'pr_90', 'pr_180', 'pr_365', 'vpd_7', 'vpd_30', 'vpd_90',
-                          'vpd_trend', 'erc_7', 'erc_30', 'erc_90', 'fm100_30', 'fm100_90', 'fm100_trend', 'et_stress'],
-    'Dry vegetation (low moisture)': ['ndmi', 'smap_root', 'lst_day', 'NDVI', 'EVI'],
-    'Fuel: forest & canopy': ['canopy_ht', 'treecover', 'canopy_ht_2km', 'treecover_2km', 'LC_Forest', 'LC_Shrub', 'nbhd_forest_2km'],
-    'Fuel: grass & agriculture': ['LC_Grass', 'LC_Crop', 'LC_Pasture', 'nbhd_crop_2km', 'nbhd_pasture_2km'],
-    'Wetland (lowers risk)': ['LC_Wetland', 'nbhd_wetland_2km', 'nbhd_wetland_5km'],
-    'Hot & dry weather': ['tmmx_7', 'tmmx_30', 'tmmx_90', 'rmin_30', 'rmin_90'],
+    'Nearness to people & development': ['DistDev', 'Pop_Density', 'nbhd_dev_500m', 'LC_Developed', 'NightLights', 'built'],
+    'Drought & rainfall': ['pdsi_0', 'pdsi_30', 'pdsi_90', 'pdsi_180', 'pdsi_traj_90', 'dryness', 'pr_deficit',
+                           'pr_7', 'pr_14', 'pr_30', 'pr_60', 'pr_90', 'pr_180', 'pr_365', 'vpd_7', 'vpd_30', 'vpd_90',
+                           'vpd_trend', 'erc_7', 'erc_30', 'erc_90', 'fm100_30', 'fm100_90', 'fm100_trend', 'et_stress'],
+    'Vegetation moisture': ['ndmi', 'smap_root', 'lst_day', 'NDVI', 'EVI'],
+    'Forest & canopy fuel': ['canopy_ht', 'treecover', 'canopy_ht_2km', 'treecover_2km', 'LC_Forest', 'LC_Shrub', 'nbhd_forest_2km'],
+    'Grass & cropland fuel': ['LC_Grass', 'LC_Crop', 'LC_Pasture', 'nbhd_crop_2km', 'nbhd_pasture_2km'],
+    'Wetland & marsh (sawgrass)': ['LC_Wetland', 'nbhd_wetland_2km', 'nbhd_wetland_5km'],
+    'Temperature & humidity': ['tmmx_7', 'tmmx_30', 'tmmx_90', 'rmin_30', 'rmin_90'],
     'Terrain': ['Elevation'],
 }
 
