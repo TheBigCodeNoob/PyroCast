@@ -1,927 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Florida Wildfire Risk Assessment System</title>
-    
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
-    <style>
-        body { margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-        #map { height: 100vh; width: 100vw; z-index: 1; }
-        
-        /* CSS Blur for the Heatmap Layer Pane */
-        .leaflet-heatmap-pane {
-            filter: blur(30px); /* Smooth blending of vector circles */
-            opacity: 0.8;
-        }
-        
-        #controls {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            width: 300px;
-        }
-        
-        h2 { margin-top: 0; color: #d35400; }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; font-size: 0.9em; color: #555; margin-bottom: 5px; }
-        input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #e67e22;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        button:hover { background: #d35400; }
-        button:disabled { background: #ccc; cursor: not-allowed; }
-
-        .loading { display: none; margin-top: 10px; color: #666; font-size: 0.9em; text-align: center;}
-        
-        /* Feedback Section */
-        .feedback-section {
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid #ddd;
-        }
-        
-        .feedback-section h3 {
-            margin-top: 0;
-            font-size: 1em;
-            color: #555;
-        }
-        
-        textarea {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-family: inherit;
-            resize: vertical;
-            min-height: 80px;
-        }
-        
-        .feedback-status {
-            margin-top: 8px;
-            font-size: 0.85em;
-            color: #27ae60;
-        }
-        
-        /* Warning Badge */
-        .warning-badge {
-            background: #e74c3c;
-            color: white;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 0.7em;
-            font-weight: bold;
-            margin-left: 5px;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-        
-        /* Legend Styles */
-        #legend {
-            position: absolute;
-            bottom: 30px;
-            right: 20px;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 12px 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            font-size: 0.85em;
-            display: none;
-        }
-        #legend h4 { margin: 0 0 8px 0; color: #333; font-size: 0.95em; }
-        .legend-item { display: flex; align-items: center; margin: 4px 0; }
-        .legend-color { width: 20px; height: 12px; margin-right: 8px; border-radius: 2px; border: 1px solid rgba(0,0,0,0.1); }
-        
-        /* Loading Spinner */
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #e67e22;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Tooltip Styles */
-        .risk-tooltip .leaflet-popup-content-wrapper {
-            background: rgba(0, 0, 0, 0.85);
-            color: white;
-            border-radius: 6px;
-            padding: 0;
-        }
-        .risk-tooltip .leaflet-popup-content { margin: 8px 12px; }
-        .risk-tooltip .leaflet-popup-tip { background: rgba(0, 0, 0, 0.85); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PyroCast — Florida Wildfire Ignition Risk</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+  :root{ --bg:#0e1116; --panel:#161b22; --line:#272e38; --txt:#e6edf3; --muted:#8b949e;
+         --red:#e5484d; --blue:#4a90e2; --accent:#ff8c42; }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--txt)}
+  #map{position:absolute;top:0;left:0;right:0;bottom:0;background:#0e1116}
+  .leaflet-container{background:#0e1116}
+  header{position:absolute;top:0;left:0;right:0;z-index:1000;padding:12px 18px;
+    background:linear-gradient(180deg,rgba(14,17,22,.95),rgba(14,17,22,0));pointer-events:none}
+  header h1{margin:0;font-size:20px;font-weight:700;letter-spacing:.3px}
+  header h1 .fire{color:var(--accent)}
+  header .sub{margin:2px 0 0;font-size:12.5px;color:var(--muted)}
+  /* legend */
+  .legend{position:absolute;bottom:22px;left:18px;z-index:1000;background:var(--panel);
+    border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12px}
+  .legend .bar{height:10px;width:180px;border-radius:5px;margin:6px 0 4px;
+    background:linear-gradient(90deg,#ffffcc,#fd8d3c,#e31a1c,#800026)}
+  .legend .ends{display:flex;justify-content:space-between;color:var(--muted)}
+  /* mode toggle */
+  .modes{position:absolute;top:14px;right:18px;z-index:1000;display:flex;gap:6px;
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:4px}
+  .modes button{background:none;border:0;color:var(--muted);padding:6px 12px;border-radius:7px;
+    cursor:pointer;font-size:13px;font-weight:600}
+  .modes button.on{background:var(--accent);color:#1a1109}
+  /* explain panel */
+  #panel{position:absolute;top:0;right:-400px;width:380px;height:100%;z-index:1001;
+    background:var(--panel);border-left:1px solid var(--line);transition:right .25s ease;
+    padding:20px;overflow-y:auto}
+  #panel.open{right:0}
+  #panel .close{float:right;cursor:pointer;color:var(--muted);font-size:22px;line-height:1;border:0;background:none}
+  #panel h2{margin:0 0 2px;font-size:16px}
+  #panel .loc{color:var(--muted);font-size:12.5px;margin-bottom:16px}
+  .gauge{display:flex;align-items:baseline;gap:8px;margin:10px 0 4px}
+  .gauge .big{font-size:46px;font-weight:800;line-height:1}
+  .gauge .lab{font-size:13px;color:var(--muted)}
+  .ringwrap{margin:6px 0 18px}
+  .ring{height:12px;border-radius:6px;background:#0e1116;overflow:hidden}
+  .ring > i{display:block;height:100%;border-radius:6px}
+  .sec{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:18px 0 8px}
+  .factor{margin:8px 0}
+  .factor .row{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:3px}
+  .factor .row b{font-weight:600}
+  .factor .meter{height:8px;border-radius:4px;background:#0e1116;overflow:hidden}
+  .factor .meter > i{display:block;height:100%}
+  .up i{background:var(--red)} .down i{background:var(--blue)}
+  .hint{color:var(--muted);font-size:13px;line-height:1.5;margin-top:6px}
+  .pill{display:inline-block;font-size:11px;color:var(--muted);border:1px solid var(--line);
+    border-radius:20px;padding:2px 9px;margin-top:8px}
+  .spin{display:inline-block;width:16px;height:16px;border:2px solid var(--line);
+    border-top-color:var(--accent);border-radius:50%;animation:s .8s linear infinite}
+  @keyframes s{to{transform:rotate(360deg)}}
+</style>
 </head>
 <body>
+<div id="map"></div>
+<header>
+  <h1><span class="fire">&#128293;</span> PyroCast <span style="font-weight:400;color:var(--muted)">| Florida wildfire-ignition risk</span></h1>
+  <div class="sub" id="sub">loading risk map…</div>
+</header>
+<div class="modes">
+  <button id="mPoint" class="on" onclick="setMode('point')">Point</button>
+  <button id="mArea" onclick="setMode('area')">Area</button>
+</div>
+<div class="legend">
+  <div>Ignition risk (relative)</div>
+  <div class="bar"></div>
+  <div class="ends"><span>low</span><span>high</span></div>
+</div>
+<div id="panel">
+  <button class="close" onclick="closePanel()">&times;</button>
+  <h2 id="pTitle">Location</h2>
+  <div class="loc" id="pLoc"></div>
+  <div class="gauge"><div class="big" id="pRisk">—</div><div class="lab">risk score</div></div>
+  <div class="ringwrap"><div class="ring"><i id="pRing" style="width:0%"></i></div></div>
+  <div id="pBody"></div>
+</div>
 
-    <div id="controls">
-        <h2>Florida Wildfire Risk Assessment System</h2>
-        
-        <div class="input-group">
-            <label>Latitude</label>
-            <input type="text" id="lat" placeholder="e.g. 27.6648" readonly>
-        </div>
-        
-        <div class="input-group">
-            <label>Longitude</label>
-            <input type="text" id="lon" placeholder="e.g. -81.5158" readonly>
-        </div>
-        
-        <div class="input-group">
-            <label>Date</label>
-            <input type="date" id="date">
-        </div>
-        
-        <div class="input-group">
-            <label>Grid Density (Points per edge) <span id="densityLabel" style="font-size:0.8em; color:#7f8c8d;"></span></label>
-            <input type="range" id="gridDensity" min="3" max="50" value="20" oninput="updateDensityDisplay()">
-            <span id="densityVal" style="font-weight:bold; color:#e67e22;">20</span>
-            <div id="pointEstimate" style="font-size:0.75em; color:#7f8c8d; margin-top:3px;"></div>
-        </div>
-        
-        <button id="drawBtn" onclick="toggleDrawMode()">Draw Region</button>
-        <button id="gpsBtn" onclick="useMyLocation()" style="background: #3498db;">Use My Location</button>
-        <button id="predictBtn" onclick="runPrediction()">Analyze Region</button>
-        <button id="clearBtn" onclick="clearAnalysis()" style="background: #95a5a6; margin-top: 5px;">Clear Results</button>
-        <div id="status" class="loading"></div>
-        
-        <div style="margin-top: 15px; padding: 10px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px; font-size: 0.8em; color: #856404;">
-            <strong>Warning:</strong> This is an experimental demo designed to provide an easy-to-use and efficient interface for my wildfire risk prediction system. The frontend is still in active development and may have bugs. The gradients may not be accurate as they are a rendering of the model's output. Rendering does not work properly on apple devices.
-        </div>
-        
-        <!-- Feedback Section -->
-        <div class="feedback-section">
-            <h3>Report Bugs / Feedback</h3>
-            <textarea id="feedback-text" placeholder="Found a bug? Have suggestions? Let us know..."></textarea>
-            <button id="feedback-btn" onclick="submitFeedback()" style="background: #27ae60;">Submit Feedback</button>
-            <div id="feedback-status" class="feedback-status"></div>
-        </div>
-    </div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const RISK_COLORS = [[255,255,204],[254,217,118],[253,141,60],[227,26,28],[128,0,38]];
+function riskColor(r){ r=Math.max(0,Math.min(1,r)); const x=r*(RISK_COLORS.length-1);
+  const i=Math.floor(x), f=x-i, a=RISK_COLORS[i], b=RISK_COLORS[Math.min(i+1,RISK_COLORS.length-1)];
+  return `rgb(${a.map((c,k)=>Math.round(c+(b[k]-c)*f)).join(',')})`; }
 
-    <div id="legend">
-        <h4>Fire Risk Legend</h4>
-        <div class="legend-item"><div class="legend-color" style="background: rgba(0, 100, 255, 0.6);"></div>Trace (&lt;5%)</div>
-        <div class="legend-item"><div class="legend-color" style="background: rgba(0, 255, 255, 0.7);"></div>Low (5-20%)</div>
-        <div class="legend-item"><div class="legend-color" style="background: rgba(0, 255, 0, 0.8);"></div>Moderate-Low (20-40%)</div>
-        <div class="legend-item"><div class="legend-color" style="background: rgba(255, 255, 0, 0.85);"></div>Moderate (40-60%)</div>
-        <div class="legend-item"><div class="legend-color" style="background: rgba(255, 140, 0, 0.9);"></div>High (60-80%)</div>
-        <div class="legend-item"><div class="legend-color" style="background: rgba(220, 20, 60, 0.95);"></div>Very High (80-95%)</div>
-        <div class="legend-item"><div class="legend-color" style="background: rgba(255, 0, 255, 1.0); font-weight: bold;"></div><strong>Extreme (&gt;95%)</strong></div>
-    </div>
+const map = L.map('map',{zoomControl:true,preferCanvas:true}).setView([27.8,-82.5],7);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+  {attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:12}).addTo(map);
+const canvas = L.canvas({padding:0.5});
+let MODE='point';
+function setMode(m){MODE=m; document.getElementById('mPoint').classList.toggle('on',m==='point');
+  document.getElementById('mArea').classList.toggle('on',m==='area');}
 
-    <div id="map"></div>
+let layer=L.layerGroup().addTo(map);
+fetch('/api/risk').then(r=>r.json()).then(d=>{
+  if(d.error){document.getElementById('sub').textContent=d.error;return;}
+  document.getElementById('sub').innerHTML =
+    `${d.meta.n_points.toLocaleString()} points · model ${d.meta.model} · <b>click anywhere to ask why</b>`;
+  const rad = d.points.length>4000?3.2:5;
+  d.points.forEach(p=>{
+    L.circleMarker([p.lat,p.lon],{renderer:canvas,radius:rad,stroke:false,
+      fillColor:riskColor(p.risk),fillOpacity:0.82}).addTo(layer);
+  });
+}).catch(e=>document.getElementById('sub').textContent='failed to load risk map');
 
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+map.on('click', e=>{
+  const lon=e.latlng.lng, lat=e.latlng.lat;
+  openPanel(lon,lat);
+  const body={lon,lat, radius_km: MODE==='area'?25:0};
+  fetch('/api/explain',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+    .then(r=>r.json()).then(renderExplain).catch(()=>{document.getElementById('pBody').innerHTML='<div class="hint">Could not analyze this location.</div>';});
+});
 
-    <script>
-        // Initialize Map
-        const map = L.map('map').setView([27.6648, -81.5158], 7);
-        
-        // Custom Pane for Heatmap (so we can apply CSS blur to it specifically)
-        map.createPane('heatmapPane');
-        map.getPane('heatmapPane').style.zIndex = 400; // Above tiles, below markers
-        map.getPane('heatmapPane').classList.add('leaflet-heatmap-pane'); // Add blur class
+function openPanel(lon,lat){
+  document.getElementById('panel').classList.add('open');
+  document.getElementById('pTitle').textContent = MODE==='area'?'Area analysis':'Location';
+  document.getElementById('pLoc').textContent = `${lat.toFixed(3)}, ${lon.toFixed(3)}` + (MODE==='area'?' · ~25 km radius':'');
+  document.getElementById('pRisk').innerHTML='<span class="spin"></span>';
+  document.getElementById('pRing').style.width='0%';
+  document.getElementById('pBody').innerHTML='';
+}
+function closePanel(){document.getElementById('panel').classList.remove('open');}
 
-        // Add Satellite Tiles (Hybrid with Labels)
-        L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
-            attribution: 'Map data &copy; Google',
-            maxZoom: 20
-        }).addTo(map);
-
-        // State
-        let heatmapLayer = L.layerGroup({pane: 'heatmapPane'}).addTo(map);
-        let boundsLayer = null;
-        let gridPreviewLayer = L.layerGroup().addTo(map); // New layer for grid dots
-        let drawMode = false;
-        let startPoint = null;
-        let currentRect = null;
-        let selectedBounds = null; // {minLat, maxLat, minLon, maxLon}
-        let imageOverlay = null; // Global reference for the heatmap image overlay
-
-        function toggleDrawMode() {
-            drawMode = !drawMode;
-            const btn = document.getElementById('drawBtn');
-            if (drawMode) {
-                btn.innerText = "Cancel Drawing";
-                btn.style.background = "#e74c3c";
-                map.getContainer().style.cursor = "crosshair";
-                document.getElementById('status').innerText = "Click and drag to draw a box on the map.";
-            } else {
-                btn.innerText = "Draw Region";
-                btn.style.background = "#e67e22";
-                map.getContainer().style.cursor = "";
-                document.getElementById('status').innerText = "";
-                if (startPoint) {
-                    // Reset incomplete drawing
-                    if (currentRect) map.removeLayer(currentRect);
-                    startPoint = null;
-                }
-            }
-        }
-
-        // Map Interactions for Drawing
-        map.on('click', function(e) {
-            if (!drawMode) return;
-
-            if (!startPoint) {
-                // Start drawing
-                startPoint = e.latlng;
-                currentRect = L.rectangle([startPoint, startPoint], {color: "#ff7800", weight: 1}).addTo(map);
-            } else {
-                // Finish drawing
-                finishDrawing(e.latlng);
-            }
-        });
-
-        map.on('mousemove', function(e) {
-            if (!drawMode || !startPoint || !currentRect) return;
-            currentRect.setBounds([startPoint, e.latlng]);
-        });
-
-        function finishDrawing(endPoint) {
-            setRegion(startPoint, endPoint);
-            
-            // Reset Draw Mode UI
-            toggleDrawMode(); 
-            currentRect = null;
-            startPoint = null;
-        }
-        
-        function setRegion(p1, p2) {
-            // Save bounds
-            const bounds = L.latLngBounds(p1, p2);
-            selectedBounds = {
-                minLat: bounds.getSouth(),
-                maxLat: bounds.getNorth(),
-                minLon: bounds.getWest(),
-                maxLon: bounds.getEast()
-            };
-
-            // Visuals
-            if (boundsLayer) map.removeLayer(boundsLayer);
-            boundsLayer = L.rectangle(bounds, {color: "#ff7800", weight: 2}).addTo(map);
-            
-            // Reset temp drawing rect
-            if (currentRect) map.removeLayer(currentRect);
-
-            document.getElementById('status').innerText = "Region selected. Click Analyze.";
-            
-            // Update inputs
-            document.getElementById('lat').value = ((selectedBounds.minLat + selectedBounds.maxLat)/2).toFixed(5);
-            document.getElementById('lon').value = ((selectedBounds.minLon + selectedBounds.maxLon)/2).toFixed(5);
-            
-            // Adjust density slider based on region size
-            adjustDensityForRegion();
-            
-            // Preview Grid Points
-            updateGridPreview();
-        }
-        
-        function updateGridPreview() {
-            if (!selectedBounds) return;
-            
-            gridPreviewLayer.clearLayers();
-            const gridDensity = parseInt(document.getElementById('gridDensity').value);
-            
-            const minLat = selectedBounds.minLat;
-            const maxLat = selectedBounds.maxLat;
-            const minLon = selectedBounds.minLon;
-            const maxLon = selectedBounds.maxLon;
-            
-            const latDiff = maxLat - minLat;
-            const lonDiff = maxLon - minLon;
-            
-            let latStep, lonStep;
-            
-            if (latDiff > lonDiff) {
-                latStep = latDiff / gridDensity;
-                lonStep = latStep;
-            } else {
-                lonStep = lonDiff / gridDensity;
-                latStep = lonStep;
-            }
-            
-            // Match Python Logic: Iterate and add points
-            let currLat = minLat + (latStep / 2);
-            while (currLat < maxLat) {
-                let currLon = minLon + (lonStep / 2);
-                while (currLon < maxLon) {
-                    L.circleMarker([currLat, currLon], {
-                        radius: 2,
-                        color: '#3498db',
-                        fillColor: '#3498db',
-                        fillOpacity: 0.8
-                    }).addTo(gridPreviewLayer);
-                    
-                    currLon += lonStep;
-                }
-                currLat += latStep;
-            }
-        }
-        
-        // Adaptive Density System - Always use high density mode
-        function adjustDensityForRegion() {
-            const slider = document.getElementById('gridDensity');
-            // Allow up to 50 density (was advanced mode)
-            slider.max = 50;
-            updateDensityDisplay();
-        }
-        
-        function estimatePointCount() {
-            if (!selectedBounds) return 0;
-            
-            const gridDensity = parseInt(document.getElementById('gridDensity').value);
-            const latDiff = selectedBounds.maxLat - selectedBounds.minLat;
-            const lonDiff = selectedBounds.maxLon - selectedBounds.minLon;
-            
-            let latStep, lonStep;
-            if (latDiff > lonDiff) {
-                latStep = latDiff / gridDensity;
-                lonStep = latStep;
-            } else {
-                lonStep = lonDiff / gridDensity;
-                latStep = lonStep;
-            }
-            
-            const latPoints = Math.floor(latDiff / latStep);
-            const lonPoints = Math.floor(lonDiff / lonStep);
-            
-            return latPoints * lonPoints;
-        }
-        
-        // Max points limit to prevent server crashes
-        const MAX_POINTS = 1500;
-        
-        function updateDensityDisplay() {
-            const slider = document.getElementById('gridDensity');
-            const value = slider.value;
-            
-            document.getElementById('densityVal').innerText = value;
-            
-            // Update label
-            const label = document.getElementById('densityLabel');
-            label.textContent = '';
-            
-            // Show point estimate
-            if (selectedBounds) {
-                const pointCount = estimatePointCount();
-                const estimateDiv = document.getElementById('pointEstimate');
-                
-                let estimateText = `~${pointCount} analysis points`;
-                let estimateColor = '#7f8c8d';
-                
-                if (pointCount > MAX_POINTS) {
-                    estimateText = `~${pointCount} points (max ${MAX_POINTS} - reduce density)`;
-                    estimateColor = '#e74c3c';
-                } else if (pointCount > 400) {
-                    estimateText += ' (may take 3-5 minutes)';
-                    estimateColor = '#e67e22';
-                } else if (pointCount > 200) {
-                    estimateText += ' (1-3 minutes)';
-                }
-                
-                estimateDiv.textContent = estimateText;
-                estimateDiv.style.color = estimateColor;
-            }
-        }
-        
-        // Debounced grid preview update
-        let gridPreviewTimeout = null;
-        function debouncedGridPreview() {
-            if (gridPreviewTimeout) clearTimeout(gridPreviewTimeout);
-            gridPreviewTimeout = setTimeout(() => {
-                updateGridPreview();
-                updateDensityDisplay();
-            }, 150);
-        }
-        
-        // Update preview when density changes (with debounce for performance)
-        document.getElementById('gridDensity').addEventListener('input', debouncedGridPreview);
-        document.getElementById('gridDensity').addEventListener('change', () => {
-            updateGridPreview();
-            updateDensityDisplay();
-        });
-
-        function useMyLocation() {
-            if (!navigator.geolocation) {
-                alert("Geolocation is not supported by your browser");
-                return;
-            }
-            
-            const btn = document.getElementById('gpsBtn');
-            const originalText = btn.innerText;
-            btn.innerText = "Locating...";
-            btn.disabled = true;
-
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const lat = position.coords.latitude;
-                    const lon = position.coords.longitude;
-                    
-                    // Center map
-                    map.setView([lat, lon], 13);
-                    
-                    // Define a default box (approx 6km x 6km)
-                    const delta = 0.06; 
-                    const southWest = L.latLng(lat - delta/2, lon - delta/2);
-                    const northEast = L.latLng(lat + delta/2, lon + delta/2);
-                    
-                    setRegion(southWest, northEast);
-                    map.fitBounds(L.latLngBounds(southWest, northEast));
-                    
-                    btn.innerText = originalText;
-                    btn.disabled = false;
-                },
-                (err) => {
-                    console.error(err);
-                    alert("Unable to retrieve location. Ensure permission is granted.");
-                    btn.innerText = originalText;
-                    btn.disabled = false;
-                }
-            );
-        }
-
-
-        
-        function clearAnalysis() {
-            // Clear heatmap overlay
-            if (imageOverlay) {
-                map.removeLayer(imageOverlay);
-                imageOverlay = null;
-            }
-            heatmapLayer.clearLayers();
-            
-            // Don't clear grid preview here - let users see it until they change region
-            
-            // Clear analysis data
-            currentAnalysisData = [];
-            
-            // Hide legend
-            document.getElementById('legend').style.display = 'none';
-            
-            // Reset status
-            const status = document.getElementById('status');
-            if (selectedBounds) {
-                status.innerText = 'Region selected. Click Analyze to start.';
-            } else {
-                status.innerText = 'Select a region to start...';
-            }
-            
-            // Close any open tooltips
-            map.closePopup(tooltip);
-        }
-
-        // Set default date to today and max date
-        const today = new Date().toISOString().split('T')[0];
-        const dateInput = document.getElementById('date');
-        dateInput.value = today;
-        dateInput.max = today;
-        
-        // Initialize density display
-        updateDensityDisplay();
-
-        async function runPrediction() {
-            if (!selectedBounds) {
-                alert("Please draw a region first using 'Draw Region'.");
-                return;
-            }
-
-            const date = document.getElementById('date').value;
-            const gridDensity = parseInt(document.getElementById('gridDensity').value);
-            const btn = document.getElementById('predictBtn');
-            const status = document.getElementById('status');
-
-            if (!date) {
-                alert("Please select a date.");
-                return;
-            }
-            
-            // Check point count limit
-            const pointCount = estimatePointCount();
-            if (pointCount > MAX_POINTS) {
-                alert(`Too many analysis points (${pointCount}). Maximum is ${MAX_POINTS}.\n\nPlease reduce the grid density or select a smaller region.`);
-                return;
-            }
-
-            // UI Feedback
-            btn.disabled = true;
-            btn.innerText = "Processing...";
-            status.style.display = "block";
-            document.getElementById('legend').style.display = 'none'; // Hide legend during loading
-            
-            let seconds = 0;
-            const timer = setInterval(() => {
-                seconds++;
-                status.innerHTML = `<span class="spinner"></span>Analyzing satellite data... (${seconds}s)<br><small>Fetching weather, imagery, and calculating risk models.</small>`;
-            }, 1000);
-            
-            // Show initial loading state
-            status.innerHTML = `<span class="spinner"></span>Starting analysis...<br><small>Connecting to Google Earth Engine...</small>`;
-            
-            // gridPreviewLayer.clearLayers(); // KEEP DOTS PERSISTENT
-            
-            heatmapLayer.clearLayers();
-
-            try {
-                console.log('Starting prediction request...');
-                const requestBody = {
-                    min_lat: selectedBounds.minLat,
-                    max_lat: selectedBounds.maxLat,
-                    min_lon: selectedBounds.minLon,
-                    max_lon: selectedBounds.maxLon,
-                    date: date,
-                    grid_density: gridDensity
-                };
-                console.log('Request body:', requestBody);
-                
-                // First try test endpoint to verify connectivity
-                console.log('Testing connectivity with /test_predict...');
-                const testResponse = await fetch('/test_predict', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(requestBody),
-                    signal: AbortSignal.timeout(5000) // 5 second timeout for test
-                }).catch(err => {
-                    console.error('Test fetch failed:', err);
-                    throw new Error(`Test request failed: ${err.message}`);
-                });
-                
-                console.log('Test response:', await testResponse.json());
-                
-                // Now try the real prediction
-                console.log('Sending real prediction request...');
-                const response = await fetch('/predict_heatmap', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(requestBody),
-                    mode: 'cors',
-                    credentials: 'same-origin'
-                }).catch(err => {
-                    console.error('Prediction fetch failed:', err);
-                    throw new Error(`Network request failed: ${err.message}`);
-                });
-                
-                console.log('Response received:', response.status);
-
-                const result = await response.json();
-
-                if (result.status === 'success') {
-                    // Check if date was adjusted
-                    if (result.actual_date && result.actual_date !== date) {
-                        alert(`No data found for ${date}. Using most recent data from ${result.actual_date} instead.`);
-                        document.getElementById('date').value = result.actual_date;
-                    }
-
-                    // Clear grid preview dots now that analysis is complete
-                    gridPreviewLayer.clearLayers();
-
-                    // Generate Vector Heatmap
-                    renderVectorHeatmap(result.data);
-                    
-                    // Calculate risk summary
-                    const avgRisk = (result.data.reduce((sum, pt) => sum + pt.prob, 0) / result.data.length * 100).toFixed(1);
-                    const maxRisk = (Math.max(...result.data.map(pt => pt.prob)) * 100).toFixed(1);
-                    const highRiskPoints = result.data.filter(pt => pt.prob > 0.6).length;
-                    
-                    status.innerHTML = `Analysis Complete!<br>
-                        <small>${result.data.length} points analyzed | Avg: ${avgRisk}% | Max: ${maxRisk}%<br>
-                        ${highRiskPoints > 0 ? `${highRiskPoints} high-risk areas detected` : 'No high-risk areas'}</small>`;
-                    
-                    // Show legend
-                    document.getElementById('legend').style.display = 'block';
-                } else {
-                    // Handle API errors
-                    const msg = result.detail || result.message || "Unknown error occurred.";
-                    alert("Error: " + msg);
-                    status.innerText = "Error: " + msg;
-                }
-
-            } catch (err) {
-                console.error('Prediction error:', err);
-                console.error('Error type:', err.name);
-                console.error('Error message:', err.message);
-                
-                let errorMsg = 'Analysis failed';
-                let userMsg = 'Error: ';
-                
-                if (err.message.includes('NetworkError') || err.message.includes('Failed to fetch') || err.message.includes('Network request failed')) {
-                    errorMsg = 'Cannot connect to server';
-                    userMsg = "Connection Error: Cannot reach the server. This might be caused by:\n\n1. A browser extension blocking the request\n2. Network connectivity issues\n3. Server is down\n\nTry:\n- Disabling browser extensions\n- Using a different browser\n- Checking your internet connection";
-                } else if (err.message.includes('timeout')) {
-                    errorMsg = 'Request timed out';
-                    userMsg = "Timeout: The request took too long. Try a smaller region or lower grid density.";
-                } else {
-                    errorMsg = err.message || 'Unknown error';
-                    userMsg = "Error: " + errorMsg;
-                }
-                
-                status.innerHTML = `<span style="color:#e74c3c;">${errorMsg}</span>`;
-                alert(userMsg);
-            } finally {
-                clearInterval(timer);
-                btn.disabled = false;
-                btn.innerText = "Analyze Region";
-            }
-        }
-
-        // Global Data for Hover
-        let currentAnalysisData = [];
-
-        function renderVectorHeatmap(dataPoints) {
-            if (!dataPoints || dataPoints.length === 0) return;
-            
-            // Store for hover interaction
-            currentAnalysisData = dataPoints;
-
-            // 1. Analyze Grid Topology
-            const lats = dataPoints.map(p => p.lat).sort((a,b) => a-b);
-            const lons = dataPoints.map(p => p.lon).sort((a,b) => a-b);
-            
-            // Find unique values to determine step size
-            // Use a small epsilon for float comparison
-            const uniqueLats = lats.filter((v, i, a) => i === 0 || Math.abs(v - a[i-1]) > 0.0001);
-            const uniqueLons = lons.filter((v, i, a) => i === 0 || Math.abs(v - a[i-1]) > 0.0001);
-
-            let latStep = uniqueLats.length > 1 ? (uniqueLats[uniqueLats.length-1] - uniqueLats[0]) / (uniqueLats.length - 1) : 0.01;
-            let lonStep = uniqueLons.length > 1 ? (uniqueLons[uniqueLons.length-1] - uniqueLons[0]) / (uniqueLons.length - 1) : 0.01;
-
-            // 2. Define Canvas Bounds (Extend to edges of the grid cells, not just centers)
-            // Points are centers, so we extend by half a step in each direction
-            const boundsMinLat = uniqueLats[0] - (latStep / 2);
-            const boundsMaxLat = uniqueLats[uniqueLats.length-1] + (latStep / 2);
-            const boundsMinLon = uniqueLons[0] - (lonStep / 2);
-            const boundsMaxLon = uniqueLons[uniqueLons.length-1] + (lonStep / 2);
-
-            // 3. Setup Canvas
-            const canvas = document.createElement('canvas');
-            // Higher resolution for sharper, clearer gradient
-            const width = 800; 
-            const height = 800;
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d');
-            
-            ctx.clearRect(0, 0, width, height);
-            
-            // Enhanced Color Mapping (More Distinguishable)
-            function getColor(prob) {
-                // Visualize even tiny risks
-                const p = Math.max(0, Math.min(1, prob));
-                
-                if (p === 0) return `rgba(0, 0, 0, 0)`;           // Transparent (Truly 0)
-                if (p < 0.05) return `rgba(0, 100, 255, 0.4)`;    // Deep Blue (Trace Risk)
-                if (p < 0.2) return `rgba(0, 255, 255, 0.5)`;     // Cyan (Low)
-                if (p < 0.4) return `rgba(0, 255, 0, 0.65)`;      // Green (Moderate-Low)
-                if (p < 0.6) return `rgba(255, 255, 0, 0.75)`;    // Yellow (Moderate)
-                if (p < 0.8) return `rgba(255, 140, 0, 0.85)`;    // Orange (High)
-                if (p < 0.95) return `rgba(220, 20, 60, 0.9)`;    // Crimson Red (Very High)
-                return `rgba(255, 0, 255, 0.95)`;                 // Bright Magenta (Extreme) - Very distinct!
-            }
-
-            // 4. Draw Heatmap with reduced blur for sharper definition
-            ctx.filter = 'blur(12px)'; 
-            
-            // Calculate scale factors
-            const latRange = boundsMaxLat - boundsMinLat;
-            const lonRange = boundsMaxLon - boundsMinLon;
-
-            // Draw radius (smaller for sharper edges)
-            const stepX = (lonStep / lonRange) * width;
-            const stepY = (latStep / latRange) * height;
-            const radius = Math.sqrt(stepX*stepX + stepY*stepY) * 0.75; 
-
-            dataPoints.forEach(pt => {
-                // Skip ocean/masked points entirely
-                // This prevents them from drawing color, leaving the map visible underneath
-                if (pt.prob <= 0.0) return; 
-
-                const x = ((pt.lon - boundsMinLon) / lonRange) * width;
-                const y = ((boundsMaxLat - pt.lat) / latRange) * height;
-                
-                ctx.fillStyle = getColor(pt.prob);
-                ctx.beginPath();
-                ctx.arc(x, y, radius, 0, 2 * Math.PI);
-                ctx.fill();
-            });
-            
-            // 5. Add to Map
-            const imageUrl = canvas.toDataURL();
-            const imageBounds = [[boundsMinLat, boundsMinLon], [boundsMaxLat, boundsMaxLon]];
-            
-            // Remove old layer
-            if (imageOverlay) map.removeLayer(imageOverlay);
-
-            imageOverlay = L.imageOverlay(imageUrl, imageBounds, {
-                opacity: 0.75, // Higher opacity for clearer risk visualization
-                interactive: true,
-                className: 'heatmap-overlay' // For potential CSS styling
-            }).addTo(map);
-        }
-
-        // --- Tooltip Logic ---
-        const tooltip = L.popup({
-            closeButton: false,
-            className: 'risk-tooltip',
-            offset: [0, -10]
-        });
-        
-        // Throttled tooltip update for performance
-        let tooltipRafId = null;
-        let lastTooltipUpdate = 0;
-        const TOOLTIP_THROTTLE_MS = 50; // Update at most every 50ms
-
-        map.on('mousemove', function(e) {
-            if (!currentAnalysisData || currentAnalysisData.length === 0) return;
-            
-            // Throttle updates
-            const now = Date.now();
-            if (now - lastTooltipUpdate < TOOLTIP_THROTTLE_MS) return;
-            lastTooltipUpdate = now;
-            
-            // Cancel any pending RAF
-            if (tooltipRafId) cancelAnimationFrame(tooltipRafId);
-            
-            tooltipRafId = requestAnimationFrame(() => {
-                updateTooltip(e);
-            });
-        });
-        
-        function updateTooltip(e) {
-            // Find closest point
-            let closest = null;
-            const cursor = e.latlng;
-
-            // Dynamic Threshold based on current zoom level
-            // At zoom 10, 1 deg ~ 111km.
-            // We want to detect if cursor is "near" a point relative to the view.
-            // Let's use screen pixels instead of lat/lon for better UX.
-            
-            // Convert cursor to container point
-            const p1 = map.latLngToContainerPoint(cursor);
-            
-            // Find closest in pixel space
-            let minPixelDist = Infinity;
-            
-            currentAnalysisData.forEach(pt => {
-                const p2 = map.latLngToContainerPoint([pt.lat, pt.lon]);
-                const dist = p1.distanceTo(p2);
-                if (dist < minPixelDist) {
-                    minPixelDist = dist;
-                    closest = pt;
-                }
-            });
-
-            // Threshold: 50 pixels radius on screen (generous hit box)
-            if (minPixelDist < 50 && closest) {
-                const percent = (closest.prob * 100).toFixed(2);
-                let riskLabel = "Trace";
-                let color = "#3498db";
-                let emoji = "🟦";
-                
-                if (closest.prob > 0.05) { riskLabel = "Low"; color = "cyan"; emoji = "🟦"; }
-                if (closest.prob > 0.2) { riskLabel = "Moderate-Low"; color = "#2ecc71"; emoji = "🟩"; }
-                if (closest.prob > 0.4) { riskLabel = "Moderate"; color = "#f1c40f"; emoji = "🟨"; }
-                if (closest.prob > 0.6) { riskLabel = "High"; color = "#e67e22"; emoji = "🟧"; }
-                if (closest.prob > 0.8) { riskLabel = "Very High"; color = "#dc143c"; emoji = "🟥"; }
-                if (closest.prob > 0.95) { riskLabel = "EXTREME"; color = "#ff00ff"; emoji = "🟪"; }
-
-                const content = `
-                    <div style="text-align: center; font-size: 0.95em;">
-                        <strong>${emoji} Fire Risk: ${percent}%</strong><br>
-                        <span style="color:${color}; font-weight:bold;">${riskLabel}</span><br>
-                        <small style="opacity: 0.7;">Lat: ${closest.lat.toFixed(4)}, Lon: ${closest.lon.toFixed(4)}</small>
-                    </div>
-                `;
-                
-                tooltip
-                    .setLatLng(e.latlng)
-                    .setContent(content)
-                    .openOn(map);
-            } else {
-                map.closePopup(tooltip);
-            }
-        }
-        
-        // Hide tooltip when mouse leaves the map
-        map.on('mouseout', function() {
-            map.closePopup(tooltip);
-        });
-        
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && drawMode) {
-                toggleDrawMode(); // Cancel drawing mode
-            }
-            if (e.key === 'Enter' && selectedBounds && !document.getElementById('predictBtn').disabled) {
-                runPrediction(); // Run prediction with Enter key
-            }
-        });
-
-        // Feedback submission
-        async function submitFeedback() {
-            const feedbackText = document.getElementById('feedback-text').value.trim();
-            const feedbackBtn = document.getElementById('feedback-btn');
-            const feedbackStatus = document.getElementById('feedback-status');
-            
-            if (!feedbackText) {
-                feedbackStatus.textContent = 'Please enter a message';
-                feedbackStatus.style.color = '#e74c3c';
-                return;
-            }
-            
-            feedbackBtn.disabled = true;
-            feedbackStatus.textContent = 'Submitting...';
-            feedbackStatus.style.color = '#666';
-            
-            try {
-                console.log('Submitting feedback to:', window.location.origin + '/submit_feedback');
-                
-                const response = await fetch('/submit_feedback', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        message: feedbackText,
-                        user_agent: navigator.userAgent,
-                        timestamp: new Date().toISOString()
-                    }),
-                    mode: 'cors',
-                    credentials: 'same-origin'
-                });
-                
-                console.log('Response status:', response.status);
-                
-                if (!response.ok) {
-                    throw new Error(`Server error: ${response.status} ${response.statusText}`);
-                }
-                
-                const result = await response.json();
-                console.log('Response data:', result);
-                
-                feedbackStatus.textContent = '✓ Thank you! Feedback submitted successfully.';
-                feedbackStatus.style.color = '#27ae60';
-                document.getElementById('feedback-text').value = '';
-                
-            } catch (error) {
-                console.error('Feedback error details:', {
-                    message: error.message,
-                    stack: error.stack,
-                    type: error.name
-                });
-                
-                let errorMsg = '✗ Failed to submit. ';
-                if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
-                    errorMsg += 'Network error - check your connection.';
-                } else if (error.message.includes('CORS')) {
-                    errorMsg += 'CORS error - server configuration issue.';
-                } else {
-                    errorMsg += error.message || 'Please try again.';
-                }
-                
-                feedbackStatus.textContent = errorMsg;
-                feedbackStatus.style.color = '#e74c3c';
-            } finally {
-                feedbackBtn.disabled = false;
-            }
-        }
-    </script>
+function pct(r){return Math.round(r*100);}
+function renderExplain(d){
+  if(d.error){document.getElementById('pBody').innerHTML=`<div class="hint">${d.error}</div>`;return;}
+  document.getElementById('pRisk').textContent = pct(d.risk);
+  const ring=document.getElementById('pRing');
+  ring.style.width=pct(d.risk)+'%'; ring.style.background=riskColor(d.risk);
+  const band = d.risk>0.66?'High':d.risk>0.4?'Moderate':'Low';
+  let h = `<div class="pill">${band} relative risk${d.n_points?` · averaged over ${d.n_points} points`:''}</div>`;
+  const maxE = Math.max(0.0001, ...(d.raises_risk||[]).map(x=>x.effect), ...(d.lowers_risk||[]).map(x=>-x.effect));
+  if(d.raises_risk && d.raises_risk.length){
+    h+='<div class="sec">Why it&rsquo;s risky</div>';
+    d.raises_risk.forEach(f=>{h+=factorRow(f.factor,f.effect,maxE,'up');});
+  }
+  if(d.lowers_risk && d.lowers_risk.length){
+    h+='<div class="sec">What lowers the risk</div>';
+    d.lowers_risk.forEach(f=>{h+=factorRow(f.factor,-f.effect,maxE,'down');});
+  }
+  if(!(d.raises_risk||[]).length && !(d.lowers_risk||[]).length)
+    h+='<div class="hint">No single factor stands out here — the risk is a balance of average conditions.</div>';
+  h+='<div class="hint" style="margin-top:18px">Each bar shows how much that group of conditions pushes this location&rsquo;s risk up or down, measured by removing it and re-running the model.</div>';
+  document.getElementById('pBody').innerHTML=h;
+}
+function factorRow(name,eff,maxE,cls){
+  const w=Math.round(Math.min(1,eff/maxE)*100);
+  return `<div class="factor ${cls}"><div class="row"><b>${name}</b><span>${eff>=0?'+':''}${pct(eff)} pts</span></div>
+    <div class="meter"><i style="width:${w}%"></i></div></div>`;
+}
+</script>
 </body>
 </html>
