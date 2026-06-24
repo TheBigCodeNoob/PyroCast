@@ -21,7 +21,7 @@
   .legend{position:absolute;bottom:22px;left:18px;z-index:1000;background:var(--panel);
     border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12px}
   .legend .bar{height:10px;width:180px;border-radius:5px;margin:6px 0 4px;
-    background:linear-gradient(90deg,#ffffcc,#fd8d3c,#e31a1c,#800026)}
+    background:linear-gradient(90deg,#1a9850,#91cf60,#ffff8c,#fd8d3c,#d73027)}
   .legend .ends{display:flex;justify-content:space-between;color:var(--muted)}
   /* mode toggle */
   .modes{position:absolute;top:14px;right:18px;z-index:1000;display:flex;gap:6px;
@@ -84,7 +84,7 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const RISK_COLORS = [[255,255,204],[254,217,118],[253,141,60],[227,26,28],[128,0,38]];
+const RISK_COLORS = [[26,152,80],[145,207,96],[255,255,140],[253,141,60],[215,48,39]];
 function riskColor(r){ r=Math.max(0,Math.min(1,r)); const x=r*(RISK_COLORS.length-1);
   const i=Math.floor(x), f=x-i, a=RISK_COLORS[i], b=RISK_COLORS[Math.min(i+1,RISK_COLORS.length-1)];
   return `rgb(${a.map((c,k)=>Math.round(c+(b[k]-c)*f)).join(',')})`; }

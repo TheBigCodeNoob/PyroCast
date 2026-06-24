@@ -3,8 +3,9 @@ risk via grouped occlusion (no SHAP needed). Shared by the API and the compute j
 import json, pathlib, numpy as np, pandas as pd, joblib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-# prefer the Florida-specialized model if present, else the general best
-_MODEL_PATHS = [ROOT / 'best_model_fl.joblib', ROOT / 'best_model_v13.joblib', ROOT / 'best_model_final.joblib']
+# prefer FL ensemble (lowest-variance) > FL single > general best
+_MODEL_PATHS = [ROOT / 'best_model_fl_ensemble.joblib', ROOT / 'best_model_fl.joblib',
+                ROOT / 'best_model_v13.joblib', ROOT / 'best_model_final.joblib']
 
 # human-readable factor groups (feature -> plain English bucket)
 FACTOR_GROUPS = {
@@ -41,6 +42,14 @@ def load():
     return _BUNDLE
 
 
+def _predict(X):
+    """probability of ignition; averages the ensemble members if present (lower variance)."""
+    b = load()
+    if b.get('models'):
+        return np.mean([m.predict_proba(X)[:, 1] for m in b['models']], axis=0)
+    return b['model'].predict_proba(X)[:, 1]
+
+
 def _engineer(df):
     df = df.copy()
     for name, fn in ENGINEERED.items():
@@ -65,7 +74,7 @@ def score(df):
         if f not in df.columns:
             df[f] = np.nan
     X = df[b['features']].values.astype('float32')
-    return b['model'].predict_proba(X)[:, 1]
+    return _predict(X)
 
 
 def explain(row, n=4):
@@ -78,7 +87,7 @@ def explain(row, n=4):
     for f in b['features']:
         if f not in df.columns:
             df[f] = np.nan
-    base = float(b['model'].predict_proba(df[b['features']].values.astype('float32'))[0, 1])
+    base = float(_predict(df[b['features']].values.astype('float32'))[0])
     contribs = []
     for group, feats in FACTOR_GROUPS.items():
         present = [f for f in feats if f in b['features']]
@@ -87,7 +96,7 @@ def explain(row, n=4):
         d2 = df.copy()
         for f in present:
             d2[f] = _MEDIANS.get(f, 0.0)
-        r2 = float(b['model'].predict_proba(d2[b['features']].values.astype('float32'))[0, 1])
+        r2 = float(_predict(d2[b['features']].values.astype('float32'))[0])
         contribs.append({'factor': group, 'effect': round(base - r2, 4)})  # +ve = raises risk
     contribs.sort(key=lambda c: -c['effect'])
     raises = [c for c in contribs if c['effect'] > 0.005][:n]
