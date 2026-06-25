@@ -22,11 +22,11 @@ def render_raster(df, path):
     """Smooth, readable surface: missing-data-aware Gaussian smooth of the raw risk (removes per-
     cell speckle without touching the model), then re-rank to percentile so the colors keep the
     psychology-tuned green-heavy spread. Ocean/gaps stay transparent. Returns map bounds."""
-    from scipy.ndimage import gaussian_filter
+    from scipy.ndimage import gaussian_filter, zoom
     piv = df.pivot_table(index='lat', columns='lon', values='risk_raw')
     arr = piv.values
     mask = ~np.isnan(arr)
-    sig = 2.4
+    sig = 1.3                                                       # light: kill speckle, keep definition
     w = gaussian_filter(mask.astype(float), sigma=sig)
     sm = gaussian_filter(np.where(mask, arr, 0.0), sigma=sig) / np.where(w > 1e-3, w, 1.0)
     sm[~mask] = np.nan
@@ -34,8 +34,12 @@ def render_raster(df, path):
     disp = np.full_like(sm, np.nan)
     disp[mask] = land.argsort().argsort() / max(1, len(land) - 1)   # smooth -> percentile
     disp = disp[::-1, :]                                            # row 0 = north
-    rgba = PSYCH(np.nan_to_num(disp, nan=0.0))
-    rgba[..., 3] = np.where(np.isnan(disp), 0.0, 0.85)
+    Z = 6                                                           # high-res output so it renders crisp
+    big = zoom(np.nan_to_num(disp, nan=0.0), Z, order=1)
+    bigm = zoom(mask[::-1, :].astype(float), Z, order=1)
+    big[bigm < 0.5] = np.nan
+    rgba = PSYCH(np.nan_to_num(big, nan=0.0))
+    rgba[..., 3] = np.where(np.isnan(big), 0.0, 0.88)
     plt.imsave(str(path), rgba)
     return [[float(piv.index.min()), float(piv.columns.min())], [float(piv.index.max()), float(piv.columns.max())]]
 
