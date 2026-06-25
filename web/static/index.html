@@ -21,7 +21,7 @@
   .legend{position:absolute;bottom:22px;left:18px;z-index:1000;background:var(--panel);
     border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12px}
   .legend .bar{height:10px;width:180px;border-radius:5px;margin:6px 0 4px;
-    background:linear-gradient(90deg,#1a9850,#91cf60,#ffff8c,#fd8d3c,#d73027)}
+    background:linear-gradient(90deg,#1a7d3a 0%,#74bd57 50%,#cdd451 66%,#f3c63f 79%,#ee7e2b 90%,#d8342a 100%)}
   .legend .ends{display:flex;justify-content:space-between;color:var(--muted)}
   /* mode toggle */
   .modes{position:absolute;top:14px;right:18px;z-index:1000;display:flex;gap:6px;
@@ -86,10 +86,12 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-const RISK_COLORS = [[26,152,80],[145,207,96],[255,255,140],[253,141,60],[215,48,39]];
-function riskColor(r){ r=Math.max(0,Math.min(1,r)); const x=r*(RISK_COLORS.length-1);
-  const i=Math.floor(x), f=x-i, a=RISK_COLORS[i], b=RISK_COLORS[Math.min(i+1,RISK_COLORS.length-1)];
-  return `rgb(${a.map((c,k)=>Math.round(c+(b[k]-c)*f)).join(',')})`; }
+// psychology-tuned: green holds through the low/middle so average areas read calm
+const STOPS=[[0,[26,125,58]],[0.5,[116,189,87]],[0.66,[205,212,81]],[0.79,[243,198,63]],[0.9,[238,126,43]],[1,[216,52,42]]];
+function riskColor(r){ r=Math.max(0,Math.min(1,r));
+  for(let i=1;i<STOPS.length;i++){ if(r<=STOPS[i][0]){ const p0=STOPS[i-1][0],a=STOPS[i-1][1],p1=STOPS[i][0],b=STOPS[i][1];
+    const f=(r-p0)/(p1-p0); return `rgb(${a.map((c,k)=>Math.round(c+(b[k]-c)*f)).join(',')})`; } }
+  return 'rgb(216,52,42)'; }
 
 const map = L.map('map',{zoomControl:true,preferCanvas:true}).setView([27.8,-82.5],7);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
@@ -99,16 +101,14 @@ let MODE='point';
 function setMode(m){MODE=m; document.getElementById('mPoint').classList.toggle('on',m==='point');
   document.getElementById('mArea').classList.toggle('on',m==='area');}
 
-let layer=L.layerGroup().addTo(map);
+let riskOverlay=null;
 fetch('/api/risk').then(r=>r.json()).then(d=>{
   if(d.error){document.getElementById('sub').textContent=d.error;return;}
+  const m=d.meta;
   document.getElementById('sub').innerHTML =
-    `${d.meta.n_points.toLocaleString()} points · model ${d.meta.model} · <b>click anywhere to ask why</b>`;
-  const rad = d.points.length>4000?3.2:5;
-  d.points.forEach(p=>{
-    L.circleMarker([p.lat,p.lon],{renderer:canvas,radius:rad,stroke:false,
-      fillColor:riskColor(p.risk),fillOpacity:0.82}).addTo(layer);
-  });
+    `${m.n_points.toLocaleString()} cells · live model · <b>click anywhere to ask why</b>`;
+  riskOverlay = L.imageOverlay('/data/fl_risk.png?t='+Date.now(), m.bounds, {opacity:0.85, interactive:false}).addTo(map);
+  map.fitBounds(m.bounds, {padding:[10,10]});
 }).catch(e=>document.getElementById('sub').textContent='failed to load risk map');
 
 map.on('click', e=>{

@@ -4,8 +4,40 @@ fresh GEE export, or on any existing grid CSV dir.
 Outputs: web/data/fl_risk.json (compact, for the map) + web/data/fl_grid_full.csv (full
 features, for on-demand explanations)."""
 import sys, glob, pathlib, json, numpy as np, pandas as pd
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from matplotlib.colors import LinearSegmentedColormap
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import pyrocast_core as core
+
+# psychology-tuned scale: green dominates the low/middle so average areas read CALM;
+# amber/orange/red reserved for the genuine top of the distribution.
+PSYCH = LinearSegmentedColormap.from_list('psych', [
+    (0.00, '#1a7d3a'), (0.50, '#74bd57'), (0.66, '#cdd451'),
+    (0.79, '#f3c63f'), (0.90, '#ee7e2b'), (1.00, '#d8342a')])
+
+
+def render_raster(df, path):
+    """Smooth, readable surface: missing-data-aware Gaussian smooth of the raw risk (removes per-
+    cell speckle without touching the model), then re-rank to percentile so the colors keep the
+    psychology-tuned green-heavy spread. Ocean/gaps stay transparent. Returns map bounds."""
+    from scipy.ndimage import gaussian_filter
+    piv = df.pivot_table(index='lat', columns='lon', values='risk_raw')
+    arr = piv.values
+    mask = ~np.isnan(arr)
+    sig = 2.4
+    w = gaussian_filter(mask.astype(float), sigma=sig)
+    sm = gaussian_filter(np.where(mask, arr, 0.0), sigma=sig) / np.where(w > 1e-3, w, 1.0)
+    sm[~mask] = np.nan
+    land = sm[mask]
+    disp = np.full_like(sm, np.nan)
+    disp[mask] = land.argsort().argsort() / max(1, len(land) - 1)   # smooth -> percentile
+    disp = disp[::-1, :]                                            # row 0 = north
+    rgba = PSYCH(np.nan_to_num(disp, nan=0.0))
+    rgba[..., 3] = np.where(np.isnan(disp), 0.0, 0.85)
+    plt.imsave(str(path), rgba)
+    return [[float(piv.index.min()), float(piv.columns.min())], [float(piv.index.max()), float(piv.columns.max())]]
 
 HERE = pathlib.Path(__file__).resolve().parent
 DATA = HERE / 'data'
@@ -50,10 +82,10 @@ def main(grid_dir=None):
     # Robust to the balanced-training scale and to lagging satellite layers; spreads the map.
     df['risk'] = df['risk_raw'].rank(pct=True).round(4)
     core.set_medians(df)
-    out = df[['lon', 'lat', 'risk']].round({'lon': 4, 'lat': 4})
-    meta = {'model': core.load().get('_path'), 'n_points': int(len(out)), 'display': 'percentile',
-            'raw_median': round(float(df.risk_raw.median()), 3)}
-    json.dump({'meta': meta, 'points': out.to_dict('records')}, open(DATA / 'fl_risk.json', 'w'))
+    bounds = render_raster(df, DATA / 'fl_risk.png')
+    meta = {'model': core.load().get('_path'), 'n_points': int(len(df)), 'display': 'percentile',
+            'raw_median': round(float(df.risk_raw.median()), 3), 'bounds': bounds}
+    json.dump({'meta': meta}, open(DATA / 'fl_risk.json', 'w'))
     df.to_csv(DATA / 'fl_grid_full.csv', index=False)   # raw + percentile + features, for explain
     print('wrote fl_risk.json + fl_grid_full.csv:', meta)
 

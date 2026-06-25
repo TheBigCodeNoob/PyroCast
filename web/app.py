@@ -42,6 +42,14 @@ def risk():
     return FileResponse(p, media_type='application/json')
 
 
+@app.get('/data/fl_risk.png')
+def risk_png():
+    p = DATA / 'fl_risk.png'
+    if p.exists():
+        return FileResponse(p, media_type='image/png')
+    return JSONResponse({'error': 'no image'}, status_code=404)
+
+
 @app.get('/api/meta')
 def meta():
     p = DATA / 'fl_risk.json'
