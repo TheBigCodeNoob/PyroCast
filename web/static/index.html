@@ -77,7 +77,7 @@
   <button class="close" onclick="closePanel()">&times;</button>
   <h2 id="pTitle">Location</h2>
   <div class="loc" id="pLoc"></div>
-  <div class="gauge"><div class="big" id="pRisk">—</div><div class="lab">risk score</div></div>
+  <div class="gauge"><div class="big" id="pRisk">—</div><div class="lab">Florida risk<br>percentile</div></div>
   <div class="ringwrap"><div class="ring"><i id="pRing" style="width:0%"></i></div></div>
   <div id="pBody"></div>
 </div>
@@ -133,8 +133,8 @@ function renderExplain(d){
   document.getElementById('pRisk').textContent = pct(d.risk);
   const ring=document.getElementById('pRing');
   ring.style.width=pct(d.risk)+'%'; ring.style.background=riskColor(d.risk);
-  const band = d.risk>0.66?'High':d.risk>0.4?'Moderate':'Low';
-  let h = `<div class="pill">${band} relative risk${d.n_points?` · averaged over ${d.n_points} points`:''}</div>`;
+  const band = d.risk>0.8?'Very high':d.risk>0.6?'High':d.risk>0.4?'Moderate':'Low';
+  let h = `<div class="pill">${band} — ranks above ${pct(d.risk)}% of Florida${d.n_points?` · ${d.n_points} cells`:''}</div>`;
   const maxE = Math.max(0.0001, ...(d.raises_risk||[]).map(x=>x.effect), ...(d.lowers_risk||[]).map(x=>-x.effect));
   if(d.raises_risk && d.raises_risk.length){
     h+='<div class="sec">Why it&rsquo;s risky</div>';

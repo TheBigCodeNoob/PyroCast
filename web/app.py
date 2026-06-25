@@ -69,7 +69,7 @@ def explain(req: ExplainReq):
         agg, risks = {}, []
         for i in sel:
             ex = core.explain(_grid.iloc[int(i)])
-            risks.append(ex['risk'])
+            risks.append(float(_grid.iloc[int(i)].get('risk', ex['risk'])))   # percentile
             for c in ex['raises_risk'] + ex['lowers_risk']:
                 agg[c['factor']] = agg.get(c['factor'], 0.0) + c['effect']
         items = sorted(agg.items(), key=lambda kv: -kv[1])
@@ -78,6 +78,7 @@ def explain(req: ExplainReq):
         return {'risk': round(float(np.mean(risks)), 4), 'n_points': int(len(sel)), 'raises_risk': raises, 'lowers_risk': lowers}
     i = _nearest(req.lon, req.lat)
     out = core.explain(_grid.iloc[i])
+    out['risk'] = round(float(_grid.iloc[i].get('risk', out['risk'])), 4)   # percentile for display
     out['grid_lon'] = round(float(_coords[i, 0]), 4); out['grid_lat'] = round(float(_coords[i, 1]), 4)
     return out
 

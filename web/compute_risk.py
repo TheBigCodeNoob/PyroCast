@@ -45,16 +45,16 @@ def main(grid_dir=None):
     if len(df) < 10:
         print('not enough grid data yet'); return
     DATA.mkdir(parents=True, exist_ok=True)
-    df['risk'] = core.score(df)
+    df['risk_raw'] = core.score(df)
+    # display as PERCENTILE within Florida (prioritization tool: "how does this cell rank?").
+    # Robust to the balanced-training scale and to lagging satellite layers; spreads the map.
+    df['risk'] = df['risk_raw'].rank(pct=True).round(4)
     core.set_medians(df)
-    # compact JSON for the map
-    out = df[['lon', 'lat', 'risk']].round({'lon': 4, 'lat': 4, 'risk': 4})
-    meta = {'model': core.load().get('_path'), 'n_points': int(len(out)),
-            'risk_min': round(float(out.risk.min()), 3), 'risk_max': round(float(out.risk.max()), 3),
-            'risk_median': round(float(out.risk.median()), 3)}
+    out = df[['lon', 'lat', 'risk']].round({'lon': 4, 'lat': 4})
+    meta = {'model': core.load().get('_path'), 'n_points': int(len(out)), 'display': 'percentile',
+            'raw_median': round(float(df.risk_raw.median()), 3)}
     json.dump({'meta': meta, 'points': out.to_dict('records')}, open(DATA / 'fl_risk.json', 'w'))
-    # full features for on-demand explanations
-    df.to_csv(DATA / 'fl_grid_full.csv', index=False)
+    df.to_csv(DATA / 'fl_grid_full.csv', index=False)   # raw + percentile + features, for explain
     print('wrote fl_risk.json + fl_grid_full.csv:', meta)
 
 
