@@ -20,6 +20,9 @@ FACTOR_GROUPS = {
     'Temperature & humidity': ['tmmx_7', 'tmmx_30', 'tmmx_90', 'rmin_30', 'rmin_90'],
     'Terrain': ['Elevation'],
 }
+# landscape ("why this place") vs the rest, which are weather/moisture ("conditions right now")
+STATIC_FACTORS = {'Nearness to people & development', 'Forest & canopy fuel', 'Grass & cropland fuel',
+                  'Wetland & marsh (sawgrass)', 'Terrain'}
 
 ENGINEERED = {
     'pdsi_traj_90': lambda d: d.pdsi_0 - d.pdsi_90, 'vpd_trend': lambda d: d.vpd_7 - d.vpd_90,
@@ -99,9 +102,12 @@ def explain(row, n=4):
         r2 = float(_predict(d2[b['features']].values.astype('float32'))[0])
         contribs.append({'factor': group, 'effect': round(base - r2, 4)})  # +ve = raises risk
     contribs.sort(key=lambda c: -c['effect'])
-    raises = [c for c in contribs if c['effect'] > 0.005][:n]
-    lowers = [c for c in contribs if c['effect'] < -0.005][-2:]
-    return {'risk': round(base, 4), 'raises_risk': raises, 'lowers_risk': lowers}
+    sig = [c for c in contribs if abs(c['effect']) > 0.004]
+    place = [c for c in sig if c['factor'] in STATIC_FACTORS][:4]
+    conditions = [c for c in sig if c['factor'] not in STATIC_FACTORS][:4]
+    # keep legacy keys too (area aggregation / older clients)
+    return {'risk': round(base, 4), 'place': place, 'conditions': conditions,
+            'raises_risk': [c for c in sig if c['effect'] > 0][:n], 'lowers_risk': [c for c in sig if c['effect'] < 0][-2:]}
 
 
 def save_grid(df, path):

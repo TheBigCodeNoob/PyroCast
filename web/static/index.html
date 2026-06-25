@@ -67,6 +67,8 @@
 <div class="modes">
   <button id="mPoint" class="on" onclick="setMode('point')">Point</button>
   <button id="mArea" onclick="setMode('area')">Area</button>
+  <span style="width:1px;background:var(--line);margin:2px 2px"></span>
+  <button id="mFires" onclick="toggleFires()" title="overlay real 2017-2020 ignitions">Actual fires</button>
 </div>
 <div class="legend">
   <div>Ignition risk (relative)</div>
@@ -134,25 +136,36 @@ function renderExplain(d){
   const ring=document.getElementById('pRing');
   ring.style.width=pct(d.risk)+'%'; ring.style.background=riskColor(d.risk);
   const band = d.risk>0.8?'Very high':d.risk>0.6?'High':d.risk>0.4?'Moderate':'Low';
-  let h = `<div class="pill">${band} — ranks above ${pct(d.risk)}% of Florida${d.n_points?` · ${d.n_points} cells`:''}</div>`;
-  const maxE = Math.max(0.0001, ...(d.raises_risk||[]).map(x=>x.effect), ...(d.lowers_risk||[]).map(x=>-x.effect));
-  if(d.raises_risk && d.raises_risk.length){
-    h+='<div class="sec">Why it&rsquo;s risky</div>';
-    d.raises_risk.forEach(f=>{h+=factorRow(f.factor,f.effect,maxE,'up');});
-  }
-  if(d.lowers_risk && d.lowers_risk.length){
-    h+='<div class="sec">What lowers the risk</div>';
-    d.lowers_risk.forEach(f=>{h+=factorRow(f.factor,-f.effect,maxE,'down');});
-  }
-  if(!(d.raises_risk||[]).length && !(d.lowers_risk||[]).length)
-    h+='<div class="hint">No single factor stands out here — the risk is a balance of average conditions.</div>';
-  h+='<div class="hint" style="margin-top:18px">Each bar shows how much that group of conditions pushes this location&rsquo;s risk up or down, measured by removing it and re-running the model.</div>';
+  let h = `<div class="pill">${band} — riskier than ${pct(d.risk)}% of Florida${d.n_points?` · ${d.n_points} cells`:''}</div>`;
+  const place=d.place||[], cond=d.conditions||[];
+  const maxE = Math.max(0.0001, ...place.concat(cond).map(x=>Math.abs(x.effect)));
+  if(place.length){ h+='<div class="sec">The landscape</div>'; place.forEach(f=>h+=factorRow(f.factor,f.effect,maxE)); }
+  if(cond.length){ h+='<div class="sec">Conditions right now</div>'; cond.forEach(f=>h+=factorRow(f.factor,f.effect,maxE)); }
+  if(!place.length && !cond.length)
+    h+='<div class="hint">No single factor stands out — the risk here is a balance of average conditions.</div>';
+  h+='<div class="hint" style="margin-top:18px">"Landscape" = fixed traits (how built-up, what fuel). "Conditions" = today&rsquo;s weather, drought and moisture. Red bars raise the risk, blue lower it; size = how much (found by removing each factor and re-running the model).</div>';
   document.getElementById('pBody').innerHTML=h;
 }
-function factorRow(name,eff,maxE,cls){
-  const w=Math.round(Math.min(1,eff/maxE)*100);
-  return `<div class="factor ${cls}"><div class="row"><b>${name}</b><span>${eff>=0?'+':''}${pct(eff)} pts</span></div>
+function factorRow(name,eff,maxE){
+  const up=eff>=0, w=Math.round(Math.min(1,Math.abs(eff)/maxE)*100);
+  return `<div class="factor ${up?'up':'down'}"><div class="row"><b>${name}</b><span>${up?'raises':'lowers'}</span></div>
     <div class="meter"><i style="width:${w}%"></i></div></div>`;
+}
+// actual recorded fires overlay
+let firesLayer=null, firesOn=false;
+function toggleFires(){
+  firesOn=!firesOn; document.getElementById('mFires').classList.toggle('on',firesOn);
+  if(firesOn){
+    if(!firesLayer){
+      firesLayer=L.layerGroup();
+      fetch('/api/ignitions').then(r=>r.json()).then(d=>{
+        (d.points||[]).forEach(p=>L.circleMarker([p.lat,p.lon],{renderer:canvas,radius:1.6,stroke:false,
+          fillColor:'#27e0ff',fillOpacity:0.55}).addTo(firesLayer));
+        document.getElementById('sub').innerHTML += ` · <span style="color:#27e0ff">${(d.n||0).toLocaleString()} real 2017-20 fires shown</span>`;
+      });
+    }
+    firesLayer.addTo(map);
+  } else if(firesLayer){ map.removeLayer(firesLayer); }
 }
 </script>
 </body>

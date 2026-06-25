@@ -50,6 +50,24 @@ def meta():
     return {}
 
 
+_ignitions = None
+
+
+@app.get('/api/ignitions')
+def ignitions():
+    """Actual recorded Florida wildfire ignitions (FPA-FOD 2017-2020) for visual validation."""
+    global _ignitions
+    if _ignitions is None:
+        f = HERE.parent / 'fpafod_se.csv'
+        if not f.exists():
+            return {'points': [], 'n': 0}
+        d = pd.read_csv(f, usecols=['latitude', 'longitude', 'nwcg_cause_classification'])
+        d = d[(d.latitude < 31.0) & (d.latitude > 24.4) & (d.longitude > -87.7) & (d.longitude < -79.8)]
+        _ignitions = [{'lon': round(float(r.longitude), 4), 'lat': round(float(r.latitude), 4),
+                       'c': 1 if r.nwcg_cause_classification == 'Human' else 0} for r in d.itertuples()]
+    return {'points': _ignitions, 'n': len(_ignitions)}
+
+
 class ExplainReq(BaseModel):
     lon: float
     lat: float
@@ -66,16 +84,17 @@ def explain(req: ExplainReq):
         if len(sel) == 0:
             sel = np.array([_nearest(req.lon, req.lat)])
         sel = sel[:40]
-        agg, risks = {}, []
+        aggP, aggC, risks = {}, {}, []
         for i in sel:
             ex = core.explain(_grid.iloc[int(i)])
             risks.append(float(_grid.iloc[int(i)].get('risk', ex['risk'])))   # percentile
-            for c in ex['raises_risk'] + ex['lowers_risk']:
-                agg[c['factor']] = agg.get(c['factor'], 0.0) + c['effect']
-        items = sorted(agg.items(), key=lambda kv: -kv[1])
-        raises = [{'factor': k, 'effect': round(v / len(sel), 4)} for k, v in items if v > 0][:4]
-        lowers = [{'factor': k, 'effect': round(v / len(sel), 4)} for k, v in items if v < 0][-2:]
-        return {'risk': round(float(np.mean(risks)), 4), 'n_points': int(len(sel)), 'raises_risk': raises, 'lowers_risk': lowers}
+            for c in ex.get('place', []):
+                aggP[c['factor']] = aggP.get(c['factor'], 0.0) + c['effect']
+            for c in ex.get('conditions', []):
+                aggC[c['factor']] = aggC.get(c['factor'], 0.0) + c['effect']
+        place = sorted([{'factor': k, 'effect': round(v / len(sel), 4)} for k, v in aggP.items()], key=lambda x: -x['effect'])[:4]
+        cond = sorted([{'factor': k, 'effect': round(v / len(sel), 4)} for k, v in aggC.items()], key=lambda x: -x['effect'])[:4]
+        return {'risk': round(float(np.mean(risks)), 4), 'n_points': int(len(sel)), 'place': place, 'conditions': cond}
     i = _nearest(req.lon, req.lat)
     out = core.explain(_grid.iloc[i])
     out['risk'] = round(float(_grid.iloc[i].get('risk', out['risk'])), 4)   # percentile for display
