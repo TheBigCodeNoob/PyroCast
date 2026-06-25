@@ -19,29 +19,37 @@ PSYCH = LinearSegmentedColormap.from_list('psych', [
 
 
 def render_raster(df, path):
-    """Smooth, readable surface: missing-data-aware Gaussian smooth of the raw risk (removes per-
-    cell speckle without touching the model), then re-rank to percentile so the colors keep the
-    psychology-tuned green-heavy spread. Ocean/gaps stay transparent. Returns map bounds."""
-    from scipy.ndimage import gaussian_filter, zoom
-    piv = df.pivot_table(index='lat', columns='lon', values='risk_raw')
-    arr = piv.values
-    mask = ~np.isnan(arr)
-    sig = 1.3                                                       # light: kill speckle, keep definition
-    w = gaussian_filter(mask.astype(float), sigma=sig)
-    sm = gaussian_filter(np.where(mask, arr, 0.0), sigma=sig) / np.where(w > 1e-3, w, 1.0)
-    sm[~mask] = np.nan
-    land = sm[mask]
-    disp = np.full_like(sm, np.nan)
-    disp[mask] = land.argsort().argsort() / max(1, len(land) - 1)   # smooth -> percentile
+    """Interpolate the scattered grid points onto a clean high-res raster (no pivot holes, no coast
+    warp), mask out anything farther than ~one cell from real data (ocean), lightly smooth, then
+    re-rank to percentile for the psychology-tuned green-heavy colors. Returns map bounds."""
+    from scipy.interpolate import griddata
+    from scipy.spatial import cKDTree
+    from scipy.ndimage import gaussian_filter, binary_opening, binary_closing
+    pts = df[['lon', 'lat']].values
+    lon0, lon1 = float(df.lon.min()), float(df.lon.max())
+    lat0, lat1 = float(df.lat.min()), float(df.lat.max())
+    W = 1000
+    H = int(round(W * (lat1 - lat0) / (lon1 - lon0)))
+    gx, gy = np.meshgrid(np.linspace(lon0, lon1, W), np.linspace(lat0, lat1, H))
+    gz = griddata(pts, df.risk_raw.values, (gx, gy), method='linear').ravel()
+    dist, _ = cKDTree(pts).query(np.column_stack([gx.ravel(), gy.ravel()]))
+    gz[dist > 0.04] = np.nan                                       # >~one cell from data = ocean
+    gz = gz.reshape(H, W)
+    valid = ~np.isnan(gz)                                          # cells with real data
+    # display mask: fill pinholes, then drop isolated edge specks -> clean coastline
+    land = binary_opening(binary_closing(valid, np.ones((3, 3)), iterations=2), np.ones((3, 3)), iterations=2)
+    sig = 6
+    wsm = gaussian_filter(valid.astype(float), sigma=sig)          # smooth using only real data
+    sm = gaussian_filter(np.where(valid, gz, 0.0), sigma=sig) / np.where(wsm > 1e-3, wsm, 1.0)
+    sm[~land] = np.nan
+    m = ~np.isnan(sm)
+    disp = np.full(sm.shape, np.nan)
+    disp[m] = sm[m].argsort().argsort() / max(1, int(m.sum()) - 1)  # smooth -> percentile
     disp = disp[::-1, :]                                            # row 0 = north
-    Z = 6                                                           # high-res output so it renders crisp
-    big = zoom(np.nan_to_num(disp, nan=0.0), Z, order=1)
-    bigm = zoom(mask[::-1, :].astype(float), Z, order=1)
-    big[bigm < 0.5] = np.nan
-    rgba = PSYCH(np.nan_to_num(big, nan=0.0))
-    rgba[..., 3] = np.where(np.isnan(big), 0.0, 0.88)
+    rgba = PSYCH(np.nan_to_num(disp, nan=0.0))
+    rgba[..., 3] = np.where(np.isnan(disp), 0.0, 0.88)
     plt.imsave(str(path), rgba)
-    return [[float(piv.index.min()), float(piv.columns.min())], [float(piv.index.max()), float(piv.columns.max())]]
+    return [[lat0, lon0], [lat1, lon1]]
 
 HERE = pathlib.Path(__file__).resolve().parent
 DATA = HERE / 'data'
