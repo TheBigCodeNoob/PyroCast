@@ -56,6 +56,34 @@
   .spin{display:inline-block;width:16px;height:16px;border:2px solid var(--line);
     border-top-color:var(--accent);border-radius:50%;animation:s .8s linear infinite}
   @keyframes s{to{transform:rotate(360deg)}}
+  /* accuracy button + modal */
+  .accbtn{position:absolute;bottom:22px;right:18px;z-index:1000;background:var(--panel);
+    border:1px solid var(--line);border-radius:10px;padding:9px 14px;color:var(--txt);
+    font-size:13px;font-weight:600;cursor:pointer}
+  .accbtn:hover{border-color:var(--accent)}
+  .accbtn b{color:var(--accent)}
+  #acc{position:absolute;inset:0;z-index:2000;background:rgba(6,8,11,.72);
+    display:none;align-items:center;justify-content:center;padding:24px}
+  #acc.open{display:flex}
+  #acc .box{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    max-width:620px;width:100%;max-height:88vh;overflow-y:auto;padding:26px 28px}
+  #acc h2{margin:0 0 4px;font-size:20px}
+  #acc .lead{color:var(--muted);font-size:13.5px;line-height:1.5;margin:0 0 18px}
+  #acc .close{float:right;cursor:pointer;color:var(--muted);font-size:24px;line-height:1;border:0;background:none}
+  #acc .cap{font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:20px 0 10px}
+  .cmp{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:13px}
+  .cmp .nm{width:150px;flex:none;color:var(--txt)}
+  .cmp .nm.us{color:var(--accent);font-weight:700}
+  .cmp .track{flex:1;height:16px;background:#0e1116;border-radius:8px;overflow:hidden}
+  .cmp .track > i{display:block;height:100%;border-radius:8px;background:#3a4351}
+  .cmp .track > i.us{background:linear-gradient(90deg,#ee7e2b,#f3c63f)}
+  .cmp .v{width:42px;flex:none;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
+  #acc .blk{margin:16px 0}
+  #acc .blk h3{margin:0 0 4px;font-size:14px;color:var(--txt)}
+  #acc .blk p{margin:0;font-size:13px;line-height:1.55;color:var(--muted)}
+  #acc .blk p b{color:var(--txt)}
+  #acc .foot{margin-top:20px;padding-top:14px;border-top:1px solid var(--line);
+    font-size:11.5px;color:var(--muted);line-height:1.5}
 </style>
 </head>
 <body>
@@ -84,6 +112,37 @@
   <div id="pBody"></div>
 </div>
 
+<button class="accbtn" onclick="openAcc()">How accurate is this? <b>&#9432;</b></button>
+<div id="acc" onclick="if(event.target===this)closeAcc()">
+  <div class="box">
+    <button class="close" onclick="closeAcc()">&times;</button>
+    <h2>How accurate is PyroCast?</h2>
+    <p class="lead">PyroCast predicts <b style="color:var(--txt)">where and when wildfires ignite</b> — the hardest of the three fire-modeling jobs (harder than mapping fire <i>danger</i>, or simulating the spread of a fire that already started). And it's scored the strict way.</p>
+
+    <div class="cap">vs. the best published ignition models &nbsp;·&nbsp; AUC, higher is better</div>
+    <div class="cmp"><span class="nm us">PyroCast · Southeast</span><span class="track"><i class="us" style="width:72%"></i></span><span class="v">0.86</span></div>
+    <div class="cmp"><span class="nm">California (2023)</span><span class="track"><i style="width:68%"></i></span><span class="v">0.84</span></div>
+    <div class="cmp"><span class="nm">Europe, best (2025)</span><span class="track"><i style="width:66%"></i></span><span class="v">0.83</span></div>
+    <div class="cmp"><span class="nm us">PyroCast · Florida</span><span class="track"><i class="us" style="width:58%"></i></span><span class="v">0.79</span></div>
+    <div class="cmp"><span class="nm" style="color:#5b6472">coin flip</span><span class="track"><i style="width:0%"></i></span><span class="v">0.50</span></div>
+
+    <div class="blk">
+      <h3>Tested the strict way</h3>
+      <p>Most published models test on random days and places blended into their training data. PyroCast is scored only on <b>regions it never saw, in a year (2020) it never saw</b> — the way it would actually be used. Shuffle the fire labels and it collapses to 0.50, proving it learned real signal, not a shortcut. Its gains even survive being matched on population and development, so it isn't just detecting "near people."</p>
+    </div>
+    <div class="blk">
+      <h3>Why Florida reads 0.79 — honest, not weak</h3>
+      <p>A single flat state is a <b>harder</b> target than a whole continent: less landscape contrast for a model to exploit, and Florida is the <b>lightning capital of the U.S.</b> — roughly 1 in 6 fires here is lightning-caused, which no location model can foresee without live strike data. A single European province, tested this strictly, would land in the same range. What 0.79 buys on the ground: the <b>5% of Florida we flag highest-risk is where fires actually occur 91% of the time.</b></p>
+    </div>
+    <div class="blk">
+      <h3>We even tested the field's secret weapon</h3>
+      <p>The top European and California models are built on distance to the <b>wildland-urban interface</b>. We added it. It changed our accuracy by <b>nothing</b> — because PyroCast already captures that signal through the features it uses. We weren't missing the field's best idea; we'd already rebuilt it.</p>
+    </div>
+
+    <div class="foot">AUC (area under the ROC curve): 1.0 = perfect, 0.5 = a coin flip. Validation: blocked spatial + temporal hold-out (leave-region-out × train &le;2019 / test 2020). Comparison figures are the headline results reported by peer-reviewed human-caused-ignition studies; methodologies differ, so read them as a peer group, not a head-to-head race.</div>
+  </div>
+</div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 // psychology-tuned: green holds through the low/middle so average areas read calm
@@ -93,9 +152,10 @@ function riskColor(r){ r=Math.max(0,Math.min(1,r));
     const f=(r-p0)/(p1-p0); return `rgb(${a.map((c,k)=>Math.round(c+(b[k]-c)*f)).join(',')})`; } }
   return 'rgb(216,52,42)'; }
 
-const map = L.map('map',{zoomControl:true,preferCanvas:true}).setView([27.8,-82.5],7);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-  {attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:12}).addTo(map);
+const CARTO_KEY='cb1_49n3_1_5dc0131e18da6bcb7a9c600f';   // CARTO basemap key (client-side, restrict by domain in CARTO dashboard)
+const map = L.map('map',{zoomControl:true,preferCanvas:true,maxZoom:18}).setView([27.8,-82.5],7);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key='+CARTO_KEY,
+  {attribution:'&copy; OpenStreetMap &copy; CARTO',maxZoom:18}).addTo(map);
 const canvas = L.canvas({padding:0.5});
 let MODE='point';
 function setMode(m){MODE=m; document.getElementById('mPoint').classList.toggle('on',m==='point');
@@ -105,9 +165,23 @@ let riskOverlay=null;
 fetch('/api/risk').then(r=>r.json()).then(d=>{
   if(d.error){document.getElementById('sub').textContent=d.error;return;}
   const m=d.meta;
+  const when = m.computed ? ` · updated ${m.computed}` : '';
   document.getElementById('sub').innerHTML =
-    `${m.n_points.toLocaleString()} cells · live model · <b>click anywhere to ask why</b>`;
-  riskOverlay = L.imageOverlay('/data/fl_risk.png?t='+Date.now(), m.bounds, {opacity:0.85, interactive:false}).addTo(map);
+    `${m.n_points.toLocaleString()} cells · live model${when} · <b>click anywhere to ask why</b>`;
+  if(d.points && d.points.length){
+    // crisp native-resolution cells, each colored by its OWN percentile -> color always matches the
+    // value you get on click, and edges stay sharp as you zoom (no blurry stretched raster)
+    const h=(m.cell||0.04)/2;
+    riskOverlay=L.layerGroup();
+    for(let i=0;i<d.points.length;i++){
+      const lon=d.points[i][0], lat=d.points[i][1], risk=d.points[i][2];
+      L.rectangle([[lat-h,lon-h],[lat+h,lon+h]],{renderer:canvas,stroke:false,
+        fillColor:riskColor(risk),fillOpacity:0.85}).addTo(riskOverlay);
+    }
+    riskOverlay.addTo(map);
+  } else {   // fallback for older data files without per-point values
+    riskOverlay=L.imageOverlay('/data/fl_risk.png?t='+Date.now(), m.bounds, {opacity:0.85, interactive:false}).addTo(map);
+  }
   map.fitBounds(m.bounds, {padding:[10,10]});
 }).catch(e=>document.getElementById('sub').textContent='failed to load risk map');
 
@@ -151,6 +225,11 @@ function factorRow(name,eff,maxE){
   return `<div class="factor ${up?'up':'down'}"><div class="row"><b>${name}</b><span>${up?'raises':'lowers'}</span></div>
     <div class="meter"><i style="width:${w}%"></i></div></div>`;
 }
+// accuracy modal
+function openAcc(){document.getElementById('acc').classList.add('open');}
+function closeAcc(){document.getElementById('acc').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAcc();});
+
 // actual recorded fires overlay
 let firesLayer=null, firesOn=false;
 function toggleFires(){

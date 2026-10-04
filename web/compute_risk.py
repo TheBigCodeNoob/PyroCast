@@ -94,10 +94,17 @@ def main(grid_dir=None):
     # Robust to the balanced-training scale and to lagging satellite layers; spreads the map.
     df['risk'] = df['risk_raw'].rank(pct=True).round(4)
     core.set_medians(df)
-    bounds = render_raster(df, DATA / 'fl_risk.png')
+    bounds = render_raster(df, DATA / 'fl_risk.png')   # PNG kept as a static fallback only
+    # native grid spacing, so the frontend can draw each cell as a crisp rectangle
+    lons = np.sort(df.lon.unique()); gaps = np.diff(lons); gaps = gaps[gaps > 1e-6]
+    cell = float(round(float(np.min(gaps)), 3)) if len(gaps) else 0.04
+    # per-point percentile — the SAME value /api/explain returns on click, so cell color == click
+    points = df[['lon', 'lat', 'risk']].round({'lon': 3, 'lat': 3, 'risk': 3}).values.tolist()
+    from datetime import datetime
     meta = {'model': core.load().get('_path'), 'n_points': int(len(df)), 'display': 'percentile',
-            'raw_median': round(float(df.risk_raw.median()), 3), 'bounds': bounds}
-    json.dump({'meta': meta}, open(DATA / 'fl_risk.json', 'w'))
+            'raw_median': round(float(df.risk_raw.median()), 3), 'bounds': bounds,
+            'cell': cell, 'computed': datetime.now().strftime('%Y-%m-%d')}
+    json.dump({'meta': meta, 'points': points}, open(DATA / 'fl_risk.json', 'w'))
     df.to_csv(DATA / 'fl_grid_full.csv', index=False)   # raw + percentile + features, for explain
     print('wrote fl_risk.json + fl_grid_full.csv:', meta)
 
