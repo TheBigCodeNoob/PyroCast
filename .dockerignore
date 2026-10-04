@@ -1,0 +1,9 @@
+# Lean image: ship only what the server actually loads at runtime.
+# (Build context is the git repo, so the big .keras files are already excluded via .gitignore.)
+*
+!requirements.txt
+!best_model_fl_ensemble.joblib
+!fpafod_se.csv
+!web
+web/__pycache__
+**/__pycache__

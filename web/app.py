@@ -13,19 +13,32 @@ HERE = pathlib.Path(__file__).resolve().parent
 DATA = HERE / 'data'
 app = FastAPI(title='PyroCast Florida')
 
+
+@app.exception_handler(Exception)
+async def _unhandled(request, exc):
+    """Surface the real error (e.g. a failed model load) to the client + logs instead of a bare 500
+    that the UI shows as 'Could not analyze this location.'"""
+    import traceback
+    traceback.print_exc()
+    return JSONResponse({'error': f'{type(exc).__name__}: {exc}'}, status_code=500)
+
+
 _grid = None
 _coords = None
 
 
 def _ensure():
+    """Load the grid + model once. Atomic: _grid/_coords are set ONLY after the model loads, so a
+    failed load doesn't half-initialize (leaving _coords None and poisoning every later request)."""
     global _grid, _coords
-    if _grid is None:
+    if _coords is None:
         f = DATA / 'fl_grid_full.csv'
         if not f.exists():
             return False
-        _grid = pd.read_csv(f).reset_index(drop=True)
-        core.load(); core.set_medians(_grid)
-        _coords = _grid[['lon', 'lat']].values
+        g = pd.read_csv(f).reset_index(drop=True)
+        core.load(); core.set_medians(g)
+        _grid = g
+        _coords = g[['lon', 'lat']].values
     return True
 
 
