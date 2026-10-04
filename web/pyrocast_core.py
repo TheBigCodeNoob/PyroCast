@@ -24,6 +24,16 @@ FACTOR_GROUPS = {
 STATIC_FACTORS = {'Nearness to people & development', 'Forest & canopy fuel', 'Grass & cropland fuel',
                   'Wetland & marsh (sawgrass)', 'Terrain'}
 
+TIER_NAMES = ['Minimal', 'Low', 'Moderate', 'High', 'Very High', 'Extreme']
+# modifiable landscape drivers -> the concrete action an agency can schedule/fund to lower risk
+MITIGATION = {
+    'Forest & canopy fuel': 'Fuel reduction -mechanical thinning or prescribed fire to cut canopy & surface fuel load.',
+    'Grass & cropland fuel': 'Prescribed burns, mowing, or grazed firebreaks to break up fine-fuel continuity.',
+    'Wetland & marsh (sawgrass)': 'Hydrologic management + targeted prescribed burns in sawgrass/marsh fuels.',
+    'Nearness to people & development': 'Ignition prevention near homes -defensible space, debris-burn/campfire limits, WUI hardening.',
+}
+TIMING_GROUPS = {'Drought & rainfall', 'Temperature & humidity', 'Vegetation moisture'}
+
 ENGINEERED = {
     'pdsi_traj_90': lambda d: d.pdsi_0 - d.pdsi_90, 'vpd_trend': lambda d: d.vpd_7 - d.vpd_90,
     'pr_deficit': lambda d: d.pr_365 / 4 - d.pr_90, 'fm100_trend': lambda d: d.fm100_30 - d.fm100_90,
@@ -105,9 +115,31 @@ def explain(row, n=4):
     sig = [c for c in contribs if abs(c['effect']) > 0.004]
     place = [c for c in sig if c['factor'] in STATIC_FACTORS][:4]
     conditions = [c for c in sig if c['factor'] not in STATIC_FACTORS][:4]
+    # precomputed calibrated fields for this cell (added by calibrate.py; 0/defaults if absent)
+    rd = dict(row)
+
+    def _num(k, d=0.0):
+        v = rd.get(k, d)
+        try:
+            v = float(v)
+        except Exception:
+            return d
+        return d if np.isnan(v) else v
+    tier = int(_num('tier', 0)); ptier = int(_num('ptier', 0))
+    # actionable mitigation: modifiable landscape drivers that RAISE risk here
+    actions = [{'driver': c['factor'], 'do': MITIGATION[c['factor']]}
+               for c in place if c['factor'] in MITIGATION and c['effect'] > 0][:3]
+    timing = any(c['factor'] in TIMING_GROUPS and c['effect'] > 0 for c in conditions)
     # keep legacy keys too (area aggregation / older clients)
     return {'risk': round(base, 4), 'place': place, 'conditions': conditions,
-            'raises_risk': [c for c in sig if c['effect'] > 0][:n], 'lowers_risk': [c for c in sig if c['effect'] < 0][-2:]}
+            'raises_risk': [c for c in sig if c['effect'] > 0][:n], 'lowers_risk': [c for c in sig if c['effect'] < 0][-2:],
+            'tier': tier, 'tier_name': TIER_NAMES[min(tier, 5)],
+            'rate': round(_num('exp_ign_100km2_yr'), 2), 'rel_risk': round(_num('rel_risk'), 1),
+            'exposure': round(_num('exposure'), 2),
+            'ptier': ptier, 'ptier_name': TIER_NAMES[min(ptier, 5)],
+            'actions': actions,
+            'timing': ('Fire-weather is currently elevated here -a short-term window for burn bans / pre-positioning crews.'
+                       if timing else None)}
 
 
 def save_grid(df, path):

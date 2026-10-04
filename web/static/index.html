@@ -56,6 +56,34 @@
   .spin{display:inline-block;width:16px;height:16px;border:2px solid var(--line);
     border-top-color:var(--accent);border-radius:50%;animation:s .8s linear infinite}
   @keyframes s{to{transform:rotate(360deg)}}
+  /* layer toggle */
+  .layers{position:absolute;top:62px;left:18px;z-index:1000;display:flex;gap:6px;
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:4px}
+  .layers button{background:none;border:0;color:var(--muted);padding:6px 12px;border-radius:7px;
+    cursor:pointer;font-size:13px;font-weight:600}
+  .layers button.on{background:var(--accent);color:#1a1109}
+  /* tier legend */
+  .legend{min-width:208px}
+  .legend .legtitle{font-weight:700;font-size:12.5px;margin-bottom:6px;color:var(--txt)}
+  .legrow{display:flex;align-items:center;gap:8px;margin:3px 0;font-size:12px}
+  .legrow .sw{width:14px;height:14px;border-radius:3px;flex:none}
+  .legrow .nm{flex:1}
+  .legrow .rng{color:var(--muted);font-variant-numeric:tabular-nums}
+  .legu{color:var(--muted);font-size:10.5px;margin-top:7px;line-height:1.35}
+  /* panel: tier badge + metrics + actions */
+  .tierbadge{display:inline-block;font-weight:800;font-size:16px;letter-spacing:.5px;
+    padding:6px 14px;border-radius:7px;margin:6px 0 14px;text-transform:uppercase;
+    background:#0e1116;border:1px solid currentColor}
+  .metric{font-size:13px;margin:2px 0;color:var(--muted)}
+  .metric .mv{font-size:30px;font-weight:800;color:var(--txt);margin-right:5px}
+  .metric2{font-size:13px;margin:3px 0}
+  .metric2 b{color:var(--txt)}
+  .act{background:#0e1116;border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:7px;padding:9px 11px;margin:7px 0}
+  .act b{display:block;font-size:13px;margin-bottom:2px}
+  .act span{font-size:12.5px;color:var(--muted);line-height:1.45}
+  .timing{background:rgba(238,126,43,.12);border:1px solid var(--accent);border-radius:8px;
+    padding:9px 11px;margin:12px 0;font-size:12.5px;color:#ffd9b3;line-height:1.45}
   /* accuracy button + modal */
   .accbtn{position:absolute;bottom:22px;right:18px;z-index:1000;background:var(--panel);
     border:1px solid var(--line);border-radius:10px;padding:9px 14px;color:var(--txt);
@@ -92,6 +120,10 @@
   <h1><span class="fire">&#128293;</span> PyroCast <span style="font-weight:400;color:var(--muted)">| Florida wildfire-ignition risk</span></h1>
   <div class="sub" id="sub">loading risk map…</div>
 </header>
+<div class="layers">
+  <button id="lIgnition" class="on" onclick="setLayer('ignition')">Ignition likelihood</button>
+  <button id="lPriority" onclick="setLayer('priority')" title="where an ignition threatens the most people & property">Vulnerable places</button>
+</div>
 <div class="modes">
   <button id="mPoint" class="on" onclick="setMode('point')">Point</button>
   <button id="mArea" onclick="setMode('area')">Area</button>
@@ -99,16 +131,14 @@
   <button id="mFires" onclick="toggleFires()" title="overlay real 2017-2020 ignitions">Actual fires</button>
 </div>
 <div class="legend">
-  <div>Ignition risk (relative)</div>
-  <div class="bar"></div>
-  <div class="ends"><span>low</span><span>high</span></div>
+  <div class="legtitle" id="legTitle">Ignition likelihood</div>
+  <div id="legRows"></div>
+  <div class="legu" id="legUnit"></div>
 </div>
 <div id="panel">
   <button class="close" onclick="closePanel()">&times;</button>
   <h2 id="pTitle">Location</h2>
   <div class="loc" id="pLoc"></div>
-  <div class="gauge"><div class="big" id="pRisk">—</div><div class="lab">Florida risk<br>percentile</div></div>
-  <div class="ringwrap"><div class="ring"><i id="pRing" style="width:0%"></i></div></div>
   <div id="pBody"></div>
 </div>
 
@@ -161,16 +191,37 @@ let MODE='point';
 function setMode(m){MODE=m; document.getElementById('mPoint').classList.toggle('on',m==='point');
   document.getElementById('mArea').classList.toggle('on',m==='area');}
 
-let riskOverlay=null;
+let riskOverlay=null, META=null, LAYER='ignition';
 fetch('/api/risk').then(r=>r.json()).then(d=>{
   if(d.error){document.getElementById('sub').textContent=d.error;return;}
-  const m=d.meta;
+  META=d.meta; const c=META.calib;
   document.getElementById('sub').innerHTML =
-    `${m.n_points.toLocaleString()} cells · live model · <b>click anywhere to ask why</b>`;
-  // smooth interpolated risk surface (percentile-faithful, so color matches the click value)
-  riskOverlay=L.imageOverlay('/data/fl_risk.png?t='+Date.now(), m.bounds, {opacity:0.9, interactive:false}).addTo(map);
-  map.fitBounds(m.bounds, {padding:[10,10]});
+    `${META.n_points.toLocaleString()} cells · calibrated to ${c.total_actual_ignitions.toLocaleString()} real 2017-20 ignitions · <b>click to analyze</b>`;
+  setLayer('ignition');
+  map.fitBounds(META.bounds, {padding:[10,10]});
 }).catch(e=>document.getElementById('sub').textContent='failed to load risk map');
+
+function setLayer(name){
+  if(!META) return;
+  LAYER=name;
+  document.getElementById('lIgnition').classList.toggle('on',name==='ignition');
+  document.getElementById('lPriority').classList.toggle('on',name==='priority');
+  if(riskOverlay) map.removeLayer(riskOverlay);
+  riskOverlay=L.imageOverlay('/data/'+META.layers[name].png+'?t='+Date.now(), META.bounds,
+    {opacity:0.9, interactive:false}).addTo(map);
+  buildLegend(name);
+}
+function buildLegend(name){
+  const c=META.calib;
+  document.getElementById('legTitle').textContent=META.layers[name].title;
+  document.getElementById('legRows').innerHTML = c.tiers.slice().reverse().map(t=>{
+    const rng = name==='ignition' ? `<span class="rng">${t.rate_lo}&ndash;${t.rate_hi}</span>` : '';
+    return `<div class="legrow"><span class="sw" style="background:${t.color}"></span><span class="nm">${t.name}</span>${rng}</div>`;
+  }).join('');
+  document.getElementById('legUnit').textContent = name==='ignition'
+    ? 'expected ignitions / 100 km²·yr, calibrated to real fire records'
+    : 'where an ignition threatens the most people & property';
+}
 
 map.on('click', e=>{
   const lon=e.latlng.lng, lat=e.latlng.lat;
@@ -184,27 +235,31 @@ function openPanel(lon,lat){
   document.getElementById('panel').classList.add('open');
   document.getElementById('pTitle').textContent = MODE==='area'?'Area analysis':'Location';
   document.getElementById('pLoc').textContent = `${lat.toFixed(3)}, ${lon.toFixed(3)}` + (MODE==='area'?' · ~25 km radius':'');
-  document.getElementById('pRisk').innerHTML='<span class="spin"></span>';
-  document.getElementById('pRing').style.width='0%';
-  document.getElementById('pBody').innerHTML='';
+  document.getElementById('pBody').innerHTML='<div style="margin-top:12px"><span class="spin"></span></div>';
 }
 function closePanel(){document.getElementById('panel').classList.remove('open');}
 
-function pct(r){return Math.round(r*100);}
+const TIERCOL={'Minimal':'#1a7d3a','Low':'#74bd57','Moderate':'#cdd451','High':'#f3c63f','Very High':'#ee7e2b','Extreme':'#d8342a'};
 function renderExplain(d){
   if(d.error){document.getElementById('pBody').innerHTML=`<div class="hint">${d.error}</div>`;return;}
-  document.getElementById('pRisk').textContent = pct(d.risk);
-  const ring=document.getElementById('pRing');
-  ring.style.width=pct(d.risk)+'%'; ring.style.background=riskColor(d.risk);
-  const band = d.risk>0.8?'Very high':d.risk>0.6?'High':d.risk>0.4?'Moderate':'Low';
-  let h = `<div class="pill">${band} — riskier than ${pct(d.risk)}% of Florida${d.n_points?` · ${d.n_points} cells`:''}</div>`;
+  const tname = (LAYER==='priority' && d.ptier_name) ? d.ptier_name : (d.tier_name||'—');
+  const tcol = TIERCOL[tname] || '#8b949e';
+  let h = `<div class="tierbadge" style="color:${tcol}">${tname}</div>`;
+  h += `<div class="metric"><span class="mv">${(d.rate==null?0:d.rate).toFixed(1)}</span>expected ignitions / 100 km²·yr</div>`;
+  h += `<div class="metric2"><b>${(d.rel_risk==null?0:d.rel_risk).toFixed(1)}×</b> the Florida average${d.n_points?` · ${d.n_points} cells`:''}</div>`;
+  if(d.exposure!=null){
+    const ex=d.exposure, exl = ex>0.75?'high':ex>0.5?'moderate':'lower';
+    h += `<div class="metric2" style="color:var(--muted)">People &amp; property exposed: <b>${exl}</b>${d.ptier_name?` · vulnerability <b>${d.ptier_name}</b>`:''}</div>`;
+  }
+  if(d.timing) h += `<div class="timing">⏱ ${d.timing}</div>`;
   const place=d.place||[], cond=d.conditions||[];
   const maxE = Math.max(0.0001, ...place.concat(cond).map(x=>Math.abs(x.effect)));
-  if(place.length){ h+='<div class="sec">The landscape</div>'; place.forEach(f=>h+=factorRow(f.factor,f.effect,maxE)); }
+  if(place.length){ h+='<div class="sec">Why here — the landscape</div>'; place.forEach(f=>h+=factorRow(f.factor,f.effect,maxE)); }
   if(cond.length){ h+='<div class="sec">Conditions right now</div>'; cond.forEach(f=>h+=factorRow(f.factor,f.effect,maxE)); }
-  if(!place.length && !cond.length)
-    h+='<div class="hint">No single factor stands out — the risk here is a balance of average conditions.</div>';
-  h+='<div class="hint" style="margin-top:18px">"Landscape" = fixed traits (how built-up, what fuel). "Conditions" = today&rsquo;s weather, drought and moisture. Red bars raise the risk, blue lower it; size = how much (found by removing each factor and re-running the model).</div>';
+  h += '<div class="sec">What can reduce risk here</div>';
+  if((d.actions||[]).length) d.actions.forEach(a=>h+=`<div class="act"><b>${a.driver}</b><span>${a.do}</span></div>`);
+  else h += '<div class="hint">Risk here is driven mainly by fixed terrain or current weather — limited permanent mitigation; focus on detection &amp; response readiness.</div>';
+  h += '<div class="hint" style="margin-top:16px">Rates are calibrated against actual 2017-20 ignitions. "Why" factors come from removing each group and re-running the model; red raises risk, blue lowers it.</div>';
   document.getElementById('pBody').innerHTML=h;
 }
 function factorRow(name,eff,maxE){

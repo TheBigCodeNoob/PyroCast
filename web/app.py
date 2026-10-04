@@ -55,14 +55,6 @@ def risk():
     return FileResponse(p, media_type='application/json')
 
 
-@app.get('/data/fl_risk.png')
-def risk_png():
-    p = DATA / 'fl_risk.png'
-    if p.exists():
-        return FileResponse(p, media_type='image/png')
-    return JSONResponse({'error': 'no image'}, status_code=404)
-
-
 @app.get('/api/meta')
 def meta():
     p = DATA / 'fl_risk.json'
@@ -105,17 +97,29 @@ def explain(req: ExplainReq):
         if len(sel) == 0:
             sel = np.array([_nearest(req.lon, req.lat)])
         sel = sel[:40]
-        aggP, aggC, risks = {}, {}, []
+        aggP, aggC, acts = {}, {}, {}
+        rates, rels, expos, tiers = [], [], [], []
+        timing = False
         for i in sel:
             ex = core.explain(_grid.iloc[int(i)])
-            risks.append(float(_grid.iloc[int(i)].get('risk', ex['risk'])))   # percentile
+            rates.append(ex.get('rate', 0.0)); rels.append(ex.get('rel_risk', 0.0))
+            expos.append(ex.get('exposure', 0.0)); tiers.append(ex.get('tier', 0))
+            timing = timing or bool(ex.get('timing'))
+            for a in ex.get('actions', []):
+                acts.setdefault(a['driver'], a['do'])
             for c in ex.get('place', []):
                 aggP[c['factor']] = aggP.get(c['factor'], 0.0) + c['effect']
             for c in ex.get('conditions', []):
                 aggC[c['factor']] = aggC.get(c['factor'], 0.0) + c['effect']
         place = sorted([{'factor': k, 'effect': round(v / len(sel), 4)} for k, v in aggP.items()], key=lambda x: -x['effect'])[:4]
         cond = sorted([{'factor': k, 'effect': round(v / len(sel), 4)} for k, v in aggC.items()], key=lambda x: -x['effect'])[:4]
-        return {'risk': round(float(np.mean(risks)), 4), 'n_points': int(len(sel)), 'place': place, 'conditions': cond}
+        tmax = int(max(tiers)) if tiers else 0                       # worst tier in the area = what to prioritize
+        return {'n_points': int(len(sel)), 'place': place, 'conditions': cond,
+                'rate': round(float(np.mean(rates)), 2), 'rel_risk': round(float(np.mean(rels)), 1),
+                'exposure': round(float(np.mean(expos)), 2),
+                'tier': tmax, 'tier_name': core.TIER_NAMES[min(tmax, 5)],
+                'actions': [{'driver': k, 'do': v} for k, v in list(acts.items())[:3]],
+                'timing': 'Fire-weather is currently elevated across this area.' if timing else None}
     i = _nearest(req.lon, req.lat)
     out = core.explain(_grid.iloc[i])
     out['risk'] = round(float(_grid.iloc[i].get('risk', out['risk'])), 4)   # percentile for display
@@ -128,4 +132,5 @@ def index():
     return FileResponse(HERE / 'static' / 'index.html')
 
 
+app.mount('/data', StaticFiles(directory=str(DATA)), name='data')   # serves fl_risk.png + fl_priority.png
 app.mount('/static', StaticFiles(directory=str(HERE / 'static')), name='static')
