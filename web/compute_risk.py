@@ -19,35 +19,35 @@ PSYCH = LinearSegmentedColormap.from_list('psych', [
 
 
 def render_raster(df, path):
-    """Interpolate the scattered grid points onto a clean high-res raster (no pivot holes, no coast
-    warp), mask out anything farther than ~one cell from real data (ocean), lightly smooth, then
-    re-rank to percentile for the psychology-tuned green-heavy colors. Returns map bounds."""
+    """Interpolate the per-point PERCENTILE onto a clean high-res raster and smooth it just enough
+    to read as a continuous surface (not blocky), WITHOUT re-ranking the pixels. Because we map the
+    interpolated percentile straight through the colormap, the color at each grid node equals that
+    node's percentile — i.e. the exact value /api/explain returns on click. (The old version blurred
+    hard AND re-ranked smoothed pixels, which is what made red patches report a low percentile.)
+    Returns map bounds."""
     from scipy.interpolate import griddata
     from scipy.spatial import cKDTree
     from scipy.ndimage import gaussian_filter, binary_opening, binary_closing
     pts = df[['lon', 'lat']].values
     lon0, lon1 = float(df.lon.min()), float(df.lon.max())
     lat0, lat1 = float(df.lat.min()), float(df.lat.max())
-    W = 1000
+    W = 1400                                                        # high-res so it stays sharp zoomed in
     H = int(round(W * (lat1 - lat0) / (lon1 - lon0)))
     gx, gy = np.meshgrid(np.linspace(lon0, lon1, W), np.linspace(lat0, lat1, H))
-    gz = griddata(pts, df.risk_raw.values, (gx, gy), method='linear').ravel()
+    gz = griddata(pts, df.risk.values, (gx, gy), method='linear').ravel()   # interpolate the PERCENTILE
     dist, _ = cKDTree(pts).query(np.column_stack([gx.ravel(), gy.ravel()]))
     gz[dist > 0.04] = np.nan                                       # >~one cell from data = ocean
     gz = gz.reshape(H, W)
     valid = ~np.isnan(gz)                                          # cells with real data
     # display mask: fill pinholes, then drop isolated edge specks -> clean coastline
     land = binary_opening(binary_closing(valid, np.ones((3, 3)), iterations=2), np.ones((3, 3)), iterations=2)
-    sig = 6
+    sig = 3                                                        # ~1/3 of a cell: smooth, not washed out
     wsm = gaussian_filter(valid.astype(float), sigma=sig)          # smooth using only real data
     sm = gaussian_filter(np.where(valid, gz, 0.0), sigma=sig) / np.where(wsm > 1e-3, wsm, 1.0)
     sm[~land] = np.nan
-    m = ~np.isnan(sm)
-    disp = np.full(sm.shape, np.nan)
-    disp[m] = sm[m].argsort().argsort() / max(1, int(m.sum()) - 1)  # smooth -> percentile
-    disp = disp[::-1, :]                                            # row 0 = north
-    rgba = PSYCH(np.nan_to_num(disp, nan=0.0))
-    rgba[..., 3] = np.where(np.isnan(disp), 0.0, 0.88)
+    sm = sm[::-1, :]                                               # row 0 = north
+    rgba = PSYCH(np.clip(np.nan_to_num(sm, nan=0.0), 0, 1))        # interpolated percentile -> color directly
+    rgba[..., 3] = np.where(np.isnan(sm), 0.0, 0.9)
     plt.imsave(str(path), rgba)
     return [[lat0, lon0], [lat1, lon1]]
 

@@ -168,20 +168,8 @@ fetch('/api/risk').then(r=>r.json()).then(d=>{
   const when = m.computed ? ` · updated ${m.computed}` : '';
   document.getElementById('sub').innerHTML =
     `${m.n_points.toLocaleString()} cells · live model${when} · <b>click anywhere to ask why</b>`;
-  if(d.points && d.points.length){
-    // crisp native-resolution cells, each colored by its OWN percentile -> color always matches the
-    // value you get on click, and edges stay sharp as you zoom (no blurry stretched raster)
-    const h=(m.cell||0.04)/2;
-    riskOverlay=L.layerGroup();
-    for(let i=0;i<d.points.length;i++){
-      const lon=d.points[i][0], lat=d.points[i][1], risk=d.points[i][2];
-      L.rectangle([[lat-h,lon-h],[lat+h,lon+h]],{renderer:canvas,stroke:false,
-        fillColor:riskColor(risk),fillOpacity:0.85}).addTo(riskOverlay);
-    }
-    riskOverlay.addTo(map);
-  } else {   // fallback for older data files without per-point values
-    riskOverlay=L.imageOverlay('/data/fl_risk.png?t='+Date.now(), m.bounds, {opacity:0.85, interactive:false}).addTo(map);
-  }
+  // smooth interpolated risk surface (percentile-faithful, so color matches the click value)
+  riskOverlay=L.imageOverlay('/data/fl_risk.png?t='+Date.now(), m.bounds, {opacity:0.9, interactive:false}).addTo(map);
   map.fitBounds(m.bounds, {padding:[10,10]});
 }).catch(e=>document.getElementById('sub').textContent='failed to load risk map');
 
