@@ -97,3 +97,9 @@ Training Data Florida/v7/
 Training Data Florida/v8/
 Training Data Florida/v9dyn/
 Training Data Florida/v10/
+Training Data Florida/FL/
+Training Data Florida/FLgrid/
+Training Data Florida/v14_wui/
+
+# Local run logs (not needed on deploy; web/data/* holds the precomputed artifacts)
+logs/
