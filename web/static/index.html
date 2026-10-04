@@ -165,9 +165,8 @@ let riskOverlay=null;
 fetch('/api/risk').then(r=>r.json()).then(d=>{
   if(d.error){document.getElementById('sub').textContent=d.error;return;}
   const m=d.meta;
-  const when = m.computed ? ` · updated ${m.computed}` : '';
   document.getElementById('sub').innerHTML =
-    `${m.n_points.toLocaleString()} cells · live model${when} · <b>click anywhere to ask why</b>`;
+    `${m.n_points.toLocaleString()} cells · live model · <b>click anywhere to ask why</b>`;
   // smooth interpolated risk surface (percentile-faithful, so color matches the click value)
   riskOverlay=L.imageOverlay('/data/fl_risk.png?t='+Date.now(), m.bounds, {opacity:0.9, interactive:false}).addTo(map);
   map.fitBounds(m.bounds, {padding:[10,10]});
