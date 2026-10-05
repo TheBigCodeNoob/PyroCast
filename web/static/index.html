@@ -84,34 +84,6 @@
   .act span{font-size:12.5px;color:var(--muted);line-height:1.45}
   .timing{background:rgba(238,126,43,.12);border:1px solid var(--accent);border-radius:8px;
     padding:9px 11px;margin:12px 0;font-size:12.5px;color:#ffd9b3;line-height:1.45}
-  /* accuracy button + modal */
-  .accbtn{position:absolute;bottom:22px;right:18px;z-index:1000;background:var(--panel);
-    border:1px solid var(--line);border-radius:10px;padding:9px 14px;color:var(--txt);
-    font-size:13px;font-weight:600;cursor:pointer}
-  .accbtn:hover{border-color:var(--accent)}
-  .accbtn b{color:var(--accent)}
-  #acc{position:absolute;inset:0;z-index:2000;background:rgba(6,8,11,.72);
-    display:none;align-items:center;justify-content:center;padding:24px}
-  #acc.open{display:flex}
-  #acc .box{background:var(--panel);border:1px solid var(--line);border-radius:14px;
-    max-width:620px;width:100%;max-height:88vh;overflow-y:auto;padding:26px 28px}
-  #acc h2{margin:0 0 4px;font-size:20px}
-  #acc .lead{color:var(--muted);font-size:13.5px;line-height:1.5;margin:0 0 18px}
-  #acc .close{float:right;cursor:pointer;color:var(--muted);font-size:24px;line-height:1;border:0;background:none}
-  #acc .cap{font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin:20px 0 10px}
-  .cmp{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:13px}
-  .cmp .nm{width:150px;flex:none;color:var(--txt)}
-  .cmp .nm.us{color:var(--accent);font-weight:700}
-  .cmp .track{flex:1;height:16px;background:#0e1116;border-radius:8px;overflow:hidden}
-  .cmp .track > i{display:block;height:100%;border-radius:8px;background:#3a4351}
-  .cmp .track > i.us{background:linear-gradient(90deg,#ee7e2b,#f3c63f)}
-  .cmp .v{width:42px;flex:none;text-align:right;font-variant-numeric:tabular-nums;color:var(--muted)}
-  #acc .blk{margin:16px 0}
-  #acc .blk h3{margin:0 0 4px;font-size:14px;color:var(--txt)}
-  #acc .blk p{margin:0;font-size:13px;line-height:1.55;color:var(--muted)}
-  #acc .blk p b{color:var(--txt)}
-  #acc .foot{margin-top:20px;padding-top:14px;border-top:1px solid var(--line);
-    font-size:11.5px;color:var(--muted);line-height:1.5}
 </style>
 </head>
 <body>
@@ -122,7 +94,7 @@
 </header>
 <div class="layers">
   <button id="lIgnition" class="on" onclick="setLayer('ignition')">Ignition likelihood</button>
-  <button id="lPriority" onclick="setLayer('priority')" title="where an ignition threatens the most people & property">Vulnerable places</button>
+  <button id="lPriority" onclick="setLayer('priority')" title="ignition risk combined with people & property exposed">People &amp; property</button>
 </div>
 <div class="modes">
   <button id="mPoint" class="on" onclick="setMode('point')">Point</button>
@@ -140,37 +112,6 @@
   <h2 id="pTitle">Location</h2>
   <div class="loc" id="pLoc"></div>
   <div id="pBody"></div>
-</div>
-
-<button class="accbtn" onclick="openAcc()">How accurate is this? <b>&#9432;</b></button>
-<div id="acc" onclick="if(event.target===this)closeAcc()">
-  <div class="box">
-    <button class="close" onclick="closeAcc()">&times;</button>
-    <h2>How accurate is PyroCast?</h2>
-    <p class="lead">PyroCast predicts <b style="color:var(--txt)">where and when wildfires ignite</b> — the hardest of the three fire-modeling jobs (harder than mapping fire <i>danger</i>, or simulating the spread of a fire that already started). And it's scored the strict way.</p>
-
-    <div class="cap">vs. the best published ignition models &nbsp;·&nbsp; AUC, higher is better</div>
-    <div class="cmp"><span class="nm us">PyroCast · Southeast</span><span class="track"><i class="us" style="width:72%"></i></span><span class="v">0.86</span></div>
-    <div class="cmp"><span class="nm">California (2023)</span><span class="track"><i style="width:68%"></i></span><span class="v">0.84</span></div>
-    <div class="cmp"><span class="nm">Europe, best (2025)</span><span class="track"><i style="width:66%"></i></span><span class="v">0.83</span></div>
-    <div class="cmp"><span class="nm us">PyroCast · Florida</span><span class="track"><i class="us" style="width:58%"></i></span><span class="v">0.79</span></div>
-    <div class="cmp"><span class="nm" style="color:#5b6472">coin flip</span><span class="track"><i style="width:0%"></i></span><span class="v">0.50</span></div>
-
-    <div class="blk">
-      <h3>Tested the strict way</h3>
-      <p>Most published models test on random days and places blended into their training data. PyroCast is scored only on <b>regions it never saw, in a year (2020) it never saw</b> — the way it would actually be used. Shuffle the fire labels and it collapses to 0.50, proving it learned real signal, not a shortcut. Its gains even survive being matched on population and development, so it isn't just detecting "near people."</p>
-    </div>
-    <div class="blk">
-      <h3>Why Florida reads 0.79 — honest, not weak</h3>
-      <p>A single flat state is a <b>harder</b> target than a whole continent: less landscape contrast for a model to exploit, and Florida is the <b>lightning capital of the U.S.</b> — roughly 1 in 6 fires here is lightning-caused, which no location model can foresee without live strike data. A single European province, tested this strictly, would land in the same range. What 0.79 buys on the ground: the <b>5% of Florida we flag highest-risk is where fires actually occur 91% of the time.</b></p>
-    </div>
-    <div class="blk">
-      <h3>We even tested the field's secret weapon</h3>
-      <p>The top European and California models are built on distance to the <b>wildland-urban interface</b>. We added it. It changed our accuracy by <b>nothing</b> — because PyroCast already captures that signal through the features it uses. We weren't missing the field's best idea; we'd already rebuilt it.</p>
-    </div>
-
-    <div class="foot">AUC (area under the ROC curve): 1.0 = perfect, 0.5 = a coin flip. Validation: blocked spatial + temporal hold-out (leave-region-out × train &le;2019 / test 2020). Comparison figures are the headline results reported by peer-reviewed human-caused-ignition studies; methodologies differ, so read them as a peer group, not a head-to-head race.</div>
-  </div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -215,12 +156,12 @@ function buildLegend(name){
   const c=META.calib;
   document.getElementById('legTitle').textContent=META.layers[name].title;
   document.getElementById('legRows').innerHTML = c.tiers.slice().reverse().map(t=>{
-    const rng = name==='ignition' ? `<span class="rng">${t.rate_lo}&ndash;${t.rate_hi}</span>` : '';
+    const rng = name==='ignition' ? `<span class="rng">${t.rate.toFixed(1)}</span>` : '';
     return `<div class="legrow"><span class="sw" style="background:${t.color}"></span><span class="nm">${t.name}</span>${rng}</div>`;
   }).join('');
   document.getElementById('legUnit').textContent = name==='ignition'
-    ? 'expected ignitions / 100 km²·yr, calibrated to real fire records'
-    : 'where an ignition threatens the most people & property';
+    ? `observed ignitions / 100 km²·yr (FPA-FOD 2017-20) · FL avg ${c.avg_rate_100km2_yr}`
+    : 'ignition risk × people & property exposed (where to act first)';
 }
 
 map.on('click', e=>{
@@ -242,24 +183,28 @@ function closePanel(){document.getElementById('panel').classList.remove('open');
 const TIERCOL={'Minimal':'#1a7d3a','Low':'#74bd57','Moderate':'#cdd451','High':'#f3c63f','Very High':'#ee7e2b','Extreme':'#d8342a'};
 function renderExplain(d){
   if(d.error){document.getElementById('pBody').innerHTML=`<div class="hint">${d.error}</div>`;return;}
-  const tname = (LAYER==='priority' && d.ptier_name) ? d.ptier_name : (d.tier_name||'—');
+  const onP = (LAYER==='priority');
+  const tname = (onP && d.ptier_name) ? d.ptier_name : (d.tier_name||'—');
   const tcol = TIERCOL[tname] || '#8b949e';
-  let h = `<div class="tierbadge" style="color:${tcol}">${tname}</div>`;
-  h += `<div class="metric"><span class="mv">${(d.rate==null?0:d.rate).toFixed(1)}</span>expected ignitions / 100 km²·yr</div>`;
-  h += `<div class="metric2"><b>${(d.rel_risk==null?0:d.rel_risk).toFixed(1)}×</b> the Florida average${d.n_points?` · ${d.n_points} cells`:''}</div>`;
+  const rate=(d.rate==null?0:d.rate), lo=d.rate_lo, hi=d.rate_hi;
+  let h = `<div class="tierbadge" style="color:${tcol}">${tname}${onP?' priority':''}</div>`;
+  h += `<div class="metric"><span class="mv">${rate.toFixed(1)}</span>ignitions / 100 km²·yr`
+     + `${(lo!=null&&hi!=null)?` <span style="color:var(--muted)">(${lo.toFixed(1)}–${hi.toFixed(1)})</span>`:''}</div>`;
+  h += `<div class="metric2"><b>${(d.rel_risk==null?0:d.rel_risk).toFixed(1)}×</b> the Florida average`
+     + `${META.calib?` (avg ${META.calib.avg_rate_100km2_yr})`:''}${d.n_points?` · ${d.n_points} cells`:''}</div>`;
   if(d.exposure!=null){
     const ex=d.exposure, exl = ex>0.75?'high':ex>0.5?'moderate':'lower';
-    h += `<div class="metric2" style="color:var(--muted)">People &amp; property exposed: <b>${exl}</b>${d.ptier_name?` · vulnerability <b>${d.ptier_name}</b>`:''}</div>`;
+    h += `<div class="metric2" style="color:var(--muted)">People &amp; property exposed: <b>${exl}</b>${d.ptier_name?` · mitigation priority <b>${d.ptier_name}</b>`:''}</div>`;
   }
-  if(d.timing) h += `<div class="timing">⏱ ${d.timing}</div>`;
+  if(d.weather_driven) h += `<div class="timing">Much of the risk here is <b>weather-driven</b> (drought, heat, low humidity), so it rises and falls with conditions — relevant for timing burn restrictions and crew readiness.</div>`;
   const place=d.place||[], cond=d.conditions||[];
   const maxE = Math.max(0.0001, ...place.concat(cond).map(x=>Math.abs(x.effect)));
   if(place.length){ h+='<div class="sec">Why here — the landscape</div>'; place.forEach(f=>h+=factorRow(f.factor,f.effect,maxE)); }
-  if(cond.length){ h+='<div class="sec">Conditions right now</div>'; cond.forEach(f=>h+=factorRow(f.factor,f.effect,maxE)); }
+  if(cond.length){ h+='<div class="sec">Weather &amp; drought (this snapshot)</div>'; cond.forEach(f=>h+=factorRow(f.factor,f.effect,maxE)); }
   h += '<div class="sec">What can reduce risk here</div>';
   if((d.actions||[]).length) d.actions.forEach(a=>h+=`<div class="act"><b>${a.driver}</b><span>${a.do}</span></div>`);
-  else h += '<div class="hint">Risk here is driven mainly by fixed terrain or current weather — limited permanent mitigation; focus on detection &amp; response readiness.</div>';
-  h += '<div class="hint" style="margin-top:16px">Rates are calibrated against actual 2017-20 ignitions. "Why" factors come from removing each group and re-running the model; red raises risk, blue lowers it.</div>';
+  else h += '<div class="hint">Risk here is driven mainly by fixed terrain or weather — limited permanent mitigation; focus on detection &amp; response readiness.</div>';
+  h += '<div class="hint" style="margin-top:16px">Rate = the observed ignition rate for this tier (FPA-FOD 2017-20) with its 95% range. "Why" factors come from removing each group and re-running the model; red raises risk, blue lowers it.</div>';
   document.getElementById('pBody').innerHTML=h;
 }
 function factorRow(name,eff,maxE){
@@ -267,11 +212,6 @@ function factorRow(name,eff,maxE){
   return `<div class="factor ${up?'up':'down'}"><div class="row"><b>${name}</b><span>${up?'raises':'lowers'}</span></div>
     <div class="meter"><i style="width:${w}%"></i></div></div>`;
 }
-// accuracy modal
-function openAcc(){document.getElementById('acc').classList.add('open');}
-function closeAcc(){document.getElementById('acc').classList.remove('open');}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAcc();});
-
 // actual recorded fires overlay
 let firesLayer=null, firesOn=false;
 function toggleFires(){

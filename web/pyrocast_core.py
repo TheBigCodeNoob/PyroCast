@@ -129,17 +129,17 @@ def explain(row, n=4):
     # actionable mitigation: modifiable landscape drivers that RAISE risk here
     actions = [{'driver': c['factor'], 'do': MITIGATION[c['factor']]}
                for c in place if c['factor'] in MITIGATION and c['effect'] > 0][:3]
-    timing = any(c['factor'] in TIMING_GROUPS and c['effect'] > 0 for c in conditions)
+    weather_driven = any(c['factor'] in TIMING_GROUPS and c['effect'] > 0 for c in conditions)
     # keep legacy keys too (area aggregation / older clients)
     return {'risk': round(base, 4), 'place': place, 'conditions': conditions,
             'raises_risk': [c for c in sig if c['effect'] > 0][:n], 'lowers_risk': [c for c in sig if c['effect'] < 0][-2:],
             'tier': tier, 'tier_name': TIER_NAMES[min(tier, 5)],
-            'rate': round(_num('exp_ign_100km2_yr'), 2), 'rel_risk': round(_num('rel_risk'), 1),
-            'exposure': round(_num('exposure'), 2),
+            'rate': round(_num('exp_ign_100km2_yr'), 2),
+            'rate_lo': round(_num('rate_lo'), 2), 'rate_hi': round(_num('rate_hi'), 2),
+            'rel_risk': round(_num('rel_risk'), 1), 'exposure': round(_num('exposure'), 2),
             'ptier': ptier, 'ptier_name': TIER_NAMES[min(ptier, 5)],
             'actions': actions,
-            'timing': ('Fire-weather is currently elevated here -a short-term window for burn bans / pre-positioning crews.'
-                       if timing else None)}
+            'weather_driven': bool(weather_driven)}
 
 
 def save_grid(df, path):

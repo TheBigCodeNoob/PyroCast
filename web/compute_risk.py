@@ -102,7 +102,7 @@ def main(grid_dir=None):
             'layers': {
                 'ignition': {'png': 'fl_risk.png', 'title': 'Ignition likelihood',
                              'unit': 'expected ignitions per 100 km2 per year'},
-                'priority': {'png': 'fl_priority.png', 'title': 'Vulnerable places',
+                'priority': {'png': 'fl_priority.png', 'title': 'People & property at risk',
                              'unit': 'ignition risk x people & property exposed'}},
             'calib': calib}
     json.dump({'meta': meta}, open(DATA / 'fl_risk.json', 'w'))

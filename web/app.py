@@ -98,13 +98,14 @@ def explain(req: ExplainReq):
             sel = np.array([_nearest(req.lon, req.lat)])
         sel = sel[:40]
         aggP, aggC, acts = {}, {}, {}
-        rates, rels, expos, tiers = [], [], [], []
-        timing = False
+        rates, rels, expos, tiers, los, his = [], [], [], [], [], []
+        weather = False
         for i in sel:
             ex = core.explain(_grid.iloc[int(i)])
             rates.append(ex.get('rate', 0.0)); rels.append(ex.get('rel_risk', 0.0))
+            los.append(ex.get('rate_lo', 0.0)); his.append(ex.get('rate_hi', 0.0))
             expos.append(ex.get('exposure', 0.0)); tiers.append(ex.get('tier', 0))
-            timing = timing or bool(ex.get('timing'))
+            weather = weather or bool(ex.get('weather_driven'))
             for a in ex.get('actions', []):
                 acts.setdefault(a['driver'], a['do'])
             for c in ex.get('place', []):
@@ -116,10 +117,11 @@ def explain(req: ExplainReq):
         tmax = int(max(tiers)) if tiers else 0                       # worst tier in the area = what to prioritize
         return {'n_points': int(len(sel)), 'place': place, 'conditions': cond,
                 'rate': round(float(np.mean(rates)), 2), 'rel_risk': round(float(np.mean(rels)), 1),
+                'rate_lo': round(float(np.mean(los)), 2), 'rate_hi': round(float(np.mean(his)), 2),
                 'exposure': round(float(np.mean(expos)), 2),
                 'tier': tmax, 'tier_name': core.TIER_NAMES[min(tmax, 5)],
                 'actions': [{'driver': k, 'do': v} for k, v in list(acts.items())[:3]],
-                'timing': 'Fire-weather is currently elevated across this area.' if timing else None}
+                'weather_driven': bool(weather)}
     i = _nearest(req.lon, req.lat)
     out = core.explain(_grid.iloc[i])
     out['risk'] = round(float(_grid.iloc[i].get('risk', out['risk'])), 4)   # percentile for display
