@@ -49,6 +49,14 @@ Monotonic across all tiers (verified). Statewide average: **1.59**.
   background points. Reproduce with `python validate_fl_headline.py`. This estimates discrimination
   between recorded fires and the sampled background, not precision or calibration at the real-world
   fire rate; use a prospective, population-representative evaluation for operational alert claims.
+- **Companion checks on the same test:** an access-only HGB baseline (population, development
+  distance, developed land, nightlights, and nearby development) scores **0.698 AUROC**; the full
+  ensemble gains **0.087**. In the sampled rows, the top 1% / 5% / 10% score bands capture **1.6% /
+  7.6% / 15.4%** of fires (lift **1.58× / 1.52× / 1.53×** over random ranking). Sampled average
+  precision is **0.827** (uninformative baseline 0.598); sampled Brier score is **0.187** (constant
+  sample-prevalence baseline 0.240). These prevalence-dependent statistics describe this evaluation
+  sample only; they are not estimates of operational precision, alert burden, or real-risk
+  calibration. The evaluator also prints score-decile calibration diagnostics for this sample.
 - **Spatial holdout** — refit the rate curve on 0.6° spatial blocks it never saw, predict the held-out
   blocks: out-of-sample error **0.00–0.17** ignitions/100 km²/yr per tier. The rates are not overfit;
   they generalize to unseen areas.

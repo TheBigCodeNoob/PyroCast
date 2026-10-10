@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 from lightgbm import LGBMClassifier
 from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier
-from sklearn.metrics import roc_auc_score
+from sklearn.metrics import average_precision_score, brier_score_loss, roc_auc_score
 from sklearn.model_selection import GroupKFold
 
 warnings.filterwarnings('ignore')
@@ -78,6 +78,12 @@ def main():
             reg_lambda=3.0, min_child_samples=30, random_state=0, verbose=-1),
     }
     predictions = {name: np.full(len(y), np.nan) for name in model_factories}
+    access_features = ['Pop_Density', 'DistDev', 'LC_Developed', 'NightLights', 'nbhd_dev_500m']
+    missing_access = sorted(set(access_features) - set(data.columns))
+    if missing_access:
+        raise ValueError(f'Missing access-baseline features: {missing_access}')
+    access_X = np.nan_to_num(data[access_features].to_numpy(dtype='float32'))
+    access_predictions = np.full(len(y), np.nan)
     for fold, (train_groups, test_groups) in enumerate(
             GroupKFold(5).split(X, y, blocks), start=1):
         train = train_groups[year[train_groups] <= 2019]
@@ -91,6 +97,11 @@ def main():
             model = make_model()
             model.fit(X[train], y[train])
             predictions[name][test] = model.predict_proba(X[test])[:, 1]
+        access_model = HistGradientBoostingClassifier(
+            max_iter=450, learning_rate=0.05, max_leaf_nodes=63,
+            l2_regularization=2.0, min_samples_leaf=25, random_state=0)
+        access_model.fit(access_X[train], y[train])
+        access_predictions[test] = access_model.predict_proba(access_X[test])[:, 1]
 
     mask = ~np.isnan(predictions['hgb'])
     if not mask.any() or len(np.unique(y[mask])) != 2:
@@ -104,8 +115,36 @@ def main():
           f'spatial blocks={len(np.unique(test_blocks))}')
     for name in model_factories:
         print(f'{name} blocked space+time AUROC={roc_auc_score(test_y, predictions[name][mask]):.4f}')
-    print(f'Ensemble blocked space+time AUROC={roc_auc_score(test_y, ensemble):.4f}')
+    ensemble_auc = roc_auc_score(test_y, ensemble)
+    access_auc = roc_auc_score(test_y, access_predictions[mask])
+    print(f'Ensemble blocked space+time AUROC={ensemble_auc:.4f}')
     print(f'Ensemble 95% spatial-block bootstrap interval=[{interval[0]:.4f}, {interval[1]:.4f}]')
+    print(f'Access-only HGB baseline AUROC={access_auc:.4f} (ensemble delta={ensemble_auc - access_auc:+.4f})')
+
+    sample_prevalence = test_y.mean()
+    print(f'\nSampled-set ranking diagnostics (test prevalence={sample_prevalence:.1%}; not operational PPV):')
+    print(f'Average precision={average_precision_score(test_y, ensemble):.4f} '
+          f'(uninformative baseline={sample_prevalence:.4f})')
+    print(f'Brier score={brier_score_loss(test_y, ensemble):.4f} '
+          f'(constant-prior baseline={sample_prevalence * (1 - sample_prevalence):.4f}; '
+          'sample-prior dependent)')
+    order = np.argsort(ensemble)[::-1]
+    for fraction in (0.01, 0.05, 0.10):
+        selected = order[:max(1, int(np.ceil(len(test_y) * fraction)))]
+        captured = int(test_y[selected].sum())
+        precision = captured / len(selected)
+        recall = captured / int(test_y.sum())
+        print(f'Top {fraction:.0%} of sampled rows: capture={recall:.1%}, '
+              f'sampled precision={precision:.1%}, lift={precision / sample_prevalence:.2f}x, '
+              f'sampled false alarms/captured fire={(len(selected) - captured) / captured:.2f}')
+
+    calibration = pd.DataFrame({'score': ensemble, 'label': test_y})
+    calibration['bin'] = pd.qcut(calibration.score, q=10, duplicates='drop')
+    print('Sampled-set score deciles (mean score vs observed fire fraction):')
+    for _, group in calibration.groupby('bin', observed=True):
+        print(f'  {group.score.mean():.3f} vs {group.label.mean():.3f} (n={len(group)})')
+    print('Real-prevalence PPV / false alarms per true fire: not estimable from sampled negatives; '
+          'requires representative place-time evaluation or known sampling weights.')
 
 
 if __name__ == '__main__':
