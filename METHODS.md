@@ -11,7 +11,8 @@ conda run -n base python web/compute_risk.py       # rebuild the map + calibrate
 ## Data
 
 - **Model:** `best_model_fl_ensemble.joblib` — HistGradientBoosting + RandomForest + LightGBM ensemble,
-  58 features, trained on 7,515 Florida rows. Honest held-out AUC on its training target ≈ 0.79.
+  58 features, trained on 7,515 Florida rows. Its blocked space-and-time headline is AUROC **0.785**
+  (95% spatial-block bootstrap interval **0.760–0.810**, 1,773 held-out samples across 60 blocks).
 - **Ground truth:** FPA-FOD recorded ignitions, Florida, **2017–2020** (4 years). 10,361 of 10,484
   in-bbox ignitions snap onto the grid (98.8%); the rest fall on ocean / no-vegetation cells that are
   not modeled.
@@ -42,15 +43,22 @@ Monotonic across all tiers (verified). Statewide average: **1.59**.
 
 ## Validation
 
+- **Predictive ranking (headline)** — AUROC **0.785** on out-of-fold Florida samples. Five-fold
+  evaluation holds out 0.6° spatial blocks; each model trains on years through 2019 and is tested on
+  2020 in blocks it never saw. The test contains 1,060 fires and 713 season-matched sampled
+  background points. Reproduce with `python validate_fl_headline.py`. This estimates discrimination
+  between recorded fires and the sampled background, not precision or calibration at the real-world
+  fire rate; use a prospective, population-representative evaluation for operational alert claims.
 - **Spatial holdout** — refit the rate curve on 0.6° spatial blocks it never saw, predict the held-out
   blocks: out-of-sample error **0.00–0.17** ignitions/100 km²/yr per tier. The rates are not overfit;
   they generalize to unseen areas.
 - **Temporal holdout** — calibrate on 2017–2019, test on 2020: tier order holds; point rates vary by
   roughly ±20–30% year to year. **Read the tier and its CI, not a single decimal.**
-- **Rank skill (honest headline)** — AUC **0.64** for "has this cell ever ignited"; the top 5% of cells
-  capture ~10% of all ignitions (**≈2× lift**), top 10% ~18% (1.8×). This is a **prioritization ranking,
-  not a precise forecast** — it reliably sorts higher- from lower-risk ground, with many cells in every
-  tier seeing fires.
+- **Retrospective grid diagnostic** — AUROC **0.643** for ranking whether a cell had any recorded
+  ignition in 2017–2020; the top 5% of cells contain 9.8% of those ignitions (~2× lift), and the top
+  10% contain 18.3%. This is useful for describing the current map's retrospective concentration,
+  but it is not an independent performance estimate: the scored fire record overlaps all 4,779
+  Florida positive training samples. Its 0.6° spatial-block bootstrap interval is 0.615–0.679.
 
 ## Cause mix (what is and isn't predictable)
 
