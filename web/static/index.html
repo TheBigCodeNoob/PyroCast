@@ -65,6 +65,23 @@
   .layers button.on{background:var(--accent);color:#1a1109}
   .layers button.go{border-left:1px solid var(--line);border-radius:0 7px 7px 0;color:var(--txt)}
   .layers button.go:hover{background:#2d333b}
+  /* history timeline */
+  .timeline{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);z-index:1000;
+    display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);
+    border-radius:10px;padding:5px 8px;max-width:72vw}
+  .tlticks{display:flex;gap:3px;overflow-x:auto;max-width:52vw;padding:2px;scrollbar-width:thin}
+  .tltick{min-width:32px;text-align:center;font-size:10px;color:var(--muted);cursor:pointer;
+    border-radius:6px;padding:3px 4px;user-select:none}
+  .tltick b{display:block;font-size:12.5px;line-height:1.1}
+  .tltick:hover{background:#2d333b}
+  .tltick.on{background:var(--accent);color:#1a1109}
+  .tlbtn{background:none;border:1px solid var(--line);border-radius:7px;color:var(--muted);
+    cursor:pointer;font-size:12px;font-weight:600;padding:5px 9px;white-space:nowrap}
+  .tlbtn:hover{background:#2d333b}
+  .tlbtn.live.on{background:var(--accent);color:#1a1109;border-color:transparent}
+  .repcard{position:absolute;bottom:88px;left:50%;transform:translateX(-50%);z-index:1001;
+    width:440px;max-width:92vw;max-height:46vh;overflow-y:auto;background:var(--panel);
+    border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:13px}
   /* tier legend */
   .legend{min-width:208px}
   .legend .legtitle{font-weight:700;font-size:12.5px;margin-bottom:6px;color:var(--txt)}
@@ -117,6 +134,12 @@
   <div class="loc" id="pLoc"></div>
   <div id="pBody"></div>
 </div>
+<div class="timeline" id="timeline" style="display:none">
+  <button class="tlbtn" onclick="toggleReport()" title="what became high risk / eased since the previous day, and why">&#128196; Daily report</button>
+  <div class="tlticks" id="tlTicks"></div>
+  <button class="tlbtn live on" id="tlLive" onclick="setHist(null)">LIVE</button>
+</div>
+<div class="repcard" id="repcard" style="display:none"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
@@ -144,10 +167,70 @@ fetch('/api/risk').then(r=>r.json()).then(d=>{
     `conditions as of ${META.computed} · calibrated to ${c.total_actual_ignitions.toLocaleString()} real ignitions · <b>click to analyze</b>`;
   setLayer('ignition');
   map.fitBounds(META.bounds, {padding:[10,10]});
+  loadHistory();
 }).catch(e=>document.getElementById('sub').textContent='failed to load risk map');
+
+// ---- history timeline: compare the live map with daily snapshots of past conditions ----
+let HIST=null, HDATES={}, REPORT_OPEN=false;
+function loadHistory(){
+  fetch('/api/history').then(r=>r.json()).then(h=>{
+    HDATES=h.snapshots||{}; const dates=Object.keys(HDATES).sort();
+    if(!dates.length) return;
+    document.getElementById('timeline').style.display='flex';
+    document.getElementById('tlTicks').innerHTML = dates.map(d=>{
+      const dt=new Date(d+'T12:00:00');
+      return `<div class="tltick" id="tk${d}" onclick="setHist('${d}')" title="conditions on ${d}">`+
+             `<b>${dt.getDate()}</b>${dt.toLocaleString('en',{month:'short'})}</div>`;
+    }).join('');
+    const el=document.getElementById('tlTicks'); el.scrollLeft=el.scrollWidth;
+  }).catch(()=>{});
+}
+function setHist(d){
+  HIST=d;
+  document.querySelectorAll('.tltick').forEach(t=>t.classList.remove('on'));
+  document.getElementById('tlLive').classList.toggle('on',!d);
+  if(d){
+    const tk=document.getElementById('tk'+d); if(tk) tk.classList.add('on');
+    if(riskOverlay) map.removeLayer(riskOverlay);
+    riskOverlay=L.imageOverlay('/data/history/pulse_'+d+'.png', HDATES[d].bounds,
+      {opacity:0.9, interactive:false}).addTo(map);
+    showReport(d);
+  } else { setLayer(LAYER); hideReport(); }
+}
+function toggleReport(){
+  if(REPORT_OPEN){ hideReport(); return; }
+  const ds=Object.keys(HDATES).sort();
+  if(ds.length) showReport(HIST||ds[ds.length-1]);
+}
+function showReport(d){
+  const card=document.getElementById('repcard');
+  if(!HDATES[d]||!HDATES[d].report){
+    card.innerHTML='<button class="close" onclick="hideReport()">&times;</button>'+
+      '<div class="hint">No change report for '+d+' yet - it needs the previous day\'s snapshot too.</div>';
+    card.style.display='block'; REPORT_OPEN=true; return;
+  }
+  fetch('/api/report?date='+d).then(r=>r.json()).then(rep=>{
+    const sec=(title,items)=> items.length? `<div class="sec">${title}</div>`+items.map(a=>
+      `<div class="factor"><div class="row"><b>${a.name}</b><span style="color:var(--muted)">${a.tier}${a.cells>1?' · '+a.cells+' cells':''}</span></div>`+
+      (a.drivers.length?`<div class="hint" style="margin:1px 0 0">${a.drivers.join(' · ')}</div>`:'')+`</div>`).join('') : '';
+    card.innerHTML =
+      `<button class="close" onclick="hideReport()">&times;</button>`+
+      `<h2 style="margin:0;font-size:15px">Daily change report</h2>`+
+      `<div class="loc" style="margin-bottom:8px">${rep.prev} &rarr; ${rep.date} · statewide risk ${(()=>{const s=rep.mean_score_prev>0?(rep.mean_score_now-rep.mean_score_prev)/rep.mean_score_prev*100:0;return (s>=0?'+':'')+s.toFixed(1)+'%';})()}</div>`+
+      sec('&#128308; Newly high risk', rep.new_high)+
+      sec('&#128994; No longer high risk', rep.eased)+
+      ((rep.new_high.length||rep.eased.length)?'':'<div class="hint">No areas crossed the High threshold - conditions steady.</div>')+
+      (HIST?'<div class="pill">viewing historical conditions - click analysis uses the live map</div>':'');
+    card.style.display='block'; REPORT_OPEN=true;
+  }).catch(()=>{});
+}
+function hideReport(){document.getElementById('repcard').style.display='none'; REPORT_OPEN=false;}
 
 function setLayer(name){
   if(!META) return;
+  if(typeof HIST!=='undefined' && HIST){ HIST=null;                 // leaving historical view
+    document.querySelectorAll('.tltick').forEach(t=>t.classList.remove('on'));
+    const lv=document.getElementById('tlLive'); if(lv) lv.classList.add('on'); }
   LAYER=name;
   document.getElementById('lIgnition').classList.toggle('on',name==='ignition');
   document.getElementById('lPriority').classList.toggle('on',name==='priority');

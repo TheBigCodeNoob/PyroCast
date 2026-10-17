@@ -108,3 +108,4 @@ logs/
 web/data/live_state.json
 web/data/scorecard.json
 web/data/audit/
+web/data/history/

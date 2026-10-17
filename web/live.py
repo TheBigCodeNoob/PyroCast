@@ -11,7 +11,7 @@
 EE auth: GOOGLE_APPLICATION_CREDENTIALS (key-file path) if set, else any env var whose value
 is a service-account JSON blob (written to a temp file). No creds -> jobs idle harmlessly.
 """
-import os, sys, json, time, tempfile, datetime, threading, traceback
+import os, sys, json, math, time, tempfile, datetime, threading, traceback
 import numpy as np, pandas as pd
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -268,6 +268,210 @@ def _render_audit(grid, gs, ev, pre, fpct, tier, path):
     fig.tight_layout(); fig.savefig(path, dpi=110, facecolor='#0e1116'); plt.close(fig)
 
 
+# ---------------- job 3: daily pulse snapshots + change reports ----------------
+HIST_DIR = os.path.join(DATA, 'history')
+PULSE_LAG = 10                      # conditions date = today - lag (same availability lag as refresh)
+PULSE_FLOOR = '2026-09-25'          # earliest conditions date to (re)build - gives ~3 weeks of timeline
+MAX_PULSE_PER_TICK = 2              # bound backfill work per scheduler tick (~8 min each)
+HIGH_PCT = 0.75                     # High tier lower edge (calibrate.TIER_PCT[2])
+HYST = 0.03                         # hysteresis so cells hovering at the edge don't flicker in reports
+# (column, plain-english label, format)
+DRIVERS = [('vpd_7', 'air dryness (VPD)', 'pct'), ('erc_7', 'fire-energy index (ERC)', 'pct'),
+           ('fm100_30', 'dead-fuel moisture', 'pct'), ('pr_30', 'rain last 30 days', 'mm'),
+           ('pdsi_0', 'drought index (PDSI)', 'abs'), ('smap_surface', 'soil moisture', 'pct'),
+           ('ndmi', 'vegetation moisture (NDMI)', 'abs'), ('lst_day', 'land-surface temp', 'degC'),
+           ('rmin_30', 'min humidity (30d)', 'pct')]
+CITIES = [('Pensacola', -87.22, 30.42), ('Crestview', -86.57, 30.76), ('Panama City', -85.66, 30.16),
+          ('Marianna', -85.23, 30.77), ('Apalachicola', -85.00, 29.73), ('Tallahassee', -84.28, 30.44),
+          ('Perry', -83.58, 30.12), ('Live Oak', -82.98, 30.30), ('Lake City', -82.64, 30.19),
+          ('Gainesville', -82.32, 29.65), ('Starke', -82.11, 29.94), ('Palatka', -81.64, 29.65),
+          ('Jacksonville', -81.66, 30.33), ('St. Augustine', -81.31, 29.90), ('Ocala', -82.14, 29.19),
+          ('Inverness', -82.33, 28.84), ('Brooksville', -82.39, 28.56), ('Leesburg', -81.88, 28.81),
+          ('Deltona', -81.26, 28.90), ('Daytona Beach', -81.02, 29.21), ('Titusville', -80.81, 28.61),
+          ('Orlando', -81.38, 28.54), ('Kissimmee', -81.41, 28.29), ('Lakeland', -81.95, 28.04),
+          ('Tampa', -82.46, 27.95), ('Bartow', -81.84, 27.90), ('Melbourne', -80.61, 28.08),
+          ('Vero Beach', -80.40, 27.64), ('Fort Pierce', -80.33, 27.45), ('Sebring', -81.44, 27.50),
+          ('Wauchula', -81.81, 27.55), ('Sarasota', -82.53, 27.34), ('Arcadia', -81.86, 27.22),
+          ('Okeechobee', -80.83, 27.24), ('Port St. Lucie', -80.35, 27.27), ('Punta Gorda', -82.05, 26.93),
+          ('Clewiston', -80.93, 26.75), ('LaBelle', -81.44, 26.76), ('Belle Glade', -80.67, 26.68),
+          ('Fort Myers', -81.87, 26.64), ('Immokalee', -81.42, 26.42), ('West Palm Beach', -80.05, 26.71),
+          ('Naples', -81.79, 26.14), ('Fort Lauderdale', -80.14, 26.12), ('Miami', -80.19, 25.76),
+          ('Homestead', -80.48, 25.47), ('Key West', -81.78, 24.56)]
+
+
+def _place(lon, lat):
+    """Human-readable location: 'around Ocala' or '23 km NE of Arcadia'."""
+    name, clon, clat = min(CITIES, key=lambda c: math.hypot((lon - c[1]) * 88.0, (lat - c[2]) * 111.0))
+    dkm = math.hypot((lon - clon) * 88.0, (lat - clat) * 111.0)
+    if dkm < 9:
+        return f'around {name}'
+    ang = (math.degrees(math.atan2(lon - clon, lat - clat)) + 360) % 360
+    comp = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'][int((ang + 22.5) // 45) % 8]
+    return f'{dkm:.0f} km {comp} of {name}'
+
+
+def _clusters(cells):
+    """Group (lon,lat) cells into contiguous areas (8-neighborhood on the 0.12-deg lattice)."""
+    todo, out = set(cells), []
+    while todo:
+        seed = todo.pop(); grp = [seed]; queue = [seed]
+        while queue:
+            x = queue.pop()
+            near = [c for c in todo if abs(c[0] - x[0]) < 0.19 and abs(c[1] - x[1]) < 0.19]
+            for c in near:
+                todo.discard(c); grp.append(c); queue.append(c)
+        out.append(grp)
+    return sorted(out, key=len, reverse=True)
+
+
+def _render_pulse(df, path):
+    """Transparent-ocean tier raster of the coarse pulse grid (same look as the main map)."""
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    from matplotlib.colors import ListedColormap, BoundaryNorm
+    from scipy.interpolate import griddata
+    from scipy.spatial import cKDTree
+    from scipy.ndimage import gaussian_filter, binary_opening, binary_closing
+    import calibrate
+    pts = df[['lon', 'lat']].values
+    lon0, lon1 = float(df.lon.min()), float(df.lon.max())
+    lat0, lat1 = float(df.lat.min()), float(df.lat.max())
+    W = 700; H = int(round(W * (lat1 - lat0) / (lon1 - lon0)))
+    gx, gy = np.meshgrid(np.linspace(lon0, lon1, W), np.linspace(lat0, lat1, H))
+    gz = griddata(pts, df['pct'].values, (gx, gy), method='linear').ravel()
+    dist, _ = cKDTree(pts).query(np.column_stack([gx.ravel(), gy.ravel()]))
+    gz[dist > 0.15] = np.nan
+    gz = gz.reshape(H, W)
+    valid = ~np.isnan(gz)
+    land = binary_opening(binary_closing(valid, np.ones((3, 3)), iterations=2), np.ones((3, 3)), iterations=2)
+    w = gaussian_filter(valid.astype(float), sigma=2)
+    sm = gaussian_filter(np.where(valid, gz, 0.0), sigma=2) / np.where(w > 1e-3, w, 1.0)
+    sm[~land] = np.nan
+    sm = sm[::-1, :]
+    cmap = ListedColormap(calibrate.TIER_COLORS)
+    norm = BoundaryNorm([0.0] + calibrate.TIER_PCT + [1.0001], cmap.N)
+    rgba = cmap(norm(np.clip(np.nan_to_num(sm, nan=0.0), 0, 1)))
+    rgba[..., 3] = np.where(np.isnan(sm), 0.0, 0.88)
+    plt.imsave(str(path), rgba)
+    return [[lat0, lon0], [lat1, lon1]]
+
+
+def _pulse_build(d):
+    """Extract + score + render one daily snapshot for conditions date d."""
+    _log(f'PULSE: building snapshot for conditions {d}')
+    pts = _land_points(step_mult=3)
+    df = _extract(pts, _ms(d))
+    if len(df) < 300:
+        raise RuntimeError(f'extraction too thin ({len(df)} rows)')
+    df['score'] = core.score(df)
+    df['pct'] = df['score'].rank(pct=True).round(4)
+    keep = ['lon', 'lat', 'score', 'pct'] + [c for c, _, _ in DRIVERS if c in df.columns]
+    df[keep].to_csv(os.path.join(HIST_DIR, f'pulse_{d}.csv'), index=False)
+    bounds = _render_pulse(df, os.path.join(HIST_DIR, f'pulse_{d}.png'))
+    _save(os.path.join(HIST_DIR, f'pulse_{d}.json'), {'bounds': bounds, 'n': int(len(df))})
+    _log(f'  pulse {d} done ({len(df)} cells)')
+
+
+def _fmt_driver(label, kind, prev, now):
+    dlt = now - prev
+    arrow = 'up' if dlt > 0 else 'down'
+    if kind == 'pct':
+        if abs(prev) < 1e-6:
+            return None
+        return f'{label} {arrow} {abs(dlt) / abs(prev) * 100:.0f}%'
+    if kind == 'mm':
+        return f'{label}: {dlt:+.0f} mm'
+    if kind == 'degC':
+        return f'{label} {dlt:+.1f} C'
+    return f'{label} {dlt:+.2f}'
+
+
+def _area_record(m, grp):
+    import calibrate
+    sub = m[[(lo, la) in grp for lo, la in zip(m.lon, m.lat)]]
+    lon, lat = float(sub.lon.mean()), float(sub.lat.mean())
+    tier = int(np.searchsorted(calibrate.TIER_PCT, float(sub['pct_b'].mean()), side='right'))  # tier NOW
+    drivers = []
+    for col, label, kind in DRIVERS:
+        a, b = col + '_a', col + '_b'
+        if a not in m.columns or b not in m.columns:
+            continue
+        prev, now = float(np.nanmean(sub[a])), float(np.nanmean(sub[b]))
+        if np.isnan(prev) or np.isnan(now):
+            continue
+        std = float(np.nanstd(m[b])) or 1e-9
+        z = abs(now - prev) / std
+        if z < 0.2:
+            continue
+        txt = _fmt_driver(label, kind, prev, now)
+        if txt:
+            drivers.append((z, txt))
+    drivers.sort(reverse=True)
+    return {'name': _place(lon, lat), 'lat': round(lat, 3), 'lon': round(lon, 3),
+            'cells': len(grp), 'tier': calibrate.TIER_NAMES[tier],
+            'drivers': [t for _, t in drivers[:3]]}
+
+
+def _pulse_report(d, dprev):
+    """Compare consecutive snapshots -> named areas newly High+ / no longer High+, with drivers."""
+    a = pd.read_csv(os.path.join(HIST_DIR, f'pulse_{dprev}.csv'))
+    b = pd.read_csv(os.path.join(HIST_DIR, f'pulse_{d}.csv'))
+    m = a.merge(b, on=['lon', 'lat'], suffixes=('_a', '_b'))
+    if len(m) < 300:
+        raise RuntimeError('snapshot lattices barely overlap')
+    newh = m[(m.pct_b >= HIGH_PCT) & (m.pct_a < HIGH_PCT - HYST)]
+    eased = m[(m.pct_a >= HIGH_PCT) & (m.pct_b < HIGH_PCT - HYST)]
+
+    def areas(rows):
+        cells = list(zip(rows.lon, rows.lat))
+        out = []
+        for grp in _clusters(cells):
+            # ignore single-cell blips unless the move was big
+            if len(grp) < 2:
+                sub = m[[(lo, la) in grp for lo, la in zip(m.lon, m.lat)]]
+                if abs(float(sub.pct_b.mean()) - float(sub.pct_a.mean())) < 0.12:
+                    continue
+            out.append(_area_record(m, grp))
+        return out[:6]
+
+    # NOTE: tiers are percentile bands, so the COUNT of High+ cells is constant by construction;
+    # the meaningful statewide signal is the raw mean score shift.
+    rep = {'date': d, 'prev': dprev, 'n_cells': int(len(m)),
+           'mean_score_prev': round(float(m.score_a.mean()), 4),
+           'mean_score_now': round(float(m.score_b.mean()), 4),
+           'new_high': areas(newh), 'eased': areas(eased)}
+    _save(os.path.join(HIST_DIR, f'report_{d}.json'), rep)
+    _log(f"  report {dprev} -> {d}: {len(rep['new_high'])} new high, {len(rep['eased'])} eased")
+
+
+def pulse_once():
+    if not _ee_init():
+        return False
+    os.makedirs(HIST_DIR, exist_ok=True)
+    target = datetime.date.today() - datetime.timedelta(days=PULSE_LAG)
+    floor = datetime.date.fromisoformat(PULSE_FLOOR)
+    have = {f[6:16] for f in os.listdir(HIST_DIR) if f.startswith('pulse_') and f.endswith('.csv')}
+    missing, day = [], target
+    while day >= floor:                              # newest first: today's snapshot lands first
+        if str(day) not in have:
+            missing.append(str(day))
+        day -= datetime.timedelta(days=1)
+    for d in missing[:MAX_PULSE_PER_TICK]:
+        try:
+            _pulse_build(d)
+        except Exception as e:
+            _log(f'pulse {d}: {type(e).__name__}: {e}')
+    dates = sorted({f[6:16] for f in os.listdir(HIST_DIR) if f.startswith('pulse_') and f.endswith('.csv')})
+    for i in range(1, len(dates)):
+        if not os.path.exists(os.path.join(HIST_DIR, f'report_{dates[i]}.json')):
+            try:
+                _pulse_report(dates[i], dates[i - 1])
+            except Exception as e:
+                _log(f'report {dates[i]}: {type(e).__name__}: {e}')
+    return True
+
+
 # ---------------- scheduler ----------------
 def _seed_state():
     """Fresh container (no state file): trust the shipped map's own computed date, so a
@@ -302,6 +506,7 @@ def _loop():
                 st = _load(STATE, {})
                 st['last_audit'] = now if ok else now - (AUDIT_EVERY_H - 6) * 3600
                 _save(STATE, st)
+            pulse_once()      # self-gating: no-op when every snapshot up to today-10d exists
         except Exception:
             _log('scheduler error:\n' + traceback.format_exc())
         time.sleep(1800)
@@ -315,8 +520,10 @@ def start():
 
 
 if __name__ == '__main__':
-    # manual one-shots for local testing: python web/live.py refresh|audit
+    # manual one-shots for local testing: python web/live.py refresh|audit|pulse
     if 'refresh' in sys.argv:
         refresh_once()
     if 'audit' in sys.argv:
         audit_once()
+    if 'pulse' in sys.argv:
+        pulse_once()

@@ -134,6 +134,40 @@ def explain(req: ExplainReq):
     return out
 
 
+@app.get('/api/history')
+def history():
+    """Available daily pulse snapshots (conditions date -> overlay bounds + report flag)."""
+    hd = DATA / 'history'
+    out = {}
+    if hd.exists():
+        for f in sorted(hd.glob('pulse_*.json')):
+            d = f.stem[6:]
+            try:
+                meta = json.load(open(f))
+            except Exception:
+                continue
+            if (hd / f'pulse_{d}.png').exists():
+                out[d] = {'bounds': meta['bounds'], 'report': (hd / f'report_{d}.json').exists()}
+    return {'snapshots': out}
+
+
+@app.get('/api/report')
+def report(date: str = ''):
+    """Daily change report for a snapshot date (default: the most recent one)."""
+    import re
+    hd = DATA / 'history'
+    if date:
+        if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', date):
+            return JSONResponse({'error': 'bad date'}, status_code=400)
+        p = hd / f'report_{date}.json'
+    else:
+        reps = sorted(hd.glob('report_*.json')) if hd.exists() else []
+        p = reps[-1] if reps else None
+    if not p or not p.exists():
+        return JSONResponse({'error': 'no report for that date yet'}, status_code=404)
+    return json.load(open(p))
+
+
 @app.get('/scorecard')
 def scorecard():
     """The self-audit: every significant FL fire since launch, scored against the map PyroCast
