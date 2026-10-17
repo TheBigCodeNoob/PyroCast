@@ -103,3 +103,8 @@ Training Data Florida/v14_wui/
 
 # Local run logs (not needed on deploy; web/data/* holds the precomputed artifacts)
 logs/
+
+# Live self-audit runtime state (regenerated on Railway from START_DATE; don't version it)
+web/data/live_state.json
+web/data/scorecard.json
+web/data/audit/

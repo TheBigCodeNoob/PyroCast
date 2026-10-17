@@ -5,5 +5,10 @@
 !best_model_fl_ensemble.joblib
 !fpafod_se.csv
 !web
+# live refresh/self-audit (web/live.py) imports the GEE feature stack:
+!Dataget_v11e.py
+!Dataget_v11h_canopy.py
+!Dataget_v12_moisture.py
+!Dataget_fl_grid.py
 web/__pycache__
 **/__pycache__

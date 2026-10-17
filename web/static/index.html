@@ -137,7 +137,7 @@ fetch('/api/risk').then(r=>r.json()).then(d=>{
   if(d.error){document.getElementById('sub').textContent=d.error;return;}
   META=d.meta; const c=META.calib;
   document.getElementById('sub').innerHTML =
-    `${META.n_points.toLocaleString()} cells · calibrated to ${c.total_actual_ignitions.toLocaleString()} real 2017-20 ignitions · <b>click to analyze</b>`;
+    `conditions as of ${META.computed} · calibrated to ${c.total_actual_ignitions.toLocaleString()} real ignitions · <a href="/scorecard" style="color:#6cb6ff">live scorecard</a> · <b>click to analyze</b>`;
   setLayer('ignition');
   map.fitBounds(META.bounds, {padding:[10,10]});
 }).catch(e=>document.getElementById('sub').textContent='failed to load risk map');

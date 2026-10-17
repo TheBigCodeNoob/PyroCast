@@ -6,3 +6,6 @@ scikit-learn==1.8.0
 lightgbm==4.6.0
 joblib==1.5.3
 pydantic==2.12.3
+earthengine-api>=1.5
+scipy>=1.14
+matplotlib>=3.9
