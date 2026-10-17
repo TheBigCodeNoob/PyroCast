@@ -258,7 +258,23 @@ def _render_audit(grid, gs, ev, pre, fpct, tier, path):
 
 
 # ---------------- scheduler ----------------
+def _seed_state():
+    """Fresh container (no state file): trust the shipped map's own computed date, so a
+    redeploy doesn't trigger an immediate 70-min re-extraction of data it already has."""
+    st = _load(STATE, {})
+    if 'last_refresh' not in st:
+        try:
+            d = json.load(open(os.path.join(DATA, 'fl_risk.json')))['meta']['computed']
+            y, m, dd = (int(x) for x in d.split('-'))
+            st['last_refresh'] = datetime.datetime(y, m, dd, 12).timestamp()
+            _save(STATE, st)
+            _log(f'seeded last_refresh from shipped map (computed {d})')
+        except Exception:
+            pass
+
+
 def _loop():
+    _seed_state()
     while True:
         try:
             st = _load(STATE, {})
