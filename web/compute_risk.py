@@ -108,7 +108,7 @@ def main(grid_dir=None):
     json.dump({'meta': meta}, open(DATA / 'fl_risk.json', 'w'))
     df.to_csv(DATA / 'fl_grid_full.csv', index=False)
     print('wrote fl_risk.json + fl_risk.png + fl_priority.png + fl_grid_full.csv')
-    print('  baseline', calib['baseline_rate_100km2_yr'], 'ign/100km2/yr | Extreme cells:',
+    print('  avg', calib['avg_rate_100km2_yr'], 'ign/100km2/yr | Extreme cells:',
           calib['tiers'][5]['n_cells'])
 
 

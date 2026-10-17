@@ -17,9 +17,11 @@ EXPORT_FOLDER = 'Fire_v12_moisture'
 COLUMNS = ['lon', 'lat', 'label', 'cause', 'year', 'doy',
            'ndmi', 'smap_surface', 'smap_root', 'lst_day', 'lst_night', 'et', 'pet']
 NBAR = ee.ImageCollection('MODIS/061/MCD43A4')
-SMAP = ee.ImageCollection('NASA/SMAP/SPL4SMGP/007')
+# 008 = reprocessed continuation of 007 (same bands/scale); 007 PRODUCTION STOPPED ~2026,
+# so live/current dates on 007 silently hit the constant-0 fallback (= bone-dry soil, wrong).
+SMAP = ee.ImageCollection('NASA/SMAP/SPL4SMGP/008')
 LST = ee.ImageCollection('MODIS/061/MOD11A1')
-MET = ee.ImageCollection('MODIS/006/MOD16A2')
+MET = ee.ImageCollection('MODIS/061/MOD16A2')   # 006 is fully dead (et/pet were all-null)
 
 
 def extra(feature):
@@ -28,18 +30,21 @@ def extra(feature):
     def at(img, band, scale):
         return img.reduceRegion(ee.Reducer.first(), pt, scale).get(band)
 
+    # mosaic (sorted ascending -> newest pixel on top, older fills its masked gaps) instead of
+    # .first(): near the publication edge the latest image can be partially published, which
+    # used to null the whole state. Identical to .first() wherever the latest pixel is valid.
     nb = NBAR.filterDate(td.advance(-16, 'day'), td)
-    nbimg = ee.Image(ee.Algorithms.If(nb.size().gt(0), nb.sort('system:time_start', False).first(),
+    nbimg = ee.Image(ee.Algorithms.If(nb.size().gt(0), nb.sort('system:time_start').mosaic(),
             ee.Image.constant([0, 0]).rename(['Nadir_Reflectance_Band2', 'Nadir_Reflectance_Band6'])))
     ndmi = nbimg.normalizedDifference(['Nadir_Reflectance_Band2', 'Nadir_Reflectance_Band6']).rename('ndmi')
-    sm = SMAP.filterDate(td.advance(-3, 'day'), td)
+    sm = SMAP.filterDate(td.advance(-7, 'day'), td)
     smimg = ee.Image(ee.Algorithms.If(sm.size().gt(0), sm.sort('system:time_start', False).first(),
             ee.Image.constant([0, 0]).rename(['sm_surface', 'sm_rootzone'])))
     lst = LST.filterDate(td.advance(-8, 'day'), td)
     lstimg = ee.Image(ee.Algorithms.If(lst.size().gt(0), lst.mean(),
              ee.Image.constant([0, 0]).rename(['LST_Day_1km', 'LST_Night_1km'])))
-    et = MET.filterDate(td.advance(-16, 'day'), td)
-    etimg = ee.Image(ee.Algorithms.If(et.size().gt(0), et.sort('system:time_start', False).first(),
+    et = MET.filterDate(td.advance(-24, 'day'), td)
+    etimg = ee.Image(ee.Algorithms.If(et.size().gt(0), et.sort('system:time_start').mosaic(),
             ee.Image.constant([0, 0]).rename(['ET', 'PET'])))
     coords = pt.coordinates()
     return ee.Feature(pt, {
