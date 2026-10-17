@@ -1,0 +1,16 @@
+fire,county,start,acres,cause,lon,lat,located_by_firms,pre_date,ign_pctile,tier,rate
+Mile 31,Broward,2023-03-12,13500,unknown,-80.546,26.279,True,2023-03-05,5.7,Minimal,0.81
+Cypress Camp Trail,Collier,2023-04-04,9749,unknown,-81.245,26.21,True,2023-03-28,70.6,Moderate,1.75
+County Road 121,Nassau,2023-04-20,1053,human (vehicle),-81.965,30.407,True,2023-04-13,46.4,Low,1.4
+Major,Marion,2023-04-27,4952,unknown,-81.701,29.129,True,2023-04-20,84.2,High,2.11
+Sandy 2023,Collier,2023-05-01,19814,lightning,-81.185,26.025,True,2023-04-24,27.0,Low,1.4
+Two Barrel,Liberty,2025-02-26,1943,unknown,-84.989,30.169,True,2025-02-19,27.6,Low,1.4
+Turkey Hammock,Brevard,2025-02-28,1171,unknown,-80.701,28.3,False,2025-02-21,91.1,Very High,2.8
+The 344,Miami-Dade,2025-03-12,26719,unknown,-80.359,25.435,True,2025-03-05,34.4,Low,1.4
+Johnson,Miami-Dade,2025-03-18,8340,unknown,-80.413,25.389,True,2025-03-11,85.0,High,2.11
+East Marsh,Volusia,2025-03-31,3377,unknown,-81.367,29.096,True,2025-03-24,53.3,Moderate,1.75
+Juniper Swamp,Liberty,2025-04-12,4986,unknown,-84.958,30.278,True,2025-04-05,79.8,High,2.11
+Curry Island,Glades,2025-04-18,1050,unknown,-81.117,26.957,True,2025-04-11,32.1,Low,1.4
+Wood,Highlands,2025-05-25,1272,unknown,-81.176,27.626,True,2025-05-18,86.6,High,2.11
+13 Mile,Palm Beach,2025-07-07,13000,unknown,-80.753,26.385,True,2025-06-30,81.5,High,2.11
+Mile Marker 39,Broward,2025-08-18,48000,lightning,-80.578,26.215,True,2025-08-11,73.7,Moderate,1.75
