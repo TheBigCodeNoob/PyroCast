@@ -1,6 +1,7 @@
 """PyroCast Florida — web backend. Serves the precomputed risk map and answers on-demand
 "why is this high/low risk?" explanations. Pure sklearn model, no GEE at request time."""
-import pathlib, json, numpy as np, pandas as pd
+import pathlib, json, warnings, numpy as np, pandas as pd
+warnings.filterwarnings('ignore', message='X does not have valid feature names')  # LGBM log spam
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse, FileResponse
@@ -180,7 +181,8 @@ Fires are chosen by the satellite, not by us. <a href='/'>&larr; back to the map
 
 @app.get('/')
 def index():
-    return FileResponse(HERE / 'static' / 'index.html')
+    # no-cache: browsers heuristic-cache responses without it, serving stale UI after deploys
+    return FileResponse(HERE / 'static' / 'index.html', headers={'Cache-Control': 'no-cache'})
 
 
 @app.on_event('startup')

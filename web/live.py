@@ -58,6 +58,17 @@ def _ee_init():
             if not _warned:
                 _log('no GEE credentials found; live jobs idle'); _warned = True
             return False
+        # ee.Initialize() only auto-uses PERSISTENT (interactive) credentials, which don't exist
+        # on Railway — a service-account key must be passed explicitly. Bind it into
+        # ee.Initialize so the Dataget modules' own import-time ee.Initialize(project=...) works.
+        import ee, functools
+        key_path = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+        email = json.load(open(key_path)).get('client_email')
+        if email:
+            creds = ee.ServiceAccountCredentials(email, key_path)
+            ee.Initialize(creds, project='gleaming-glass-426122-k0')
+            ee.Initialize = functools.partial(ee.Initialize, creds)
+            _log(f'EE initialized as {email}')
         # Dataget_fl_grid parses argv at import; Dataget_v11e opens fpafod_se.csv relative to CWD
         argv, cwd = sys.argv, os.getcwd()
         sys.argv = [sys.argv[0], '2022-01-01']
