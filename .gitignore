@@ -100,6 +100,9 @@ Training Data Florida/v10/
 Training Data Florida/FL/
 Training Data Florida/FLgrid/
 Training Data Florida/v14_wui/
+# 2001-16 hist training data: 68MB, regenerable (Dataget_fl_hist.py -> Drive -> dl_by_name.py)
+Training Data Florida/FL_hist/
+drive-download-*/
 
 # Local run logs (not needed on deploy; web/data/* holds the precomputed artifacts)
 logs/

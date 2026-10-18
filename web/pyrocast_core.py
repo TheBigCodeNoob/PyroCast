@@ -3,9 +3,9 @@ risk via grouped occlusion (no SHAP needed). Shared by the API and the compute j
 import json, pathlib, numpy as np, pandas as pd, joblib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-# prefer FL ensemble (lowest-variance) > FL single > general best
-_MODEL_PATHS = [ROOT / 'best_model_fl_ensemble.joblib', ROOT / 'best_model_fl.joblib',
-                ROOT / 'best_model_v13.joblib', ROOT / 'best_model_final.joblib']
+# prefer v2 (2001-2020 training, blocked AUROC 0.809, hgb+lgb) > v1 ensemble > FL single > general
+_MODEL_PATHS = [ROOT / 'best_model_fl_ensemble_v2.joblib', ROOT / 'best_model_fl_ensemble.joblib',
+                ROOT / 'best_model_fl.joblib', ROOT / 'best_model_v13.joblib', ROOT / 'best_model_final.joblib']
 
 # human-readable factor groups (feature -> plain English bucket)
 FACTOR_GROUPS = {

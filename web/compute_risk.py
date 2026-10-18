@@ -96,9 +96,17 @@ def main(grid_dir=None):
     bounds = render_tiers(df, 'risk', DATA / 'fl_risk.png')         # ignition-likelihood tiers
     render_tiers(df, 'prisk', DATA / 'fl_priority.png')             # vulnerable-places tiers
 
-    from datetime import datetime
+    from datetime import datetime, timedelta
+    conditions = None
+    if 'year' in df.columns and 'doy' in df.columns:
+        try:   # grid rows carry the GEE target date (doy is 0-based, from ee getRelative)
+            conditions = (datetime(int(df.year.mode()[0]), 1, 1)
+                          + timedelta(days=int(df.doy.mode()[0]))).strftime('%Y-%m-%d')
+        except Exception:
+            pass
     meta = {'model': core.load().get('_path'), 'n_points': int(len(df)), 'bounds': bounds,
             'cell': cell, 'computed': datetime.now().strftime('%Y-%m-%d'),
+            'conditions': conditions or datetime.now().strftime('%Y-%m-%d'),
             'layers': {
                 'ignition': {'png': 'fl_risk.png', 'title': 'Ignition likelihood',
                              'unit': 'expected ignitions per 100 km2 per year'},

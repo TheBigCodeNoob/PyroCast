@@ -25,9 +25,9 @@ TIER_PCT = calibrate.TIER_PCT; TIER_COLORS = calibrate.TIER_COLORS; TIER_NAMES =
 ENG = {'pdsi_traj_90': lambda d: d.pdsi_0 - d.pdsi_90, 'vpd_trend': lambda d: d.vpd_7 - d.vpd_90,
        'pr_deficit': lambda d: d.pr_365 / 4 - d.pr_90, 'fm100_trend': lambda d: d.fm100_30 - d.fm100_90,
        'dryness': lambda d: d.vpd_30 + d.erc_30 - d.pr_90 / 50, 'et_stress': lambda d: d.et / (d.pet + 1)}
-BUNDLE = joblib.load(os.path.join(ROOT, 'best_model_fl_ensemble.joblib'))
+BUNDLE = joblib.load(os.path.join(ROOT, os.environ.get('PYRO_MODEL', 'best_model_fl_ensemble.joblib')))
 FEATURES = BUNDLE['features']
-OUTDIR = os.path.join(ROOT, 'figures', 'fire_backtest'); os.makedirs(OUTDIR, exist_ok=True)
+OUTDIR = os.path.join(ROOT, 'figures', os.environ.get('PYRO_OUT', 'fire_backtest')); os.makedirs(OUTDIR, exist_ok=True)
 
 # Real FL wildfires AFTER training (2023, 2025). (name, county, start date, acres, cause)
 FIRES = [

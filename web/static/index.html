@@ -164,7 +164,7 @@ fetch('/api/risk').then(r=>r.json()).then(d=>{
   if(d.error){document.getElementById('sub').textContent=d.error;return;}
   META=d.meta; const c=META.calib;
   document.getElementById('sub').innerHTML =
-    `conditions as of ${META.computed} · calibrated to ${c.total_actual_ignitions.toLocaleString()} real ignitions · <b>click to analyze</b>`;
+    `conditions as of ${META.conditions||META.computed} · calibrated to ${c.total_actual_ignitions.toLocaleString()} real ignitions · <b>click to analyze</b>`;
   setLayer('ignition');
   map.fitBounds(META.bounds, {padding:[10,10]});
   loadHistory();

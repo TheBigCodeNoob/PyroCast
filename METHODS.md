@@ -10,13 +10,25 @@ conda run -n base python web/compute_risk.py       # rebuild the map + calibrate
 
 ## Data
 
-- **Model:** `best_model_fl_ensemble.joblib` — HistGradientBoosting + RandomForest + LightGBM ensemble,
-  58 features, trained on 7,515 Florida rows. Its blocked space-and-time headline is AUROC **0.785**
-  (95% spatial-block bootstrap interval **0.760–0.810**, 1,773 held-out samples across 60 blocks).
-- **Ground truth:** FPA-FOD recorded ignitions, Florida, **2017–2020** (4 years). 10,361 of 10,484
-  in-bbox ignitions snap onto the grid (98.8%); the rest fall on ocean / no-vegetation cells that are
-  not modeled.
-- **Grid:** 9,417 land cells at 0.04° (~**17.2 km²**/cell, ~4.4 km).
+- **Model (v2, 2026-10-18):** `best_model_fl_ensemble_v2.joblib` — HistGradientBoosting + LightGBM
+  ensemble, 58 features, trained on **98,848 Florida rows spanning 2001–2020** (56,834 real FPA-FOD
+  ignitions). Blocked space-and-time headline: AUROC **0.809** (95% spatial-block bootstrap interval
+  **0.789–0.830**, 1,773 held-out 2020 samples across 60 blocks), average precision **0.845**.
+- **The data-extension experiment** (`train_fl_hist.py`, `finalize_v2.py`): under the identical
+  blocked protocol and identical held-out 2020 rows, training on 2017–2019 alone scores **0.780**;
+  adding 2001–2016 raises it to **0.809** — a paired improvement of **+0.029** (95% spatial-block
+  CI of the delta **+0.016 to +0.042**, P(improvement) > 0.999). RandomForest was dropped from the
+  v2 ensemble: it scored below both other members and inflated the bundle to 445 MB.
+  Known historical-era caveats (accepted, documented): static layers (land cover, population,
+  development, canopy) are ~2020 vintage for all years; NightLights is 0 before VIIRS (2012);
+  SMAP soil moisture is a constant 0 before 2015 — consistent with how missing values are imputed
+  at inference.
+- **Previous model (v1):** `best_model_fl_ensemble.joblib` — HGB+RF+LGBM on 7,515 rows (2017–2020
+  only); blocked headline AUROC **0.785** (CI 0.760–0.810). Kept for reproducibility/rollback.
+- **Ground truth for calibration:** FPA-FOD recorded ignitions, Florida, **2017–2020** (4 years).
+  10,361 of 10,484 in-bbox ignitions snap onto the grid (98.8%); the rest fall on ocean /
+  no-vegetation cells that are not modeled.
+- **Grid:** ~9,400 land cells at 0.04° (~**17.2 km²**/cell, ~4.4 km).
 
 ## How the labels are built
 
@@ -28,25 +40,28 @@ conda run -n base python web/compute_risk.py       # rebuild the map + calibrate
    was removed.)
 3. **Relative risk** = tier rate ÷ the **statewide average** rate (1.59 /100 km²/yr).
 
-### Validated tier rates (ignitions / 100 km² / yr)
+### Validated tier rates (ignitions / 100 km² / yr) — v2 model, Oct 2026 conditions
 
 | Tier | cells | observed rate | 95% CI | × FL avg |
 |------|------:|------:|:------:|:---:|
-| Minimal | 2354 | 0.81 | 0.77–0.85 | 0.5× |
-| Low | 2354 | 1.40 | 1.34–1.46 | 0.9× |
-| Moderate | 2354 | 1.75 | 1.69–1.82 | 1.1× |
-| High | 1413 | 2.11 | 2.02–2.21 | 1.3× |
-| Very High | 753 | 2.80 | 2.66–2.95 | 1.8× |
-| Extreme | 189 | 3.38 | 3.07–3.72 | 2.1× |
+| Minimal | 2335 | 0.82 | 0.78–0.87 | 0.5× |
+| Low | 2335 | 1.28 | 1.22–1.33 | 0.8× |
+| Moderate | 2335 | 1.72 | 1.66–1.78 | 1.1× |
+| High | 1401 | 2.23 | 2.14–2.33 | 1.4× |
+| Very High | 748 | 3.01 | 2.86–3.17 | 1.9× |
+| Extreme | 187 | 3.71 | 3.38–4.05 | 2.3× |
 
-Monotonic across all tiers (verified). Statewide average: **1.59**.
+Monotonic across all tiers (verified); tier rates recompute automatically at every live refresh.
+Statewide average: **1.6**. (The v1 model's top tiers were flatter — Very High 2.80 / Extreme 3.38;
+v2 separates the extreme tail more sharply against the same fire record.)
 
 ## Validation
 
-- **Predictive ranking (headline)** — AUROC **0.785** on out-of-fold Florida samples. Five-fold
+- **Predictive ranking (headline)** — AUROC **0.809** (v2) on out-of-fold Florida samples. Five-fold
   evaluation holds out 0.6° spatial blocks; each model trains on years through 2019 and is tested on
   2020 in blocks it never saw. The test contains 1,060 fires and 713 season-matched sampled
-  background points. Reproduce with `python validate_fl_headline.py`. This estimates discrimination
+  background points. Reproduce with `python train_fl_hist.py` + `python finalize_v2.py` (v2) or
+  `python validate_fl_headline.py` (v1 protocol, 0.785). This estimates discrimination
   between recorded fires and the sampled background, not precision or calibration at the real-world
   fire rate; use a prospective, population-representative evaluation for operational alert claims.
 - **Companion checks on the same test:** an access-only HGB baseline (population, development
